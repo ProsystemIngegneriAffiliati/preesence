@@ -6,4 +6,11 @@
     <application>
         <resource-handler>org.omnifaces.resourcehandler.CombinedResourceHandler</resource-handler>
     </application>
+    <locale-config>
+        <default-locale>it_IT</default-locale>
+    </locale-config>
+    <resource-bundle>
+        <base-name>i18n.messages</base-name>
+        <var>msg</var>
+    </resource-bundle>
 </faces-config>
