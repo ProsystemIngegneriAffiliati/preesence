@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:b="http://bootsfaces.net/ui">
+    <h:head>
+        <title>BootsFaces Basic Page</title>
+        <meta name="author" content="Davide Mainardi"></meta>
+    </h:head>
+    <h:body>
+        <b:navBar brand="Preesence" fluid="true">
+            <b:navbarLinks>
+                <b:navLink value="Maina" href="#" />
+                <b:navLink value="Guaina" href="#" />
+                <b:navLink value="Straina" href="#" />
+            </b:navbarLinks>
+            <b:navbarLinks pull="right">
+                <b:navLink value="Maina" href="#" />
+            </b:navbarLinks>
+        </b:navBar>
+        <b:container fluid="true">
+            <b:row>
+                <b:column>
+                    <b:messages global-only="true" />
+                    <b:well>Io sono Maina</b:well>
+                </b:column>
+            </b:row>
+            <b:row>
+                <b:column hidden="xs" col-sm="3" col-md="4" styleClass="sidebar">
+                    <b:listLinks>
+                        <b:navLink value="Maina" href="#" />
+                        <b:navLink value="Guaina" href="#" />
+                        <b:navLink value="Straina" href="#" />
+                    </b:listLinks>
+                </b:column>
+                <b:column col-sm="9" col-md="8" styleClass="main">
+                    Ciao, io sono Maina
+                </b:column>
+            </b:row>
+        </b:container>
+        <b:navBar
+            position="bottom"
+            brand="Made with &hearts; by Davide Mainardi"
+            styleClass="hidden-sm hidden-xs"
+            brandStyle="font-size: 1em; padding-top:5px !important; padding-bottom:0 !important; height: 2em;"
+            style="min-height:2em !important;"/>
+    </h:body>
+</html>
+
