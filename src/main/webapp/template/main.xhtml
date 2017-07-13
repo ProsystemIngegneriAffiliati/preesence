@@ -1,12 +1,47 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <h:head>
-        <title>Facelet Title</title>
+        <title>#{msg.appName} <ui:insert name='pageTitle'></ui:insert></title>
+        <meta name="author" content="Davide Mainardi"></meta>
     </h:head>
     <h:body>
-        Hello from Facelets
+        <h:form>
+            <b:navBar brand="#{msg.appName}"
+                      brandHref="/preesence"
+                      fluid="true">
+                <b:navbarLinks class="visible-xs">
+                    <ui:include src="sideMenu.xhtml"/>
+                </b:navbarLinks>
+                <ui:include src="topMenu.xhtml"/>
+            </b:navBar>
+        </h:form>
+        <b:container fluid="true">
+            <b:row>
+                <b:column hidden="xs" col-sm="3" col-md="2" styleClass="sidebar">
+                    <b:listLinks>
+                        <ui:include src="sideMenu.xhtml"/>
+                    </b:listLinks>
+                </b:column>
+                <b:column col-sm="9" col-md="8" styleClass="main">
+                    <div class="page-header">
+                        <h1><ui:insert name="contentTitle" /></h1>
+                    </div>
+                    <p class="lead"><ui:insert name="contentSubtitle" /></p>
+                    <ui:insert name="content" />
+                </b:column>
+                <b:column col-sm="12" col-md="2">
+                    <b:messages global-only="true" />
+                </b:column>
+            </b:row>
+        </b:container>
+        <b:navBar brand="Made with &hearts; by Davide Mainardi"
+                  position="bottom"
+                  styleClass="hidden-sm hidden-xs"
+                  brandStyle="font-size: 1em; padding-top:5px !important; padding-bottom:0 !important; height: 2em;"
+                  style="min-height:2em !important;"/>
     </h:body>
 </html>
-

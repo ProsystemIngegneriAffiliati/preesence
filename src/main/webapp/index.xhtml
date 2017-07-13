@@ -1,49 +1,23 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:b="http://bootsfaces.net/ui">
-    <h:head>
-        <title>BootsFaces Basic Page</title>
-        <meta name="author" content="Davide Mainardi"></meta>
-    </h:head>
-    <h:body>
-        <b:navBar brand="Preesence" fluid="true">
-            <b:navbarLinks>
-                <b:navLink value="Maina" href="#" />
-                <b:navLink value="Guaina" href="#" />
-                <b:navLink value="Straina" href="#" />
-            </b:navbarLinks>
-            <b:navbarLinks pull="right">
-                <b:navLink value="Maina" href="#" />
-            </b:navbarLinks>
-        </b:navBar>
-        <b:container fluid="true">
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <ui:composition template="template/main.xhtml">
+        <ui:define name="contentTitle">#{msg.appName}</ui:define>
+        <ui:define name="contentSubtitle">#{msg.appName_tip}</ui:define>
+        <ui:define name="content">
+            <b:jumbotron>
+                <h1>#{msg.welcome}</h1>
+                <p>#{msg.welcome_tip}</p>
+                <p><a href="https://github.com/ProsystemIngegneriAffiliati/preesence" class="btn btn-lg btn-info">ah ah ah</a></p>
+            </b:jumbotron>
             <b:row>
-                <b:column>
-                    <b:messages global-only="true" />
-                    <b:well>Io sono Maina</b:well>
-                </b:column>
+                <b:column visible="xs">XS</b:column>
+                <b:column visible="sm">SM</b:column>
+                <b:column visible="md">MD</b:column>
+                <b:column visible="lg">LG</b:column>
             </b:row>
-            <b:row>
-                <b:column hidden="xs" col-sm="3" col-md="4" styleClass="sidebar">
-                    <b:listLinks>
-                        <b:navLink value="Maina" href="#" />
-                        <b:navLink value="Guaina" href="#" />
-                        <b:navLink value="Straina" href="#" />
-                    </b:listLinks>
-                </b:column>
-                <b:column col-sm="9" col-md="8" styleClass="main">
-                    Ciao, io sono Maina
-                </b:column>
-            </b:row>
-        </b:container>
-        <b:navBar
-            position="bottom"
-            brand="Made with &hearts; by Davide Mainardi"
-            styleClass="hidden-sm hidden-xs"
-            brandStyle="font-size: 1em; padding-top:5px !important; padding-bottom:0 !important; height: 2em;"
-            style="min-height:2em !important;"/>
-    </h:body>
+        </ui:define>
+    </ui:composition>
 </html>
-
