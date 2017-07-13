@@ -38,7 +38,6 @@ import org.omnifaces.cdi.ViewScoped;
 @ViewScoped
 public class ListUserPresenter implements Serializable{
     private List<UserApp> users;
-    private List<UserApp> selectedUsers;
     
     @Inject
     UserService userService;
@@ -51,33 +50,20 @@ public class ListUserPresenter implements Serializable{
         users = userService.listUserApps();
     }
     
-    public void deleteUsers() {
-        if (selectedUsers != null && !selectedUsers.isEmpty()) {
-            for (UserApp userTemp : selectedUsers)
-                if (userTemp.getUserName().equals(authenticator.getLoggedUser().getUserName()))
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error in deleting user", "You cannot delete yourself"));
-                else {
-                    try {
-                        userService.deleteUserApp(userTemp);
-                    } catch (EJBException e) {
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", ExceptionUtility.unwrap(e.getCausedByException()).getLocalizedMessage()));
-                    }
-                }
-            users = userService.listUserApps();
+    public void deleteUser(UserApp userApp) {
+        if (userApp.getUserName().equals(authenticator.getLoggedUser().getUserName()))
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error in deleting user", "You cannot delete yourself"));
+        else {
+            try {
+                userService.deleteUserApp(userApp);
+            } catch (EJBException e) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", ExceptionUtility.unwrap(e.getCausedByException()).getLocalizedMessage()));
+            }
         }
-        else
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Missing selection", "Select a user before deleting"));
+        users = userService.listUserApps();
     }
 
     public List<UserApp> getUsers() {
         return users;
-    }
-
-    public List<UserApp> getSelectedUsers() {
-        return selectedUsers;
-    }
-
-    public void setSelectedUsers(List<UserApp> selectedUsers) {
-        this.selectedUsers = selectedUsers;
     }
 }
