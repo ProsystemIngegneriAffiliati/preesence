@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:bnu="http://bootsfaces.net/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+    <ui:composition template="template/main.xhtml">
+        <ui:define name="contentTitle">#{msg.signUp_createNewUser}</ui:define>
+        <ui:define name="contentSubtitle">#{msg.signUp_createNewUser_tip}</ui:define>
+        <ui:define name="content">
+            <h:form id="createUserForm">
+                <bnu:panelGrid colSpans="2,5,5">
+                    <h:outputLabel for="username" value="#{msg.login_username}"/>
+                    <bnu:inputText id="username" value="#{authenticator.userName}" required="true" pt:autofocus="true"/>
+                    <bnu:message/>
+                    <h:outputLabel for="newPassword1" value="#{msg.login_password}"/>
+                    <bnu:inputSecret id="newPassword1" value="#{authenticator.newPassword1}" required="true"/>
+                    <bnu:message/>
+                    <h:outputLabel for="newPassword2" value="#{msg.signUp_confirmPassword}"/>
+                    <bnu:inputSecret id="newPassword2" value="#{authenticator.newPassword2}" required="true"/>
+                    <bnu:message/>
+                </bnu:panelGrid>
+                <h:commandButton value="#{msg.signUp_createNewUser}" styleClass="btn btn-default" action="#{authenticator.createNewUser()}"/>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

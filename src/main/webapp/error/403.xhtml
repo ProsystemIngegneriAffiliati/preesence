@@ -1,13 +1,14 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:bnu="http://bootsfaces.net/ui">
     <ui:composition template="/template/basic.xhtml">
-        <ui:define name="titleAndSubtitle">
-            <div class="page-header">
-                <h1><ui:insert name="contentTitle" /></h1>
-            </div>
-            <p class="lead"><ui:insert name="contentSubtitle" /></p>
+        <ui:define name="content">
+            <bnu:jumbotron>
+                <h1>#{msg.error_403}</h1>
+                <p>#{msg.error_403_tip}</p>
+            </bnu:jumbotron>
         </ui:define>
     </ui:composition>
 </html>

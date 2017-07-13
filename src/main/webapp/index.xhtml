@@ -3,13 +3,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:b="http://bootsfaces.net/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
-    <ui:composition template="template/main.xhtml">
-        <ui:define name="contentTitle">#{msg.appName}</ui:define>
-        <ui:define name="contentSubtitle">#{msg.appName_tip}</ui:define>
+    <ui:composition template="template/basic.xhtml">
         <ui:define name="content">
             <b:jumbotron>
-                <h1>#{msg.welcome}</h1>
-                <p>#{msg.welcome_tip}</p>
+                <h1>#{msg.appName}</h1>
+                <p>#{msg.appName_tip}</p>
                 <p><a href="https://github.com/ProsystemIngegneriAffiliati/preesence" class="btn btn-lg btn-info">ah ah ah</a></p>
             </b:jumbotron>
             <b:row>

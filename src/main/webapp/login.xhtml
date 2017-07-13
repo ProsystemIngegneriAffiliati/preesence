@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:b="http://bootsfaces.net/ui">
+    <h:head>
+        <title>#{msg.login_login}</title>
+        <style type="text/css">
+            .form-signin {
+                margin: 0 auto;
+                max-width: 330px;
+                padding: 15px;
+            }
+        </style>
+    </h:head>
+    <h:body style="padding-top: 60px;">
+        <b:container>
+            <form name="loginForm" class="form-signin" method="POST" action="j_security_check">
+                <h2 class="form-signin-heading">#{msg.login_authentication}</h2>
+                <label for="username" class="sr-only">#{msg.login_username}</label>
+                <input id="username" type="text" name="j_username" class="form-control" required="true" autofocus="true" placeholder="#{msg.login_username}" />
+                <label for="password" class="sr-only">#{msg.login_password}</label>
+                <input id="password" type="password" name="j_password" class="form-control" required="true" placeholder="#{msg.login_password}" />
+                <input type="submit" class="btn btn-lg btn-primary btn-block" value="#{msg.login_login}"/>
+            </form>
+        </b:container>
+    </h:body>
+</html>
