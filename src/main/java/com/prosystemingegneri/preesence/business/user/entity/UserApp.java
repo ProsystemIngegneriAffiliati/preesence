@@ -125,4 +125,8 @@ public class UserApp implements Serializable{
              : super.hashCode();
     }
     
+    @Override
+    public String toString() {
+        return String.format("%s[id=%s]", getClass().getSimpleName(), userName);
+    }
 }

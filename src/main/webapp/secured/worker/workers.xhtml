@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:b="http://bootsfaces.net/ui">
+    <ui:composition template="/template/main.xhtml">
+        <ui:define name="contentTitle">#{msg.worker_workers}</ui:define>
+        <ui:define name="contentSubtitle">#{msg.worker_workers_tip}</ui:define>
+        <ui:define name="content">
+            <h:form id="workersForm">
+                <b:dataTable id="workersList"
+                             var="worker"
+                             value="#{workerListPresenter.workers}">
+                    <b:dataTableColumn label="#{msg.worker_worker_name}" value="#{worker.name}" />
+                    <b:dataTableColumn label="#{msg.actions}" orderable="false">
+                        <b:button tooltip="#{msg.edit}"
+                                  iconAwesome="pencil-square-o"
+                                  outcome="/secured/worker/worker">
+                            <f:param name="id" value="#{worker.id}" />
+                        </b:button>
+                        <b:dropButton value="✗"
+                                      tooltip="#{msg.worker_workers_delete}"
+                                      look="danger">
+                            <b:navCommandLink value="#{msg.delete}"
+                                              tooltip="#{msg.worker_workers_delete_tip}"
+                                              actionListener="#{workerListPresenter.deleteWorker(worker.id)}"
+                                              update="@form, globalMessages"/>
+                        </b:dropButton>
+                    </b:dataTableColumn>
+                </b:dataTable>
+            </h:form>
+            <b:row>
+                <b:button value="#{msg.new} #{msg.worker_worker}"
+                          outcome="worker"
+                          look="primary"
+                          styleClass="btn-block"
+                          colXs="12" colSm="6" colMd="4" colLg="3">
+                    <f:param name="id" value="0"/>
+                </b:button>
+            </b:row>
+        </ui:define>
+    </ui:composition>
+</html>
