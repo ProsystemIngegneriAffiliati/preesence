@@ -24,12 +24,15 @@
                                   disabled="#{userApp.userName.equals(authenticator.loggedUser.userName)}">
                             <f:param name="id" value="#{userApp.userName}" />
                         </b:button>
-                        <b:commandButton tooltip="#{msg.delete}"
-                                         iconAwesome="trash-o"
-                                         look="danger"
-                                         actionListener="#{listUserPresenter.deleteUser(userApp)}"
-                                         update="@form, globalMessages"
-                                         disabled="#{userApp.userName.equals(authenticator.loggedUser.userName)}"/>
+                        <b:dropButton value="✗"
+                                      tooltip="#{msg.manageUsers_users_delete}"
+                                      look="danger"
+                                      contentDisabled="#{userApp.userName.equals(authenticator.loggedUser.userName)}">
+                            <b:navCommandLink value="#{msg.delete}"
+                                              tooltip="#{msg.manageUsers_users_delete_tip}"
+                                              actionListener="#{listUserPresenter.deleteUser(userApp)}"
+                                              update="@form, globalMessages"/>
+                        </b:dropButton>
                     </b:dataTableColumn>
                 </b:dataTable>
             </h:form>

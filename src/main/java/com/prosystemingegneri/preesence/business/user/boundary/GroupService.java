@@ -16,9 +16,8 @@
  */
 package com.prosystemingegneri.preesence.business.user.boundary;
 
-import com.prosystemingegneri.preesence.business.user.entity.UserApp;
+import com.prosystemingegneri.preesence.business.user.entity.GroupApp;
 import java.util.List;
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -31,32 +30,18 @@ import javax.persistence.criteria.Root;
  * @author Davide Mainardi <ingmainardi@live.com>
  */
 @Stateless
-public class UserService {
+public class GroupService {
     @PersistenceContext
     EntityManager em;
     
-    public UserApp saveUserApp(UserApp userApp) {
-        return em.merge(userApp);
+    public GroupApp readGroupApp(String groupName) {
+        return em.find(GroupApp.class, groupName);
     }
     
-    public void createUserApp(UserApp userApp) {
-        em.persist(userApp);
-    }
-    
-    public UserApp readUserApp(String userName) {
-        return em.find(UserApp.class, userName);
-    }
-    
-    @RolesAllowed("admin")
-    public void deleteUserApp(UserApp userApp) {
-        em.remove(em.merge(userApp));
-    }
-
-    @RolesAllowed("admin")
-    public List<UserApp> listUserApps() {
+    public List<GroupApp> listGroupApps() {
         CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<UserApp> query = cb.createQuery(UserApp.class);
-        Root<UserApp> root = query.from(UserApp.class);
+        CriteriaQuery<GroupApp> query = cb.createQuery(GroupApp.class);
+        Root<GroupApp> root = query.from(GroupApp.class);
         query.select(root);
         return em.createQuery(query).getResultList();
     }

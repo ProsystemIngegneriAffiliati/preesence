@@ -44,4 +44,18 @@ public class GroupApp implements Serializable {
         this.groupName = groupName;
     }
     
+    @Override
+    public boolean equals(Object other) {
+        return (other != null && getClass() == other.getClass() && groupName != null)
+            ? groupName.equals(((GroupApp) other).groupName)
+            : (other == this);
+    }
+
+    @Override
+    public int hashCode() {
+        return (groupName != null) 
+            ? (getClass().hashCode() + groupName.hashCode())
+            : super.hashCode();
+    }
+    
 }

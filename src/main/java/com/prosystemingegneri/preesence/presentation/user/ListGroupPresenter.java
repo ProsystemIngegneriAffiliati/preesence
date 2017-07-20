@@ -18,47 +18,31 @@ package com.prosystemingegneri.preesence.presentation.user;
 
 import com.prosystemingegneri.preesence.business.user.boundary.GroupService;
 import com.prosystemingegneri.preesence.business.user.entity.GroupApp;
-import javax.enterprise.context.RequestScoped;
-import javax.faces.application.FacesMessage;
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-import javax.faces.convert.Converter;
-import javax.faces.convert.ConverterException;
+import java.io.Serializable;
+import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
+import org.omnifaces.cdi.ViewScoped;
 
 /**
  *
  * @author Davide Mainardi <ingmainardi@live.com>
  */
 @Named
-@RequestScoped
-public class GroupConverter implements Converter {
+@ViewScoped
+public class ListGroupPresenter implements Serializable{
+    private List<GroupApp> groups;
     
     @Inject
     GroupService service;
-
-    @Override
-    public Object getAsObject(FacesContext context, UIComponent component, String value) {
-        if (value == null || value.isEmpty()) {
-            return null;
-        }
-
-        return service.readGroupApp(value);
-    }
-
-    @Override
-    public String getAsString(FacesContext context, UIComponent component, Object value) {
-        if (value == null) {
-            return "";
-        }
-
-        if (value instanceof GroupApp) {
-            String id = ((GroupApp) value).getGroupName();
-            return (id != null) ? id : null;
-        } else {
-            throw new ConverterException(new FacesMessage("The value is not a valid GroupApp instance: " + value));
-        }
-    }
     
+    @PostConstruct
+    public void init() {
+        groups = service.listGroupApps();
+    }
+
+    public List<GroupApp> getGroups() {
+        return groups;
+    }
 }

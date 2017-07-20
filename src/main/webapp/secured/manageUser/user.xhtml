@@ -17,12 +17,26 @@
                 <f:viewAction action="#{userPresenter.readUserApp()}"/>
             </f:metadata>
 
-            <h:form>
-                <b:panelGrid colSpans="2,10">
+            <b:form>
+                <b:panelGrid colSpans="2,10" size="md">
                     <h:outputLabel for="username" value="#{msg.login_username}"/>
                     <h:outputText id="username" value="#{userPresenter.userApp.userName}"/>
                 </b:panelGrid>
-
+                <br/>
+                <b:panelGrid colSpans="3,5,4" size="md">
+                    <h:outputLabel for="usersGroups" value="#{msg.manageUsers_user_groups}"/>
+                    <h:selectManyListbox id="usersGroups"
+                                         value="#{userPresenter.userApp.groups}"
+                                         converter="#{groupConverter}"
+                                         styleClass="form-control">
+                        <f:selectItems value="#{listGroupPresenter.groups}"
+                                       var="group"
+                                       itemLabel="#{group.groupName}"
+                                       itemValue="#{group}"/>
+                    </h:selectManyListbox>
+                    <b:message/>
+                </b:panelGrid>
+                <br/>
                 <b:row>
                     <b:button value="#{msg.cancel}"
                               outcome="/secured/manageUser/users"
@@ -35,7 +49,7 @@
                         styleClass="btn-block"
                         offsetSm="2" colSm="4" offsetMd="2" colMd="3" />
                 </b:row>
-            </h:form>
+            </b:form>
         </ui:define>
     </ui:composition>
 </html>

@@ -17,10 +17,12 @@
 package com.prosystemingegneri.preesence.presentation.user;
 
 import com.prosystemingegneri.preesence.business.user.boundary.UserService;
-import com.prosystemingegneri.preesence.business.user.entity.GroupApp;
 import com.prosystemingegneri.preesence.business.user.entity.UserApp;
+import com.prosystemingegneri.preesence.presentation.ExceptionUtility;
 import java.io.Serializable;
-import java.util.List;
+import javax.ejb.EJBException;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.omnifaces.cdi.ViewScoped;
@@ -38,17 +40,18 @@ public class UserPresenter implements Serializable {
     private UserApp user;
     private String id;
     
-    //private DualListModel<GroupApp> groups = new DualListModel<>();
-    
     public void readUserApp() {
         if (id != null && !id.isEmpty())
             user = userService.readUserApp(id);
     }
     
     public String saveUserApp() {
-        user.getGroups().clear();
-        //user.getGroups().addAll(groups.getTarget());
-        user = userService.saveUserApp(user);
+        try {
+            user = userService.saveUserApp(user);
+        } catch (EJBException e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", ExceptionUtility.unwrap(e.getCausedByException()).getLocalizedMessage()));
+            return null;
+        }
         
         return "/secured/manageUser/users?faces-redirect=true";
     }
@@ -60,31 +63,6 @@ public class UserPresenter implements Serializable {
     public void setUserApp(UserApp userApp) {
         this.user = userApp;
     }
-    
-    public String addGroup(GroupApp group) {
-        this.user.getGroups().add(group);
-        return "/secured/manageUser/user?faces-redirect=true";
-    }
-    
-    public void removeGroup(GroupApp group) {
-        this.user.getGroups().remove(group);
-    }
-    
-    public List<GroupApp> avaibleGroups(UserApp user) {
-        return userService.avaibleGroups(user);
-    }
-
-    /*public DualListModel<GroupApp> getGroups() {
-        if (groups.getSource().isEmpty() && groups.getTarget().isEmpty()) {
-            groups.setSource(userService.avaibleGroups(user));
-            groups.setTarget(user.getGroups());
-        }
-        return groups;
-    }
-
-    public void setGroups(DualListModel<GroupApp> groups) {
-        this.groups = groups;
-    }*/
 
     public String getId() {
         return id;
