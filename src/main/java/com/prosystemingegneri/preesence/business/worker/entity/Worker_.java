@@ -16,6 +16,7 @@
  */
 package com.prosystemingegneri.preesence.business.worker.entity;
 
+import com.prosystemingegneri.preesence.business.user.entity.UserApp;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
@@ -26,4 +27,5 @@ import javax.persistence.metamodel.StaticMetamodel;
 @StaticMetamodel(Worker.class)
 public class Worker_ {
     public static volatile SingularAttribute<Worker, String> name;
+    public static volatile SingularAttribute<UserApp, String> user;
 }

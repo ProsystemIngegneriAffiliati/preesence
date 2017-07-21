@@ -16,10 +16,13 @@
  */
 package com.prosystemingegneri.preesence.presentation.worker;
 
+import com.prosystemingegneri.preesence.business.user.entity.UserApp;
 import com.prosystemingegneri.preesence.business.worker.boundary.WorkerService;
 import com.prosystemingegneri.preesence.business.worker.entity.Worker;
 import com.prosystemingegneri.preesence.presentation.ExceptionUtility;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.ejb.EJBException;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -58,6 +61,16 @@ public class WorkerPresenter implements Serializable{
             else
                 worker = service.readWorker(id);
         }
+    }
+    
+    public List<UserApp> listUsersNotAssociatedWithWorkers() {
+        List<UserApp> result = service.listUsersNotAssociatedWithWorkers();
+        if (result == null)
+            result = new ArrayList<>();
+        if (worker != null && worker.getUser() != null)
+            result.add(worker.getUser());
+        
+        return result;
     }
 
     public Worker getWorker() {

@@ -27,7 +27,7 @@
                     <b:selectOneMenu id="user" value="#{workerPresenter.worker.user}">
                         <f:converter converterId="omnifaces.SelectItemsConverter" />
                         <f:selectItem itemLabel="#{msg.manageUsers_user_noSelection}" noSelectionOption="true"/>
-                        <f:selectItems value="#{listUserPresenter.users}"
+                        <f:selectItems value="#{workerPresenter.listUsersNotAssociatedWithWorkers()}"
                                        var="user"
                                        itemLabel="#{user.userName}"
                                        itemValue="#{user}"/>

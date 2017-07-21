@@ -16,6 +16,7 @@
  */
 package com.prosystemingegneri.preesence.business.worker.boundary;
 
+import com.prosystemingegneri.preesence.business.user.entity.UserApp;
 import com.prosystemingegneri.preesence.business.worker.entity.Worker;
 import com.prosystemingegneri.preesence.business.worker.entity.Worker_;
 import java.io.Serializable;
@@ -93,5 +94,17 @@ public class WorkerService implements Serializable {
         } catch (NonUniqueResultException ex) {
             return em.createQuery(select).getResultList().get(0);
         }
+    }
+    
+    public List<UserApp> listUsersNotAssociatedWithWorkers() {
+        String queryText = "SELECT u "
+                + "FROM UserApp u "
+                + "WHERE u.userName NOT IN "
+                + "("
+                    + "SELECT w.user.userName "
+                    + "FROM Worker w"
+                + ")";
+        
+        return em.createQuery(queryText).getResultList();
     }
 }
