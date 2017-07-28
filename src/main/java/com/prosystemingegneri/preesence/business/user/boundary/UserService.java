@@ -17,9 +17,12 @@
 package com.prosystemingegneri.preesence.business.user.boundary;
 
 import com.prosystemingegneri.preesence.business.user.entity.UserApp;
+import com.prosystemingegneri.preesence.business.worker.boundary.WorkerService;
+import com.prosystemingegneri.preesence.business.worker.entity.Worker;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -35,7 +38,13 @@ public class UserService {
     @PersistenceContext
     EntityManager em;
     
-    public UserApp saveUserApp(UserApp userApp) {
+    @Inject
+    WorkerService workerService;
+    
+    public UserApp saveUserApp(UserApp userApp, boolean isCreatingWorker) {
+        if (isCreatingWorker && workerService.findWorker(userApp) == null)
+            workerService.createWorker(userApp);
+        
         return em.merge(userApp);
     }
     

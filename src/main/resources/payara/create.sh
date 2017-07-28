@@ -1,6 +1,6 @@
 #!/bin/sh
 
-readonly IP_ADDRESS=192.168.0.102
+readonly IP_ADDRESS=192.168.0.107
 
 ./asadmin start-domain
 wget -P ../glassfish/domains/domain1/lib/ext/ https://jdbc.postgresql.org/download/postgresql-42.0.0.jar

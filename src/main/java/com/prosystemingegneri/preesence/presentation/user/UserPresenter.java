@@ -20,6 +20,7 @@ import com.prosystemingegneri.preesence.business.user.boundary.UserService;
 import com.prosystemingegneri.preesence.business.user.entity.UserApp;
 import com.prosystemingegneri.preesence.presentation.ExceptionUtility;
 import java.io.Serializable;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJBException;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -40,6 +41,14 @@ public class UserPresenter implements Serializable {
     private UserApp user;
     private String id;
     
+    private boolean isCreatingWorker;
+    
+    @PostConstruct
+    private void init() {
+        isCreatingWorker = true;
+    }
+    
+    
     public void readUserApp() {
         if (id != null && !id.isEmpty())
             user = userService.readUserApp(id);
@@ -47,7 +56,7 @@ public class UserPresenter implements Serializable {
     
     public String saveUserApp() {
         try {
-            user = userService.saveUserApp(user);
+            user = userService.saveUserApp(user, isCreatingWorker);
         } catch (EJBException e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", ExceptionUtility.unwrap(e.getCausedByException()).getLocalizedMessage()));
             return null;
@@ -70,6 +79,14 @@ public class UserPresenter implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public boolean isIsCreatingWorker() {
+        return isCreatingWorker;
+    }
+
+    public void setIsCreatingWorker(boolean isCreatingWorker) {
+        this.isCreatingWorker = isCreatingWorker;
     }
     
 }

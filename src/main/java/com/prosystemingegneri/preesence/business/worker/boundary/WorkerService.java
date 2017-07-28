@@ -58,6 +58,14 @@ public class WorkerService implements Serializable {
         em.remove(readWorker(id));
     }
     
+    public void createWorker(UserApp user) {
+        Worker worker = new Worker();
+        worker.setName(user.getUserName());
+        worker.setUser(user);
+        
+        saveWorker(worker);
+    }
+    
     public List<Worker> listWorkers() {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Worker> query = cb.createQuery(Worker.class);
@@ -67,6 +75,27 @@ public class WorkerService implements Serializable {
         query.orderBy(cb.asc(root.get(Worker_.name)));
 
         return em.createQuery(select).getResultList();
+    }
+    
+    public Worker findWorker(UserApp user) {
+        if (user != null) {
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Worker> query = cb.createQuery(Worker.class);
+            Root<Worker> root = query.from(Worker.class);
+            CriteriaQuery<Worker> select = query.select(root).distinct(true);
+            
+            query.where(cb.equal(root.get(Worker_.user), user));
+
+            try {
+                return em.createQuery(select).getSingleResult();
+            } catch (NoResultException e) {
+                return null;
+            } catch (NonUniqueResultException ex) {
+                return em.createQuery(select).getResultList().get(0);
+            }
+        }
+        
+        return null;
     }
     
     public Worker findWorker(String name, boolean isCaseSensitive) {

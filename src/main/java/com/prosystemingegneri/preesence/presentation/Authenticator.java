@@ -91,7 +91,7 @@ public class Authenticator implements Serializable {
             if (loggedUser.getPassword().equals(hashPassword(oldPassword))) {
                 if (newPassword1.equals(newPassword2)) {
                     loggedUser.setPassword(hashPassword(newPassword1));
-                    loggedUser = userService.saveUserApp(loggedUser);
+                    loggedUser = userService.saveUserApp(loggedUser, false);
                 }
                 else {
                     FacesContext.getCurrentInstance().addMessage("changePasswordForm:newPassword2", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Wrong new password", "New passwords must be equals"));

@@ -35,6 +35,10 @@
                                        itemValue="#{group}"/>
                     </h:selectManyListbox>
                     <b:message/>
+                    
+                    <h:outputLabel for="creatingWorker" value="#{msg.worker_createWorkerWhileUser}"/>
+                    <b:switch id="creatingWorker" value="#{userPresenter.isCreatingWorker}" />
+                    <b:message/>
                 </b:panelGrid>
                 <br/>
                 <b:row>

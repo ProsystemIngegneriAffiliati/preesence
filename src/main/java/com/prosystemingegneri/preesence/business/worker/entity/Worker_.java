@@ -27,5 +27,5 @@ import javax.persistence.metamodel.StaticMetamodel;
 @StaticMetamodel(Worker.class)
 public class Worker_ {
     public static volatile SingularAttribute<Worker, String> name;
-    public static volatile SingularAttribute<UserApp, String> user;
+    public static volatile SingularAttribute<Worker, UserApp> user;
 }
