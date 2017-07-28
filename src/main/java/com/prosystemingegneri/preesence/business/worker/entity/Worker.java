@@ -17,12 +17,16 @@
 package com.prosystemingegneri.preesence.business.worker.entity;
 
 import com.prosystemingegneri.preesence.business.entity.BaseEntity;
+import com.prosystemingegneri.preesence.business.presence.entity.Presence;
 import com.prosystemingegneri.preesence.business.user.entity.UserApp;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
@@ -45,10 +49,14 @@ public class Worker extends BaseEntity<Long> {
     @OneToOne(optional = false)
     private UserApp user;
     
+    @OneToMany(mappedBy = "worker", orphanRemoval = true)
+    private List<Presence> presences;
+    
     @Version
     private int version;
 
     public Worker() {
+        presences = new ArrayList<>();
     }
 
     public String getName() {
@@ -70,6 +78,21 @@ public class Worker extends BaseEntity<Long> {
 
     public void setUser(UserApp user) {
         this.user = user;
+    }
+
+    public List<Presence> getPresences() {
+        return presences;
+    }
+    
+    public void addPresence(Presence presence) {
+        presence.setWorker(this);
+        if (!presences.contains(presence))
+            presences.add(presence);
+    }
+    
+    public void removePresence(Presence presence) {
+        presence.setWorker(null);
+        presences.remove(presence);
     }
     
 }
