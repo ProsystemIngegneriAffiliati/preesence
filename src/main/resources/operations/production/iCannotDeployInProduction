@@ -1,0 +1,10 @@
+La issue è tracciata su
+https://github.com/payara/Payara/issues/3284
+
+Sostituire il file
+grizzly-npn-bootstrap.jar
+nella cartella $PAYARA5_INSTALL$/glassfish/lib/
+
+dalla home eseguire il seguente comando
+
+scp payara5/glassfish/lib/grizzly-npn-bootstrap.jar root@178.239.180.202:/opt/payara5/glassfish/lib/
