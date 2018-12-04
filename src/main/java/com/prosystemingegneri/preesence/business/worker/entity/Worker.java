@@ -16,47 +16,26 @@
  */
 package com.prosystemingegneri.preesence.business.worker.entity;
 
+import com.prosystemingegneri.preesence.business.auth.entity.UserApp;
 import com.prosystemingegneri.preesence.business.entity.BaseEntity;
-import com.prosystemingegneri.preesence.business.presence.entity.Presence;
-import com.prosystemingegneri.preesence.business.user.entity.UserApp;
-import java.util.ArrayList;
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Version;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotEmpty;
 
 /**
  *
  * @author Davide Mainardi <ingmainardi@live.com>
  */
 @Entity
-public class Worker extends BaseEntity<Long> {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    
-    @NotNull
+public class Worker extends BaseEntity {
     @Column(nullable = false, unique = true)
-    private String name;
+    private @NotEmpty String name;
     
-    @NotNull
-    @OneToOne(optional = false)
-    private UserApp user;
-    
-    @OneToMany(mappedBy = "worker", orphanRemoval = true)
-    private List<Presence> presences;
-    
-    @Version
-    private int version;
+    @OneToOne
+    private UserApp userApp;
 
     public Worker() {
-        presences = new ArrayList<>();
     }
 
     public String getName() {
@@ -67,32 +46,12 @@ public class Worker extends BaseEntity<Long> {
         this.name = name;
     }
 
-    @Override
-    public Long getId() {
-        return id;
+    public UserApp getUserApp() {
+        return userApp;
     }
 
-    public UserApp getUser() {
-        return user;
-    }
-
-    public void setUser(UserApp user) {
-        this.user = user;
-    }
-
-    public List<Presence> getPresences() {
-        return presences;
-    }
-    
-    public void addPresence(Presence presence) {
-        presence.setWorker(this);
-        if (!presences.contains(presence))
-            presences.add(presence);
-    }
-    
-    public void removePresence(Presence presence) {
-        presence.setWorker(null);
-        presences.remove(presence);
+    public void setUserApp(UserApp userApp) {
+        this.userApp = userApp;
     }
     
 }

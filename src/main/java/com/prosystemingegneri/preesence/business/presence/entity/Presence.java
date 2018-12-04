@@ -19,16 +19,12 @@ package com.prosystemingegneri.preesence.business.presence.entity;
 import com.prosystemingegneri.preesence.business.entity.BaseEntity;
 import com.prosystemingegneri.preesence.business.presence.controller.EndAfterStart;
 import com.prosystemingegneri.preesence.business.worker.entity.Worker;
-import java.util.Date;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -37,30 +33,20 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @EndAfterStart
-public class Presence extends BaseEntity<Long> {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    
-    @NotNull
+public class Presence extends BaseEntity {
     @ManyToOne(optional = false)
-    private Worker worker;
+    private @NotNull Worker worker;
     
-    @NotNull
     @Column(nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date startTimestamp;
+    private @NotNull LocalDateTime start;
     
     @Temporal(TemporalType.TIMESTAMP)
-    private Date endTimestamp;
+    private LocalDateTime end;
     
     private String notes;
-    
-    @Version
-    private int version;
 
     public Presence() {
-        startTimestamp = new Date();
+        start = LocalDateTime.now();
     }
 
     public Worker getWorker() {
@@ -71,20 +57,20 @@ public class Presence extends BaseEntity<Long> {
         this.worker = worker;
     }
 
-    public Date getStartTimestamp() {
-        return startTimestamp;
+    public LocalDateTime getStart() {
+        return start;
     }
 
-    public void setStartTimestamp(Date startTimestamp) {
-        this.startTimestamp = startTimestamp;
+    public void setStart(LocalDateTime start) {
+        this.start = start;
     }
 
-    public Date getEndTimestamp() {
-        return endTimestamp;
+    public LocalDateTime getEnd() {
+        return end;
     }
 
-    public void setEndTimestamp(Date endTimestamp) {
-        this.endTimestamp = endTimestamp;
+    public void setEnd(LocalDateTime end) {
+        this.end = end;
     }
 
     public String getNotes() {
@@ -93,11 +79,6 @@ public class Presence extends BaseEntity<Long> {
 
     public void setNotes(String notes) {
         this.notes = notes;
-    }
-
-    @Override
-    public Long getId() {
-        return id;
     }
     
 }

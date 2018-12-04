@@ -1,33 +1,40 @@
 package com.prosystemingegneri.preesence.business.entity;
 
 import java.io.Serializable;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Version;
 
 /**
  *
  * @author Bauke Scholtz
- * @param <T> IDs must extend Number class
  */
-public abstract class BaseEntity<T extends Number> implements Serializable {
-
+@MappedSuperclass
+public abstract class BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    public abstract T getId();
-
-    //public abstract void setId(T id); //ID's are auto-generated, so there is no need to set them
+    @Version
+    private int version;
 
     @Override
     public int hashCode() {
-        return (getId() != null) 
-            ? (getClass().getSimpleName().hashCode() + getId().hashCode())
+        return (id != null) 
+            ? (getClass().getSimpleName().hashCode() + id.hashCode())
             : super.hashCode();
     }
 
     @Override
     public boolean equals(Object other) {
-        return (other != null && getId() != null
+        return (other != null && id != null
                 && other.getClass().isAssignableFrom(getClass()) 
                 && getClass().isAssignableFrom(other.getClass())) 
-            ? getId().equals(((BaseEntity<?>) other).getId())
+            ? id.equals(((BaseEntity) other).getId())
             : (other == this);
     }
 
@@ -36,4 +43,11 @@ public abstract class BaseEntity<T extends Number> implements Serializable {
         return String.format("%s[id=%d]", getClass().getSimpleName(), getId());
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public int getVersion() {
+        return version;
+    }
 }

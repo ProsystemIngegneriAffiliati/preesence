@@ -16,19 +16,23 @@
  */
 package com.prosystemingegneri.preesence.business.worker.boundary;
 
-import com.prosystemingegneri.preesence.business.user.entity.UserApp;
+import com.prosystemingegneri.preesence.business.auth.entity.UserApp;
+import com.prosystemingegneri.preesence.business.auth.entity.UserApp_;
 import com.prosystemingegneri.preesence.business.worker.entity.Worker;
 import com.prosystemingegneri.preesence.business.worker.entity.Worker_;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -41,99 +45,118 @@ public class WorkerService implements Serializable {
     @PersistenceContext
     EntityManager em;
     
-    public Worker saveWorker(Worker worker) {
+    public Worker create() {
+        return new Worker();
+    }
+    
+    public Worker save(Worker worker) {
         if (worker.getId() == null)
             em.persist(worker);
         else
             return em.merge(worker);
         
-        return null;
+        return worker;
     }
     
-    public Worker readWorker(Long id) {
+    public Worker find(Long id) {
         return em.find(Worker.class, id);
     }
     
-    public void deleteWorker(Long id) {
-        em.remove(readWorker(id));
+    public void delete(Long id) {
+        em.remove(find(id));
     }
     
-    public void createWorker(UserApp user) {
-        Worker worker = new Worker();
-        worker.setName(user.getUserName());
-        worker.setUser(user);
-        
-        saveWorker(worker);
-    }
-    
-    public List<Worker> listWorkers() {
+    public List<Worker> list(int first, int pageSize, String sortField, Boolean isAscending, String name) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Worker> query = cb.createQuery(Worker.class);
         Root<Worker> root = query.from(Worker.class);
         CriteriaQuery<Worker> select = query.select(root).distinct(true);
         
-        query.orderBy(cb.asc(root.get(Worker_.name)));
+        List<Predicate> conditions = calculateConditions(cb, root, name);
 
-        return em.createQuery(select).getResultList();
+        if (!conditions.isEmpty())
+            query.where(conditions.toArray(new Predicate[conditions.size()]));
+        
+        Order order = cb.asc(root.get(Worker_.name));
+        if (isAscending != null && sortField != null && !sortField.isEmpty()) {
+            Path<?> path;
+            switch (sortField) {
+                case "name":
+                    path = root.get(Worker_.name);
+                    break;
+                default:
+                    path = root.get(sortField);
+            }
+            if (isAscending)
+                order = cb.asc(path);
+            else
+                order = cb.desc(path);
+        }
+        query.orderBy(order);
+        
+        TypedQuery<Worker> typedQuery = em.createQuery(select);
+        if (pageSize > 0) {
+            typedQuery.setMaxResults(pageSize);
+            typedQuery.setFirstResult(first);   
+        }
+
+        return typedQuery.getResultList();
     }
     
-    public Worker findWorker(UserApp user) {
-        if (user != null) {
+    public Long getCount(String name) {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Long> query = cb.createQuery(Long.class);
+        Root<Worker> root = query.from(Worker.class);
+        CriteriaQuery<Long> select = query.select(cb.count(root));
+
+        List<Predicate> conditions = calculateConditions(cb, root, name);
+
+        if (!conditions.isEmpty())
+            query.where(conditions.toArray(new Predicate[conditions.size()]));
+
+        return em.createQuery(select).getSingleResult();
+    }
+    
+    private List<Predicate> calculateConditions(CriteriaBuilder cb, Root<Worker> root, String name) {
+        List<Predicate> conditions = new ArrayList<>();
+        
+        //Worker's name
+        if (name != null && !name.isEmpty())
+            conditions.add(cb.like(cb.lower(root.get(Worker_.name)), "%" + name.toLowerCase() + "%"));
+        
+        return conditions;
+    }
+    
+    public Optional<Worker> find(String userAppUsername, UserApp userApp) {
+        if ((userAppUsername != null && !userAppUsername.isEmpty()) || userApp != null) {
             CriteriaBuilder cb = em.getCriteriaBuilder();
             CriteriaQuery<Worker> query = cb.createQuery(Worker.class);
             Root<Worker> root = query.from(Worker.class);
-            CriteriaQuery<Worker> select = query.select(root).distinct(true);
-            
-            query.where(cb.equal(root.get(Worker_.user), user));
 
+            List<Predicate> conditions = new ArrayList<>();
+            
+            if (userAppUsername != null && !userAppUsername.isEmpty())
+                conditions.add(cb.like(root.join(Worker_.userApp).get(UserApp_.username), userAppUsername));
+            
+            if (userApp != null)
+                conditions.add(cb.equal(root.get(Worker_.userApp), userApp));
+
+            if (!conditions.isEmpty())
+                query.where(conditions.toArray(new Predicate[conditions.size()]));
+
+            Worker result;
             try {
-                return em.createQuery(select).getSingleResult();
+                result = em.createQuery(query).getSingleResult();
+                if (result == null)
+                    return Optional.empty();
             } catch (NoResultException e) {
-                return null;
-            } catch (NonUniqueResultException ex) {
-                return em.createQuery(select).getResultList().get(0);
+                return Optional.empty();
             }
+
+            return Optional.of(result);
         }
         
-        return null;
+        return Optional.empty();
     }
     
-    public Worker findWorker(String name, boolean isCaseSensitive) {
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Worker> query = cb.createQuery(Worker.class);
-        Root<Worker> root = query.from(Worker.class);
-        CriteriaQuery<Worker> select = query.select(root).distinct(true);
-        
-        List<Predicate> conditions = new ArrayList<>();
-        if (name != null && !name.isEmpty()) {
-            if (isCaseSensitive)
-                conditions.add(cb.equal(root.get(Worker_.name), name));
-            else
-                conditions.add(cb.equal(cb.lower(root.get(Worker_.name)), name.toLowerCase()));
-        }
-        
-        if (!conditions.isEmpty()) {
-            query.where(conditions.toArray(new Predicate[conditions.size()]));
-        }
-        
-        try {
-            return em.createQuery(select).getSingleResult();
-        } catch (NoResultException e) {
-            return null;
-        } catch (NonUniqueResultException ex) {
-            return em.createQuery(select).getResultList().get(0);
-        }
-    }
-    
-    public List<UserApp> listUsersNotAssociatedWithWorkers() {
-        String queryText = "SELECT u "
-                + "FROM UserApp u "
-                + "WHERE u.userName NOT IN "
-                + "("
-                    + "SELECT w.user.userName "
-                    + "FROM Worker w"
-                + ")";
-        
-        return em.createQuery(queryText).getResultList();
-    }
 }
