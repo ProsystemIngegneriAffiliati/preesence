@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Prosystem Ingegneri Affiliati
+ * Copyright (C) 2018 Prosystem Ingegneri Affiliati
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,35 +14,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.prosystemingegneri.preesence.presentation.user;
+package com.prosystemingegneri.preesence.presentation.auth;
 
-import com.prosystemingegneri.preesence.business.user.boundary.GroupService;
-import com.prosystemingegneri.preesence.business.user.entity.GroupApp;
-import java.io.Serializable;
-import java.util.List;
-import javax.annotation.PostConstruct;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import org.omnifaces.cdi.ViewScoped;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import org.omnifaces.util.Faces;
+import static org.omnifaces.util.Faces.invalidateSession;
+import static org.omnifaces.util.Faces.redirect;
 
 /**
  *
- * @author Davide Mainardi <ingmainardi@live.com>
+ * @author Davide Mainardi <ingmainardi at live.com>
  */
 @Named
-@ViewScoped
-public class ListGroupPresenter implements Serializable{
-    private List<GroupApp> groups;
-    
-    @Inject
-    GroupService service;
-    
-    @PostConstruct
-    public void init() {
-        groups = service.listGroupApps();
-    }
+@RequestScoped
+public class LogoutPresenter {
 
-    public List<GroupApp> getGroups() {
-        return groups;
+    @Inject
+    private HttpServletRequest request;
+
+    public void submit() throws ServletException {
+        Faces.logout();
+        invalidateSession();
+        redirect("index");
     }
 }

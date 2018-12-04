@@ -49,6 +49,10 @@ public class PresenceService implements Serializable {
     @Inject
     WorkerService workerService;
     
+    public Presence create() {
+        return new Presence();
+    }
+    
     public Presence save(Presence presence) {
         Presence tempPresence = presence;
         

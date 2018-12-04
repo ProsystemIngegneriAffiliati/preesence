@@ -18,16 +18,14 @@ package com.prosystemingegneri.preesence.presentation.worker;
 
 import com.prosystemingegneri.preesence.business.worker.boundary.WorkerService;
 import com.prosystemingegneri.preesence.business.worker.entity.Worker;
-import com.prosystemingegneri.preesence.presentation.ExceptionUtility;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.ejb.EJBException;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.omnifaces.cdi.ViewScoped;
+import org.omnifaces.util.Messages;
 
 /**
  *
@@ -37,33 +35,57 @@ import org.omnifaces.cdi.ViewScoped;
 @ViewScoped
 public class WorkerListPresenter implements Serializable{
     @Inject
-    WorkerService service;
+    private WorkerService service;
     
+    private WorkerLazyDataModel lazyWorkers;
+    private List<Worker> selectedWorkers;
     private List<Worker> workers;
     
     @PostConstruct
     public void init() {
-        workers = service.listWorkers();
+        lazyWorkers = new WorkerLazyDataModel(service);
+        workers = new ArrayList<>();
     }
     
-    public void deleteWorker(Long id) {
-        if (id != null) {
-            try {
-                service.deleteWorker(id);
-            } catch (EJBException e) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", ExceptionUtility.unwrap(e.getCausedByException()).getLocalizedMessage()));
-            }
-            workers = service.listWorkers();
-        }
+    public void deleteWorker() {
+        if (selectedWorkers != null && !selectedWorkers.isEmpty())
+            for (Worker worker : selectedWorkers)
+                service.delete(worker.getId());
         else
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Missing selection", "Select a row before deleting"));
+            Messages.create("missingSelection").warn().detail("missingSelection.tip").add();
     }
-
-    public List<Worker> getWorkers() {
+    
+    public List<Worker> complete(String name) {
+        workers = service.list(0, 10, null, null, name);
+        return workers;
+    }
+    
+    /**
+     * Useful only for 'omnifaces.ListConverter' used in 'p:autoComplete'
+     * 
+     * @param defaultWorker Needed when jsf page read not null autocomplete (when, for example, open a already saved entity)
+     * @return 
+     */
+    public List<Worker> getWorkers(Worker defaultWorker) {
+        if (workers.isEmpty())
+            workers.add(defaultWorker);
         return workers;
     }
 
-    public void setWorkers(List<Worker> workers) {
-        this.workers = workers;
+    public WorkerLazyDataModel getLazyWorkers() {
+        return lazyWorkers;
     }
+
+    public void setLazyWorkers(WorkerLazyDataModel lazyWorkers) {
+        this.lazyWorkers = lazyWorkers;
+    }
+
+    public List<Worker> getSelectedWorkers() {
+        return selectedWorkers;
+    }
+
+    public void setSelectedWorkers(List<Worker> selectedWorker) {
+        this.selectedWorkers = selectedWorker;
+    }
+    
 }

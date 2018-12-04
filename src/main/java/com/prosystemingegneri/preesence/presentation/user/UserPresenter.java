@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Prosystem Ingegneri Affiliati
+ * Copyright (C) 2018 Prosystem Ingegneri Affiliati
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,61 +16,48 @@
  */
 package com.prosystemingegneri.preesence.presentation.user;
 
-import com.prosystemingegneri.preesence.business.user.boundary.UserService;
-import com.prosystemingegneri.preesence.business.user.entity.UserApp;
-import com.prosystemingegneri.preesence.presentation.ExceptionUtility;
+import com.prosystemingegneri.preesence.business.auth.boundary.UserAppService;
+import com.prosystemingegneri.preesence.business.auth.entity.UserApp;
 import java.io.Serializable;
-import javax.annotation.PostConstruct;
-import javax.ejb.EJBException;
-import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.omnifaces.cdi.ViewScoped;
+import org.omnifaces.util.Messages;
 
 /**
  *
- * @author Davide Mainardi <ingmainardi@live.com>
+ * @author Davide Mainardi <ingmainardi at live.com>
  */
 @Named
 @ViewScoped
-public class UserPresenter implements Serializable {
+public class UserPresenter implements Serializable{
     @Inject
-    UserService userService;
+    private UserAppService service;
     
-    private UserApp user;
+    @Inject
+    private FacesContext facesContext;
+    
+    private UserApp userApp;
     private String id;
     
-    private boolean isCreatingWorker;
-    
-    @PostConstruct
-    private void init() {
-        isCreatingWorker = true;
-    }
-    
-    
-    public void readUserApp() {
-        if (id != null && !id.isEmpty())
-            user = userService.readUserApp(id);
-    }
-    
     public String saveUserApp() {
-        try {
-            user = userService.saveUserApp(user, isCreatingWorker);
-        } catch (EJBException e) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", ExceptionUtility.unwrap(e.getCausedByException()).getLocalizedMessage()));
-            return null;
-        }
-        
-        return "/secured/manageUser/users?faces-redirect=true";
+        service.update(userApp);
+        Messages.create("success").detail("user.user.updated").flash().add();
+        return facesContext.getViewRoot().getViewId() + "?faces-redirect=true&includeViewParams=true";
+    }
+    
+    public void detailUserApp() {
+        if (id != null)
+            userApp = service.find(id);
     }
 
     public UserApp getUserApp() {
-        return user;
+        return userApp;
     }
 
     public void setUserApp(UserApp userApp) {
-        this.user = userApp;
+        this.userApp = userApp;
     }
 
     public String getId() {
@@ -79,14 +66,6 @@ public class UserPresenter implements Serializable {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public boolean isIsCreatingWorker() {
-        return isCreatingWorker;
-    }
-
-    public void setIsCreatingWorker(boolean isCreatingWorker) {
-        this.isCreatingWorker = isCreatingWorker;
     }
     
 }

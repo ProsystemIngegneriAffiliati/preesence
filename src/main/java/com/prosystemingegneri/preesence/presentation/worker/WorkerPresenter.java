@@ -16,19 +16,14 @@
  */
 package com.prosystemingegneri.preesence.presentation.worker;
 
-import com.prosystemingegneri.preesence.business.user.entity.UserApp;
 import com.prosystemingegneri.preesence.business.worker.boundary.WorkerService;
 import com.prosystemingegneri.preesence.business.worker.entity.Worker;
-import com.prosystemingegneri.preesence.presentation.ExceptionUtility;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import javax.ejb.EJBException;
-import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.omnifaces.cdi.ViewScoped;
+import org.omnifaces.util.Messages;
 
 /**
  *
@@ -38,39 +33,30 @@ import org.omnifaces.cdi.ViewScoped;
 @ViewScoped
 public class WorkerPresenter implements Serializable{
     @Inject
-    WorkerService service;
+    private WorkerService service;
+    
+    @Inject
+    private FacesContext facesContext;
     
     private Worker worker;
     private Long id;
     
-    public String saveWorker() {
-        try {
-            service.saveWorker(worker);
-        } catch (EJBException e) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", ExceptionUtility.unwrap(e.getCausedByException()).getLocalizedMessage()));
-            return null;
-        }
+    public String save() {
+        worker = service.save(worker);
+        Messages.create("success").detail("saved").flash().add();
+        if (id == 0L)
+            id = worker.getId();
         
-        return "/secured/worker/workers?faces-redirect=true";
+        return facesContext.getViewRoot().getViewId() + "?faces-redirect=true&includeViewParams=true";
     }
     
-    public void detailWorker() {
+    public void detail() {
         if (id != null) {
             if (id == 0)
-                worker = new Worker();
+                worker = service.create();
             else
-                worker = service.readWorker(id);
+                worker = service.find(id);
         }
-    }
-    
-    public List<UserApp> listUsersNotAssociatedWithWorkers() {
-        List<UserApp> result = service.listUsersNotAssociatedWithWorkers();
-        if (result == null)
-            result = new ArrayList<>();
-        if (worker != null && worker.getUser() != null)
-            result.add(worker.getUser());
-        
-        return result;
     }
 
     public Worker getWorker() {
@@ -88,4 +74,5 @@ public class WorkerPresenter implements Serializable{
     public void setId(Long id) {
         this.id = id;
     }
+    
 }

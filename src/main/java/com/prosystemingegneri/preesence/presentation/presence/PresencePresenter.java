@@ -18,21 +18,13 @@ package com.prosystemingegneri.preesence.presentation.presence;
 
 import com.prosystemingegneri.preesence.business.presence.boundary.PresenceService;
 import com.prosystemingegneri.preesence.business.presence.entity.Presence;
-import com.prosystemingegneri.preesence.business.user.entity.UserApp;
-import com.prosystemingegneri.preesence.presentation.ExceptionUtility;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import javax.annotation.Resource;
-import javax.ejb.EJBException;
-import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
-import javax.validation.groups.Default;
 import org.omnifaces.cdi.ViewScoped;
+import org.omnifaces.util.Messages;
+
 
 /**
  *
@@ -42,39 +34,29 @@ import org.omnifaces.cdi.ViewScoped;
 @ViewScoped
 public class PresencePresenter implements Serializable{
     @Inject
-    PresenceService service;
+    private PresenceService service;
+    
+    @Inject
+    private FacesContext facesContext;
     
     private Presence presence;
     private Long id;
     
-    @Resource
-    Validator validator;
-    
-    public String savePresence() {
-        boolean isValidated = true;
-        for (ConstraintViolation<Presence> constraintViolation : validator.validate(presence, Default.class)) {
-            isValidated = false;
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", constraintViolation.getMessage()));
-        }
-        if (!isValidated)
-            return null;
+    public String save() {
+        presence = service.save(presence);
+        Messages.create("success").detail("saved").flash().add();
+        if (id == 0L)
+            id = presence.getId();
         
-        try {
-            service.savePresence(presence);
-        } catch (EJBException e) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", ExceptionUtility.unwrap(e.getCausedByException()).getLocalizedMessage()));
-            return null;
-        }
-        
-        return "/secured/presence/presences?faces-redirect=true";
+        return facesContext.getViewRoot().getViewId() + "?faces-redirect=true&includeViewParams=true";
     }
     
-    public void detailPresence() {
+    public void detail() {
         if (id != null) {
             if (id == 0)
-                presence = new Presence();
+                presence = service.create();
             else
-                presence = service.readPresence(id);
+                presence = service.find(id);
         }
     }
 
@@ -93,4 +75,5 @@ public class PresencePresenter implements Serializable{
     public void setId(Long id) {
         this.id = id;
     }
+    
 }

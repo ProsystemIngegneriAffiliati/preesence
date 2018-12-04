@@ -18,20 +18,14 @@ package com.prosystemingegneri.preesence.presentation.presence;
 
 import com.prosystemingegneri.preesence.business.presence.boundary.PresenceService;
 import com.prosystemingegneri.preesence.business.presence.entity.Presence;
-import com.prosystemingegneri.preesence.business.worker.entity.Worker;
-import com.prosystemingegneri.preesence.presentation.ExceptionUtility;
 import java.io.Serializable;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.ejb.EJBException;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.omnifaces.cdi.ViewScoped;
+import org.omnifaces.util.Messages;
+
 
 /**
  *
@@ -41,81 +35,38 @@ import org.omnifaces.cdi.ViewScoped;
 @ViewScoped
 public class PresenceListPresenter implements Serializable{
     @Inject
-    PresenceService service;
+    private PresenceService service;
     
-    private List<Presence> presences;
-    
-    private Date start;
-    private Date end;
-    private Worker worker;
-    private Boolean isPresenceNotEnded;
+    private PresenceLazyDataModel lazyPresences;
+    private List<Presence> selectedPresences;
     
     @PostConstruct
-    public void init() {        
-        Calendar startCalendar = new GregorianCalendar();
-        startCalendar.set(Calendar.DAY_OF_MONTH, 1);
-        startCalendar.set(Calendar.MONTH, 0);
-        start = startCalendar.getTime();
-        
-        Calendar endCalendar = new GregorianCalendar();
-        endCalendar.add(Calendar.DAY_OF_YEAR, 1);
-        end = endCalendar.getTime();
-        
-        updatePresences();
+    public void init() {
+        lazyPresences = new PresenceLazyDataModel(service);
     }
     
-    public void updatePresences() {
-        presences = service.listPresences(start, end, worker, isPresenceNotEnded);
-    }
-    
-    
-    public void deletePresence(Long id) {
-        if (id != null) {
-            try {
-                service.deletePresence(id);
-            } catch (EJBException e) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", ExceptionUtility.unwrap(e.getCausedByException()).getLocalizedMessage()));
-            }
-            updatePresences();
-        }
+    public void deletePresence() {
+        if (selectedPresences != null && !selectedPresences.isEmpty())
+            for (Presence presence : selectedPresences)
+                service.delete(presence.getId());
         else
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Missing selection", "Select a row before deleting"));
+            Messages.create("missingSelection").warn().detail("missingSelection.tip").add();
     }
 
-    public List<Presence> getPresences() {
-        return presences;
+    public PresenceLazyDataModel getLazyPresences() {
+        return lazyPresences;
     }
 
-    public Date getStart() {
-        return start;
+    public void setLazyPresences(PresenceLazyDataModel lazyPresences) {
+        this.lazyPresences = lazyPresences;
     }
 
-    public void setStart(Date start) {
-        this.start = start;
+    public List<Presence> getSelectedPresences() {
+        return selectedPresences;
     }
 
-    public Date getEnd() {
-        return end;
-    }
-
-    public void setEnd(Date end) {
-        this.end = end;
-    }
-
-    public Worker getWorker() {
-        return worker;
-    }
-
-    public void setWorker(Worker worker) {
-        this.worker = worker;
-    }
-
-    public Boolean getIsPresenceNotEnded() {
-        return isPresenceNotEnded;
-    }
-
-    public void setIsPresenceNotEnded(Boolean isPresenceNotEnded) {
-        this.isPresenceNotEnded = isPresenceNotEnded;
+    public void setSelectedPresences(List<Presence> selectedPresence) {
+        this.selectedPresences = selectedPresence;
     }
     
 }
