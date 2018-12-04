@@ -50,7 +50,7 @@ public class UserListPresenter implements Serializable {
         lazyUserApps = new UserLazyDataModel(service);
     }
     
-    public void deleteUserApp() {
+    public void delete() {
         if (selectedUserApps != null && !selectedUserApps.isEmpty()) {
             for (UserApp userApp : selectedUserApps) {
                 if (!externalContext.getUserPrincipal().getName().equals(userApp.getUsername()))
@@ -78,14 +78,19 @@ public class UserListPresenter implements Serializable {
     }
     
     public List<UserApp> completeUnassociatedUserApps(String nome) {
-        return service.listUserApps(0, 25, null, null, nome, null, Boolean.FALSE);
+        unassociatedUserApps = service.listUserApps(0, 10, null, null, nome, null, Boolean.FALSE);
+        return unassociatedUserApps;
     }
     
-    //Useful only for 'omnifaces.ListConverter' used in 'p:autoComplete'
-    public List<UserApp> getUnassociatedUserApps() {
-        if (unassociatedUserApps == null || unassociatedUserApps.isEmpty())
-            unassociatedUserApps = service.listUserApps(0, 0, null, null, null, null, Boolean.FALSE);
-        
+    /**
+     * Useful only for 'omnifaces.ListConverter' used in 'p:autoComplete'
+     * 
+     * @param defaultUserApp Needed when jsf page read not null autocomplete (when, for example, open a already saved entity)
+     * @return 
+     */
+    public List<UserApp> getUnassociatedUserApps(UserApp defaultUserApp) {
+        if (unassociatedUserApps.isEmpty())
+            unassociatedUserApps.add(defaultUserApp);
         return unassociatedUserApps;
     }
     

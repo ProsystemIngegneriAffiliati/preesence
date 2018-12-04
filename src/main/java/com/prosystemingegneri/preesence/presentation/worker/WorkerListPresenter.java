@@ -47,7 +47,7 @@ public class WorkerListPresenter implements Serializable{
         workers = new ArrayList<>();
     }
     
-    public void deleteWorker() {
+    public void delete() {
         if (selectedWorkers != null && !selectedWorkers.isEmpty())
             for (Worker worker : selectedWorkers)
                 service.delete(worker.getId());

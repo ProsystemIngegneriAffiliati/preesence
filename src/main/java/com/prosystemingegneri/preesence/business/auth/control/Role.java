@@ -21,9 +21,9 @@ package com.prosystemingegneri.preesence.business.auth.control;
  * @author Davide Mainardi <ingmainardi at live.com>
  */
 public enum Role {
-    LAVORATORE(Constants.LAVORATORE),
-    GESTORE_PERSONALE(Constants.GESTORE_PERSONALE),
-    CONTROLLO_COMPLETO(Constants.CONTROLLO_COMPLETO);
+    WORKER(Constants.WORKER),
+    HUMAN_RESOURCES(Constants.HUMAN_RESOURCES),
+    FULL_CONTROL(Constants.FULL_CONTROL);
 
     private Role(String roleString) {
         if (!roleString.equals(this.name()))
@@ -34,8 +34,8 @@ public enum Role {
 
         //I am using this class to allow using enum in @RolesAllowed
         //see https://stackoverflow.com/a/16384334
-        public static final String LAVORATORE = "LAVORATORE";
-        public static final String GESTORE_PERSONALE = "GESTORE_PERSONALE";
-        public static final String CONTROLLO_COMPLETO = "CONTROLLO_COMPLETO";
+        public static final String WORKER = "WORKER";
+        public static final String HUMAN_RESOURCES = "HUMAN_RESOURCES";
+        public static final String FULL_CONTROL = "FULL_CONTROL";
     }
 }

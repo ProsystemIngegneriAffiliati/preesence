@@ -1,0 +1,46 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:define name="content">
+        <h:form id="form">
+            <div class="ui-g ui-fluid">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1>#{msg['user.users']}</h1>
+                        <p:dataTable id="usersTable"
+                                     var="user" value="#{userListPresenter.lazyUserApps}"
+                                     selectionMode="multiple" selection="#{userListPresenter.selectedUserApps}" rowKey="#{user.username}"
+                                     paginator="true" rows="10" paginatorAlwaysVisible="false"
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="10,25,50" lazy="true">
+                            <f:facet name="header">
+                                <p:panelGrid columns="2" columnClasses="lefted, righted" styleClass="ui-panelgrid-blank">
+                                    #{msg['user.users.tip']}
+                                    <p:outputPanel>
+                                        <p:commandButton title="#{msg['delete']}" icon="ui-icon-delete" actionListener="#{userListPresenter.delete()}" update="usersTable">
+                                            <p:confirm header="#{msg['user.users.delete']}" message="#{msg['user.users.delete.tip']}" icon="ui-icon-alert"/>
+                                        </p:commandButton>
+                                    </p:outputPanel>
+                                </p:panelGrid>
+                            </f:facet>
+                            <p:column headerText="#{msg['login.username']}" sortBy="#{username}" filterBy="#{username}" priority="0">
+                                <h:outputText value="#{user.username}" />
+                            </p:column>
+                            <p:column headerText="#{msg['user.group.name']}" sortBy="#{groupAppName}" filterBy="#{groupAppName}" priority="0">
+                                <h:outputText value="#{user.groupApp.name}" />
+                            </p:column>
+                            <p:column headerText="#{msg['actions']}" style="width:64px; text-align:center" priority="0" exportable="false">
+                                <p:button title="#{msg['edit']}" icon="ui-icon-edit" styleClass="AquaButton" outcome="/securedAdmin/user/user">
+                                    <f:param name="id" value="#{user.username}" />
+                                </p:button>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -41,13 +41,13 @@ public class UserPresenter implements Serializable{
     private UserApp userApp;
     private String id;
     
-    public String saveUserApp() {
+    public String save() {
         service.update(userApp);
         Messages.create("success").detail("user.user.updated").flash().add();
         return facesContext.getViewRoot().getViewId() + "?faces-redirect=true&includeViewParams=true";
     }
     
-    public void detailUserApp() {
+    public void detail() {
         if (id != null)
             userApp = service.find(id);
     }

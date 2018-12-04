@@ -1,0 +1,56 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:o="http://omnifaces.org/ui"
+                template="/WEB-INF/template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:define name="metadata">
+        <f:metadata>
+            <o:viewParam name="id"
+                         value="#{userPresenter.id}"
+                         required="true" />
+            <f:viewAction action="#{userPresenter.detail()}" />
+        </f:metadata>
+    </ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <div class="ui-g ui-fluid">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1>#{msg['user.user']}</h1>
+                        <p>#{msg['user.user.tip']}</p>
+                        <p:panelGrid columns="2" columnClasses="ui-grid-col-6,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank form-group">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText readonly="true" id="username" value="#{userPresenter.userApp.username}" />
+                                <p:outputLabel for="username" value="#{msg['user.user.username']}" />
+                                <p:message for="username"/>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:selectOneMenu id="group" value="#{userPresenter.userApp.groupApp}" converter="omnifaces.SelectItemsConverter">
+                                    <f:selectItem itemLabel="#{msg['user.group.selectOne']}" itemValue="" />
+                                    <f:selectItems
+                                        value="#{groupListPresenter.groups}"
+                                        var="group"
+                                        itemLabel="#{group.name}"
+                                        itemValue="#{group}" />
+                                </p:selectOneMenu>
+                                <p:message for="group"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+                </div>
+                <div class="ui-g-1 ui-md-2"></div>
+                <div class="ui-g-4 ui-md-3">
+                    <p:button value="#{msg['cancel']}" title="#{msg['cancel.tip']}" outcome="/securedAdmin/user/users" styleClass="secondary"/>
+                </div>
+                <div class="ui-g-2 ui-md-2"></div>
+                <div class="ui-g-4 ui-md-3">
+                    <p:commandButton value="#{msg['save']}"
+                                     action="#{userPresenter.save()}"
+                                     ajax="false"/>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

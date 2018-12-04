@@ -1,21 +1,27 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:b="http://bootsfaces.net/ui"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
-    <ui:composition template="template/basic.xhtml">
-        <ui:define name="content">
-            <b:jumbotron>
-                <h1>#{msg.appName}</h1>
-                <p>#{msg.appName_tip}</p>
-                <p><a href="https://github.com/ProsystemIngegneriAffiliati/preesence" class="btn btn-lg btn-info">ah ah ah</a></p>
-            </b:jumbotron>
-            <b:row>
-                <b:column visible="xs">XS</b:column>
-                <b:column visible="sm">SM</b:column>
-                <b:column visible="md">MD</b:column>
-                <b:column visible="lg">LG</b:column>
-            </b:row>
-        </ui:define>
-    </ui:composition>
-</html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <div class="card">
+                    <h1>Main page</h1>
+                    <p>Default users are:
+                        <ul>
+                            <li>guestWorker - demo</li>
+                            <li>guestHr - demo</li>
+                            <li>demoAdmin - demo</li>
+                        </ul>
+                    </p>
+                    <p:button outcome="securedBasic/welcome" value="Go to the secret place" style="display:inline-block;margin-top:5px"/>
+                </div>
+            </div>
+        </div>
+        
+    </ui:define>
+
+</ui:composition>

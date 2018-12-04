@@ -1,0 +1,121 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:jsf="http://xmlns.jcp.org/jsf"
+    xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <style>
+        .linkInForm {
+            display: block;
+            position: relative;
+        }
+
+        .linkInForm .topbar-item-name {
+            display: none;
+        }
+
+        @media(max-width:1024px) {
+            .linkInForm {
+                font-size: 16px;
+                padding: 14px 16px;
+            }
+
+            .linkInForm {
+                color: #212121;
+            }
+
+            .linkInForm:hover {
+                background-color: #e8e8e8;
+            }
+
+            .linkInForm .topbar-item-name {
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            .linkInForm i {
+                display: inline-block;
+                font-size: 20px;
+                margin-right: 12px;
+                vertical-align: middle;
+            }
+        }
+    </style>
+
+    <div class="topbar clearfix">
+        <div class="topbar-left">            
+            <div class="logo"></div>
+        </div>
+
+        <div class="topbar-right">
+            <a id="menu-button" href="#">
+                <i></i>
+            </a>
+
+            <a id="topbar-menu-button" href="#">
+                <i class="material-icons">&#xE5D4;</i>
+            </a>
+
+            <ul class="topbar-items fadeInDown animated">
+                <c:if test="#{empty request.userPrincipal}">
+                    <li>
+                        <h:form>
+                            <a class="linkInForm" jsf:outcome="/securedBasic/welcome">
+                                <i class="topbar-icon material-icons">&#xE898;</i>
+                                <span class="topbar-item-name">#{msg['signIn']}</span>
+                            </a>
+                        </h:form>
+                    </li>
+                    <li>
+                        <h:form>
+                            <a class="linkInForm" jsf:outcome="/signUp">
+                                <i class="topbar-icon material-icons">&#xE7FE;</i>
+                                <span class="topbar-item-name">#{msg['signUp']}</span>
+                            </a>
+                        </h:form>
+                    </li>
+                </c:if>
+                <c:if test="#{not empty request.userPrincipal}">
+                    <li class="profile-item">
+                        <a href="#">
+                            <i class="topbar-icon material-icons">&#xE7FD;</i>
+                            <span class="topbar-item-name">#{request.userPrincipal.name}</span>
+                        </a>
+
+                        <ul class="ultima-menu animated">
+                            <li role="menuitem">
+                                <h:form>
+                                    <a class="linkInForm" jsf:outcome="/securedBasic/user/changePassword">
+                                        <i class="material-icons">&#xE32A;</i>
+                                        <span class="topbar-item-name">#{msg['user.changePassword']}</span>
+                                    </a>
+                                </h:form>
+                            </li>
+                            <li role="menuitem">
+                                <h:form>
+                                    <a jsf:action="#{logoutPresenter.submit()}">
+                                        <i class="material-icons">&#xE8AC;</i>
+                                        <span>#{msg['logout']}</span>
+                                    </a>
+                                </h:form>
+                            </li>
+                        </ul>
+                    </li>
+                </c:if>
+                <c:if test="#{request.isUserInRole('CONTROLLO_COMPLETO')}">
+                    <li>
+                        <h:form>
+                            <a class="linkInForm" jsf:outcome="/securedAdmin/user/users">
+                                <i class="topbar-icon material-icons">&#xE7FB;</i>
+                                <span class="topbar-item-name">#{msg['user.users']}</span>
+                            </a>
+                        </h:form>
+                    </li>
+                </c:if>
+            </ul>
+        </div>
+    </div>
+
+</ui:composition>

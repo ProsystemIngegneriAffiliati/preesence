@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+<web-app
+    version="4.0"
+    xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd">
     <context-param>
         <param-name>javax.faces.PROJECT_STAGE</param-name>
         <param-value>Development</param-value>
@@ -19,91 +23,157 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
-        <url-pattern>/faces/*</url-pattern>
+        <url-pattern>*.xhtml</url-pattern>
     </servlet-mapping>
-    <session-config>
-        <session-timeout>
-            30
-        </session-timeout>
-    </session-config>
-    <welcome-file-list>
-        <welcome-file>faces/index.xhtml</welcome-file>
-    </welcome-file-list>
     
-<!-- For managing users and groups and securing the app-->
+    <!-- Session configuration. -->
+    <session-config>
+        <cookie-config>
+            <http-only>true</http-only> <!-- Prevent client side scripting from accessing/manipulating session cookie. -->
+        </cookie-config>
+        <tracking-mode>COOKIE</tracking-mode> <!-- This disables URL rewriting. -->
+    </session-config>
+    
+    <!-- Welcome files and error pages. -->
+    <welcome-file-list>
+        <welcome-file>index</welcome-file>
+    </welcome-file-list>
+    <error-page>
+        <error-code>400</error-code>
+        <location>/WEB-INF/errorpages/400.xhtml</location>
+    </error-page>
+    <error-page>
+        <error-code>403</error-code>
+        <location>/WEB-INF/errorpages/404.xhtml</location> <!-- We don't want to leak restricted pages, so 404 instead of 403. -->
+    </error-page>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/WEB-INF/errorpages/404.xhtml</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/WEB-INF/errorpages/500.xhtml</location>
+    </error-page>
+    <error-page>
+        <exception-type>javax.faces.application.ViewExpiredException</exception-type>
+        <location>/WEB-INF/errorpages/expired.xhtml</location>
+    </error-page>
+    
+    <!-- Security constraints and roles. -->
     <security-constraint>
-        <display-name>Secured</display-name>
+        <display-name>Restrict direct access to the /resources folder.</display-name> <!-- We could have used javax.faces.WEBAPP_RESOURCES_DIRECTORY, but this doesn't cover resources from JARs. -->
         <web-resource-collection>
-            <web-resource-name>secure_zone</web-resource-name>
-            <description/>
-            <url-pattern>/faces/secured/*</url-pattern>
+            <web-resource-name>The /resources folder.</web-resource-name>
+            <url-pattern>/resources/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint />
+    </security-constraint>
+    
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Only for authenticated, basic role</web-resource-name>
+            <url-pattern>/securedWorker/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
-            <role-name>user</role-name>
+            <role-name>WORKER</role-name>
         </auth-constraint>
-    </security-constraint>   
-    <login-config>
-        <auth-method>FORM</auth-method>
-        <realm-name>preesenceRealm</realm-name>
-        <form-login-config>
-            <form-login-page>/faces/login.xhtml</form-login-page>
-            <form-error-page>/faces/error/403.xhtml</form-error-page>
-        </form-login-config>
-    </login-config>
+    </security-constraint>
+    
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Only for power users</web-resource-name>
+            <url-pattern>/securedHr/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>HUMAN_RESOURCES</role-name>
+        </auth-constraint>
+    </security-constraint>
+    
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Only for admins</web-resource-name>
+            <url-pattern>/securedAdmin/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>FULL_CONTROL</role-name>
+        </auth-constraint>
+    </security-constraint>
+    
     <security-role>
-        <role-name>user</role-name>
+        <role-name>WORKER</role-name>
     </security-role>
     <security-role>
-        <role-name>admin</role-name>
+        <role-name>HUMAN_RESOURCES</role-name>
+    </security-role>
+    <security-role>
+        <role-name>FULL_CONTROL</role-name>
     </security-role>
     
-    <!-- Useful for custom error pages-->
+    <!-- Mojarra/RI specific settings. -->
+    <context-param>
+        <param-name>com.sun.faces.defaultResourceMaxAge</param-name>
+        <param-value>4838400000</param-value> <!-- 8 weeks in millis. -->
+    </context-param>
+    <context-param>
+        <param-name>com.sun.faces.enableViewStateIdRendering</param-name>
+        <param-value>false</param-value> <!-- Prevent duplicate javax.faces.ViewState element IDs. -->
+    </context-param>
+    
+    <!-- OmniFaces specific settings. -->
+    <context-param>
+        <param-name>org.omnifaces.FACES_VIEWS_SCAN_PATHS</param-name>
+        <param-value>/*.xhtml</param-value> <!-- Enable extensionless URLs on entire webapp. -->
+    </context-param>
+    
+    <!-- Filters. NOTE: ordering of filter-mapping matters! -->
+    <filter>
+        <filter-name>characterEncodingFilter</filter-name>
+        <filter-class>org.omnifaces.filter.CharacterEncodingFilter</filter-class>
+    </filter>
     <filter>
         <filter-name>facesExceptionFilter</filter-name>
         <filter-class>org.omnifaces.filter.FacesExceptionFilter</filter-class>
     </filter>
+    <filter>
+        <filter-name>gzipResponseFilter</filter-name>
+        <filter-class>org.omnifaces.filter.GzipResponseFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>characterEncodingFilter</filter-name>
+        <servlet-name>facesServlet</servlet-name>
+    </filter-mapping>
     <filter-mapping>
         <filter-name>facesExceptionFilter</filter-name>
-        <servlet-name>Faces Servlet</servlet-name>
+        <servlet-name>facesServlet</servlet-name>
     </filter-mapping>
-    <context-param>
-        <param-name>org.omnifaces.EXCEPTION_TYPES_TO_UNWRAP</param-name>
-        <param-value>javax.ejb.EJBException,javax.persistence.RollbackException</param-value>
-    </context-param>
-    <error-page>
-        <error-code>401</error-code>
-        <location>/faces/error/401.xhtml</location>
-    </error-page>
-    <error-page>
-        <error-code>403</error-code>
-        <location>/faces/error/403.xhtml</location>
-    </error-page>
-    <error-page>
-        <error-code>404</error-code>
-        <location>/faces/error/404.xhtml</location>
-    </error-page>
-    <error-page>
-        <error-code>500</error-code>
-        <location>/faces/error/500.xhtml</location>
-    </error-page>
-    <error-page>
-        <exception-type>javax.faces.application.ViewExpiredException</exception-type>
-        <location>/faces/error/viewExpired.xhtml</location>
-    </error-page>
+    <filter-mapping>
+        <filter-name>gzipResponseFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>ERROR</dispatcher>
+    </filter-mapping>
     
-    <!--Needed for BootsFaces-->
+    <!-- For Primefaces Ultima theme-->
     <context-param>
-        <param-name>BootsFaces_USETHEME</param-name>
-        <param-value>default</param-value>
+        <param-name>primefaces.TRANSFORM_METADATA</param-name>
+        <param-value>true</param-value> <!-- Renders bean validation metadata (@NotNull/@Size/@Min/@Max) as HTML element attributes. -->
     </context-param>
     <context-param>
-        <param-name>net.bootsfaces.blockUI</param-name>
+        <param-name>primefaces.THEME</param-name>
+        <param-value>ultima-blue-grey</param-value>
+    </context-param>
+    <context-param>
+        <param-name>primefaces.FONT_AWESOME</param-name>
         <param-value>true</param-value>
     </context-param>
-    <!--    <context-param>
-        <param-name>org.omnifaces.COMBINED_RESOURCE_HANDLER_CACHE_TTL</param-name>
-        <param-value>86400</param-value>
-    </context-param>-->
+    <context-param>
+        <param-name>javax.faces.FACELETS_LIBRARIES</param-name>
+        <param-value>/WEB-INF/primefaces-ultima.taglib.xml</param-value>
+    </context-param>
+    <listener>
+        <listener-class>com.sun.faces.config.ConfigureListener</listener-class>
+    </listener>
     <mime-mapping>
         <extension>ttf</extension>
         <mime-type>application/font-sfnt</mime-type>
@@ -147,9 +217,5 @@
     <mime-mapping>
         <extension>svg#fontawesomeregular</extension>
         <mime-type>image/svg+xml</mime-type>
-    </mime-mapping>
-        <mime-mapping>
-        <extension>json</extension>
-        <mime-type>application/json</mime-type>
     </mime-mapping>
 </web-app>

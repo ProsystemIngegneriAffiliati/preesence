@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
+      xmlns:of="http://omnifaces.org/functions">
+
+    <h:head>
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+        </f:facet>
+        <title>#{msg['appName']}</title>
+        <h:outputScript name="js/ripple.js" library="ultima-layout" />
+    </h:head>
+
+    <h:body styleClass="exception-body error-page">
+
+        <div class="exception-type">
+            <p:graphicImage name="images/error.svg" library="ultima-layout" />
+        </div>
+
+        <div class="card exception-panel">
+            <i class="material-icons">&#xE000;</i>
+            <h1>#{msg['500']}</h1>
+            <div class="exception-detail">#{msg['500.tip']}</div>
+            <p:button outcome="/index" value="Homepage" styleClass="secondary"/>
+        </div>
+
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>#{msg['details']}</h1>
+                    <ul>
+                        <li>Date/time: #{of:formatDate(now, 'yyyy-MM-dd HH:mm:ss')}</li>
+                        <li>User agent: #{header['user-agent']}</li>
+                        <li>User IP: #{empty header['x-forwarded-for'] ? request.remoteAddr : fn:split(header['x-forwarded-for'], ',')[0]}</li>
+                        <li>Request URI: <a href="#{requestScope['javax.servlet.error.request_uri']}">#{requestScope['javax.servlet.error.request_uri']}</a></li>
+                        <li>Ajax request: #{facesContext.partialViewContext.ajaxRequest ? 'Yes' : 'No'}</li>
+                        <li>Status code: #{requestScope['javax.servlet.error.status_code']}</li>
+                        <li>Exception type: <code>#{requestScope['javax.servlet.error.exception_type']}</code></li>
+                        <li>Exception message: <code>#{requestScope['javax.servlet.error.message']}</code></li>
+                    </ul>
+                    <p:fieldset legend="Stack trace" toggleable="true" collapsed="true">
+                        <pre><code>#{of:printStackTrace(requestScope['javax.servlet.error.exception'])}</code></pre>
+                    </p:fieldset>
+                </div>
+            </div>
+        </div>
+
+        <h:outputStylesheet name="css/ripple.css" library="ultima-layout" />
+        <h:outputStylesheet name="css/layout-blue-grey.css" library="ultima-layout" />
+    </h:body>
+
+</html>

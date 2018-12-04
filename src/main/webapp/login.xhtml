@@ -1,28 +1,53 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:b="http://bootsfaces.net/ui">
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+
     <h:head>
-        <title>#{msg.login_login}</title>
-        <style type="text/css">
-            .form-signin {
-                margin: 0 auto;
-                max-width: 330px;
-                padding: 15px;
-            }
-        </style>
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+        </f:facet>
+        <title>#{msg['appName']} - #{msg['signIn']}</title>
+        <h:outputScript name="js/ripple.js" library="ultima-layout" />
+        <h:outputScript name="js/layout.js" library="ultima-layout" />
     </h:head>
-    <h:body style="padding-top: 60px;">
-        <b:container>
-            <form name="loginForm" class="form-signin" method="POST" action="j_security_check">
-                <h2 class="form-signin-heading">#{msg.login_authentication}</h2>
-                <label for="username" class="sr-only">#{msg.login_username}</label>
-                <input id="username" type="text" name="j_username" class="form-control" required="true" autofocus="true" placeholder="#{msg.login_username}" />
-                <label for="password" class="sr-only">#{msg.login_password}</label>
-                <input id="password" type="password" name="j_password" class="form-control" required="true" placeholder="#{msg.login_password}" />
-                <input type="submit" class="btn btn-lg btn-primary btn-block" value="#{msg.login_login}"/>
-            </form>
-        </b:container>
+
+    <h:body styleClass="login-body">
+        <div class="card login-panel ui-fluid">
+            <div class="ui-g">
+                <h:form>
+                    <div class="ui-g-12">
+                        <p:graphicImage name="images/logo.svg" library="ultima-layout" />
+                    </div>
+                    <div class="ui-g-12">
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="username" value="#{loginPresenter.username}" pt:autofocus="true" />
+                            <p:outputLabel for="username" value="#{msg['login.username']}" />
+                        </h:panelGroup>
+                    </div>
+                    <div class="ui-g-12">
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:password id="password" value="#{loginPresenter.password}" />
+                            <p:outputLabel for="password" value="#{msg['login.password']}" />
+                        </h:panelGroup>
+                    </div>
+                    <div class="ui-g-12">
+                        <p:messages globalOnly="true">
+                            <p:autoUpdate />
+                        </p:messages>
+                        <p:commandButton icon="ui-icon-person" value="#{msg['login.login']}" action="#{loginPresenter.login()}" ajax="false" />
+                    </div>
+                </h:form>
+            </div>
+        </div>
+
+        <h:outputStylesheet name="css/ripple.css" library="ultima-layout" />
+        <h:outputStylesheet name="css/layout-blue-grey.css" library="ultima-layout" />
     </h:body>
+
 </html>
