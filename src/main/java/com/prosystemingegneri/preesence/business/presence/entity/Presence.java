@@ -23,8 +23,6 @@ import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -38,15 +36,14 @@ public class Presence extends BaseEntity {
     private @NotNull Worker worker;
     
     @Column(nullable = false)
-    private @NotNull LocalDateTime start;
+    private @NotNull LocalDateTime startTimeStamp;
     
-    @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime end;
+    private LocalDateTime endTimeStamp;
     
     private String notes;
 
     public Presence() {
-        start = LocalDateTime.now();
+        startTimeStamp = LocalDateTime.now();
     }
 
     public Worker getWorker() {
@@ -57,20 +54,20 @@ public class Presence extends BaseEntity {
         this.worker = worker;
     }
 
-    public LocalDateTime getStart() {
-        return start;
+    public LocalDateTime getStartTimeStamp() {
+        return startTimeStamp;
     }
 
-    public void setStart(LocalDateTime start) {
-        this.start = start;
+    public void setStartTimeStamp(LocalDateTime startTimeStamp) {
+        this.startTimeStamp = startTimeStamp;
     }
 
-    public LocalDateTime getEnd() {
-        return end;
+    public LocalDateTime getEndTimeStamp() {
+        return endTimeStamp;
     }
 
-    public void setEnd(LocalDateTime end) {
-        this.end = end;
+    public void setEndTimeStamp(LocalDateTime endTimeStamp) {
+        this.endTimeStamp = endTimeStamp;
     }
 
     public String getNotes() {

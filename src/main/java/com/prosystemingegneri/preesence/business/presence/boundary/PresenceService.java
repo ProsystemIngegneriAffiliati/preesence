@@ -83,15 +83,15 @@ public class PresenceService implements Serializable {
         if (!conditions.isEmpty())
             query.where(conditions.toArray(new Predicate[conditions.size()]));
         
-        Order order = cb.desc(root.get(Presence_.start));
+        Order order = cb.desc(root.get(Presence_.startTimeStamp));
         if (isAscending != null && sortField != null && !sortField.isEmpty()) {
             Path<?> path;
             switch (sortField) {
                 case "start":
-                    path = root.get(Presence_.start);
+                    path = root.get(Presence_.startTimeStamp);
                     break;
                 case "end":
-                    path = root.get(Presence_.end);
+                    path = root.get(Presence_.endTimeStamp);
                     break;
                 case "workerName":
                     path = root.get(Presence_.worker).get(Worker_.name);
@@ -133,15 +133,15 @@ public class PresenceService implements Serializable {
         List<Predicate> conditions = new ArrayList<>();
         
         if (isNotEnded != null && isNotEnded) {
-            conditions.add(cb.isNull(root.get(Presence_.end)));
+            conditions.add(cb.isNull(root.get(Presence_.endTimeStamp)));
             if (start != null)
-                conditions.add(cb.greaterThanOrEqualTo(root.get(Presence_.start), start));
+                conditions.add(cb.greaterThanOrEqualTo(root.get(Presence_.startTimeStamp), start));
         }
         
         if (start != null && end != null)
             conditions.add(cb.or(
-                    cb.between(root.get(Presence_.start), start, end),
-                    cb.between(root.get(Presence_.end), start, end)));
+                    cb.between(root.get(Presence_.startTimeStamp), start, end),
+                    cb.between(root.get(Presence_.endTimeStamp), start, end)));
         
         if (worker != null)
             conditions.add(cb.equal(root.get(Presence_.worker), worker));

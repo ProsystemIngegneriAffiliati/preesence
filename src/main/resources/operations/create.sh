@@ -1,15 +1,12 @@
 #!/bin/sh
 
 readonly APP_NAME=preesence
-readonly IP_ADDRESS=192.168.1.39
+readonly IP_ADDRESS=192.168.0.121
 readonly POSTGRESQL_JDBC_DRIVER=postgresql-42.2.5.jar
 readonly DB_NAME="${APP_NAME}"
 readonly DB_USER_NAME="${APP_NAME}"
-readonly DB_USER_PASSWORD=Gv47WfRpozjJJXQV5Yv2
+readonly DB_USER_PASSWORD=aEsSV7ToimzThX6BbP6n
 
-mkdir $HOME/"${APP_NAME}"
-mkdir $HOME/"${APP_NAME}"/documents
-\
 wget -P ../glassfish/domains/domain1/lib/ext/ https://jdbc.postgresql.org/download/"${POSTGRESQL_JDBC_DRIVER}"
 ./asadmin start-domain
 ./asadmin create-jdbc-connection-pool \

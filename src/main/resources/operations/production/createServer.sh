@@ -51,9 +51,6 @@ rm payara-'"$(config_get AS_VERSION)"'.zip; \
 \
 wget -P '"$(config_get AS_ROOT_DIR)"'/glassfish/domains/'"$(config_get AS_DOMAIN_NAME)"'/lib/ext/ https://jdbc.postgresql.org/download/'"$(config_get POSTGRESQL_JDBC_DRIVER)"'; \
 \
-mkdir ${HOME}/'"$(config_get APP_NAME)"'; \
-mkdir ${HOME}/'"$(config_get APP_NAME)"'/documents; \
-\
 sh '"$(config_get AS_BIN)"'/asadmin start-domain '"$(config_get AS_DOMAIN_NAME)"'; \
 \
 sh '"$(config_get AS_BIN)"'/asadmin --passwordfile ${HOME}/dbUserPassword create-password-alias '"$(config_get AS_PASSWORD_ALIAS_NAME)"'; \

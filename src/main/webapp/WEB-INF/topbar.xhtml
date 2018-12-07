@@ -62,7 +62,7 @@
                 <c:if test="#{empty request.userPrincipal}">
                     <li>
                         <h:form>
-                            <a class="linkInForm" jsf:outcome="/securedBasic/welcome">
+                            <a class="linkInForm" jsf:outcome="/securedWorker/welcome">
                                 <i class="topbar-icon material-icons">&#xE898;</i>
                                 <span class="topbar-item-name">#{msg['signIn']}</span>
                             </a>
@@ -87,7 +87,7 @@
                         <ul class="ultima-menu animated">
                             <li role="menuitem">
                                 <h:form>
-                                    <a class="linkInForm" jsf:outcome="/securedBasic/user/changePassword">
+                                    <a class="linkInForm" jsf:outcome="/securedWorker/user/changePassword">
                                         <i class="material-icons">&#xE32A;</i>
                                         <span class="topbar-item-name">#{msg['user.changePassword']}</span>
                                     </a>

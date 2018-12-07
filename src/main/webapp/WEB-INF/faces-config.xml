@@ -17,7 +17,7 @@
             org.omnifaces.exceptionhandler.FullAjaxExceptionHandlerFactory
         </exception-handler-factory>
         <exception-handler-factory>
-            com.prosystemingegneri.eemissions.presentation.EJBExceptionHandler$Factory
+            com.prosystemingegneri.preesence.presentation.EJBExceptionHandler$Factory
         </exception-handler-factory>
     </factory>
     

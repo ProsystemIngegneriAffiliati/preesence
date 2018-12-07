@@ -28,6 +28,6 @@ import javax.persistence.metamodel.StaticMetamodel;
 @StaticMetamodel(Presence.class)
 public class Presence_ {
     public static volatile SingularAttribute<Presence, Worker> worker;
-    public static volatile SingularAttribute<Presence, LocalDateTime> start;
-    public static volatile SingularAttribute<Presence, LocalDateTime> end;
+    public static volatile SingularAttribute<Presence, LocalDateTime> startTimeStamp;
+    public static volatile SingularAttribute<Presence, LocalDateTime> endTimeStamp;
 }
