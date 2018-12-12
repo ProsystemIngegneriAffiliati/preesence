@@ -13,7 +13,12 @@
                 <div class="nano-content menu-scroll-content">
                     <pu:menu widgetVar="me">
                         <c:if test="#{request.isUserInRole('HUMAN_RESOURCES')}">
-                            <p:menuitem id="clientiMenu" value="#{msg['worker.workers']}" icon="&#xE8A3;" outcome="/securedHr/worker/workers" />
+                            <p:menuitem id="workersMenu" value="#{msg['worker.workers']}" icon="&#xE7FC;" outcome="/securedHr/worker/workers" />
+                        </c:if>
+                        <c:if test="#{request.isUserInRole('WORKER') and not empty workerPresenter.idLoggedWorker}">
+                            <p:menuitem id="workerMenu" value="#{msg['worker.worker']}" icon="&#xE8A3;" outcome="/securedWorker/worker/worker">
+                                <f:param name="id" value="#{workerPresenter.idLoggedWorker}" />
+                            </p:menuitem>
                         </c:if>
                     </pu:menu>
                 </div>

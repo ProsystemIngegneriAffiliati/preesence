@@ -16,6 +16,7 @@
  */
 package com.prosystemingegneri.preesence.business.worker.boundary;
 
+import com.prosystemingegneri.preesence.business.auth.boundary.UserAppService;
 import com.prosystemingegneri.preesence.business.auth.entity.UserApp;
 import com.prosystemingegneri.preesence.business.auth.entity.UserApp_;
 import com.prosystemingegneri.preesence.business.worker.entity.Worker;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -44,6 +46,9 @@ import javax.persistence.criteria.Root;
 public class WorkerService implements Serializable {
     @PersistenceContext
     EntityManager em;
+    
+    @Inject
+    private UserAppService userAppService;
     
     public Worker create() {
         return new Worker();
@@ -66,13 +71,13 @@ public class WorkerService implements Serializable {
         em.remove(find(id));
     }
     
-    public List<Worker> list(int first, int pageSize, String sortField, Boolean isAscending, String name) {
+    public List<Worker> list(int first, int pageSize, String sortField, Boolean isAscending, String name, Boolean isDismissed) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Worker> query = cb.createQuery(Worker.class);
         Root<Worker> root = query.from(Worker.class);
         CriteriaQuery<Worker> select = query.select(root).distinct(true);
         
-        List<Predicate> conditions = calculateConditions(cb, root, name);
+        List<Predicate> conditions = calculateConditions(cb, root, name, isDismissed);
 
         if (!conditions.isEmpty())
             query.where(conditions.toArray(new Predicate[conditions.size()]));
@@ -83,6 +88,9 @@ public class WorkerService implements Serializable {
             switch (sortField) {
                 case "name":
                     path = root.get(Worker_.name);
+                    break;
+                case "isDismissed":
+                    path = root.get(Worker_.dismission);
                     break;
                 default:
                     path = root.get(sortField);
@@ -103,13 +111,13 @@ public class WorkerService implements Serializable {
         return typedQuery.getResultList();
     }
     
-    public Long getCount(String name) {
+    public Long getCount(String name, Boolean isDismissed) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Long> query = cb.createQuery(Long.class);
         Root<Worker> root = query.from(Worker.class);
         CriteriaQuery<Long> select = query.select(cb.count(root));
 
-        List<Predicate> conditions = calculateConditions(cb, root, name);
+        List<Predicate> conditions = calculateConditions(cb, root, name, isDismissed);
 
         if (!conditions.isEmpty())
             query.where(conditions.toArray(new Predicate[conditions.size()]));
@@ -117,12 +125,20 @@ public class WorkerService implements Serializable {
         return em.createQuery(select).getSingleResult();
     }
     
-    private List<Predicate> calculateConditions(CriteriaBuilder cb, Root<Worker> root, String name) {
+    private List<Predicate> calculateConditions(CriteriaBuilder cb, Root<Worker> root, String name, Boolean isDismissed) {
         List<Predicate> conditions = new ArrayList<>();
         
         //Worker's name
         if (name != null && !name.isEmpty())
             conditions.add(cb.like(cb.lower(root.get(Worker_.name)), "%" + name.toLowerCase() + "%"));
+        
+        //If worker has been dismissed
+        if (isDismissed != null) {
+            if (isDismissed)
+                conditions.add(cb.isNotNull(root.get(Worker_.dismission)));
+            else
+                conditions.add(cb.isNull(root.get(Worker_.dismission)));
+        }
         
         return conditions;
     }
@@ -159,4 +175,42 @@ public class WorkerService implements Serializable {
         return Optional.empty();
     }
     
+    public Optional<Worker> getLoggedWorker() {
+        if (userAppService.getLoggedUser().isPresent())
+            return findByUserapp(null, userAppService.getLoggedUser().get());
+        else
+            return Optional.empty();
+    }
+    
+    private Optional<Worker> findByUserapp(String userAppUsername, UserApp userApp) {
+        if ((userAppUsername != null && !userAppUsername.isEmpty()) || userApp != null) {
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Worker> query = cb.createQuery(Worker.class);
+            Root<Worker> root = query.from(Worker.class);
+
+            List<Predicate> conditions = new ArrayList<>();
+            
+            if (userAppUsername != null && !userAppUsername.isEmpty())
+                conditions.add(cb.like(root.join(Worker_.userApp).get(UserApp_.username), userAppUsername));
+            
+            if (userApp != null)
+                conditions.add(cb.equal(root.get(Worker_.userApp), userApp));
+
+            if (!conditions.isEmpty())
+                query.where(conditions.toArray(new Predicate[conditions.size()]));
+
+            Worker result;
+            try {
+                result = em.createQuery(query).getSingleResult();
+                if (result == null)
+                    return Optional.empty();
+            } catch (NoResultException e) {
+                return Optional.empty();
+            }
+
+            return Optional.of(result);
+        }
+        
+        return Optional.empty();
+    }
 }

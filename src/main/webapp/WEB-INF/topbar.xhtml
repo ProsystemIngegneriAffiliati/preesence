@@ -104,7 +104,7 @@
                         </ul>
                     </li>
                 </c:if>
-                <c:if test="#{request.isUserInRole('CONTROLLO_COMPLETO')}">
+                <c:if test="#{request.isUserInRole('FULL_CONTROL')}">
                     <li>
                         <h:form>
                             <a class="linkInForm" jsf:outcome="/securedAdmin/user/users">

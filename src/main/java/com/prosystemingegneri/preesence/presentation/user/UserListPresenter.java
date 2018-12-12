@@ -19,6 +19,7 @@ package com.prosystemingegneri.preesence.presentation.user;
 import com.prosystemingegneri.preesence.business.auth.boundary.UserAppService;
 import com.prosystemingegneri.preesence.business.auth.entity.UserApp;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.context.ExternalContext;
@@ -48,6 +49,7 @@ public class UserListPresenter implements Serializable {
     @PostConstruct
     public void init() {
         lazyUserApps = new UserLazyDataModel(service);
+        unassociatedUserApps = new ArrayList<>();
     }
     
     public void delete() {
@@ -85,7 +87,7 @@ public class UserListPresenter implements Serializable {
     /**
      * Useful only for 'omnifaces.ListConverter' used in 'p:autoComplete'
      * 
-     * @param defaultUserApp Needed when jsf page read not null autocomplete (when, for example, open a already saved entity)
+     * @param defaultUserApp Needed when jsf page read not null autocomplete (when, for example, open an already saved entity)
      * @return 
      */
     public List<UserApp> getUnassociatedUserApps(UserApp defaultUserApp) {

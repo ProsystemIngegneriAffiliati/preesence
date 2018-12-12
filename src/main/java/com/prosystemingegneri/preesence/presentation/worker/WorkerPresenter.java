@@ -19,6 +19,7 @@ package com.prosystemingegneri.preesence.presentation.worker;
 import com.prosystemingegneri.preesence.business.worker.boundary.WorkerService;
 import com.prosystemingegneri.preesence.business.worker.entity.Worker;
 import java.io.Serializable;
+import java.util.Optional;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -41,13 +42,17 @@ public class WorkerPresenter implements Serializable{
     private Worker worker;
     private Long id;
     
+    public String reload() {
+        return facesContext.getViewRoot().getViewId() + "?faces-redirect=true&includeViewParams=true";
+    }
+    
     public String save() {
         worker = service.save(worker);
         Messages.create("success").detail("saved").flash().add();
         if (id == 0L)
             id = worker.getId();
         
-        return facesContext.getViewRoot().getViewId() + "?faces-redirect=true&includeViewParams=true";
+        return reload();
     }
     
     public void detail() {
@@ -57,6 +62,16 @@ public class WorkerPresenter implements Serializable{
             else
                 worker = service.find(id);
         }
+    }
+    
+    public Long getIdLoggedWorker() {
+        Long result = null;
+        
+        Optional<Worker> loggedWorker = service.getLoggedWorker();
+        if (loggedWorker.isPresent())
+            result = loggedWorker.get().getId();
+        
+        return result;
     }
 
     public Worker getWorker() {

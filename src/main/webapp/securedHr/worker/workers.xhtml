@@ -32,7 +32,7 @@
                                 </p:panelGrid>
                             </f:facet>
                             <p:column headerText="#{msg['worker.worker.name']}" sortBy="#{name}" filterBy="#{name}" priority="0">
-                                <h:outputText value="#{worker.nominativo}" />
+                                <h:outputText value="#{worker.name}" />
                             </p:column>
                             <p:column headerText="#{msg['actions']}" style="width:64px; text-align:center" priority="0" exportable="false">
                                 <p:button title="#{msg['edit']}" icon="ui-icon-edit" styleClass="AquaButton" outcome="/securedWorker/worker/worker">

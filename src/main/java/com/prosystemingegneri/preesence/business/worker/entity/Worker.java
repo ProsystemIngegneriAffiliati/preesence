@@ -18,6 +18,7 @@ package com.prosystemingegneri.preesence.business.worker.entity;
 
 import com.prosystemingegneri.preesence.business.auth.entity.UserApp;
 import com.prosystemingegneri.preesence.business.entity.BaseEntity;
+import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
@@ -31,6 +32,9 @@ import javax.validation.constraints.NotEmpty;
 public class Worker extends BaseEntity {
     @Column(nullable = false, unique = true)
     private @NotEmpty String name;
+    
+    @Column(columnDefinition = "date")
+    private LocalDate dismission;
     
     @OneToOne
     private UserApp userApp;
@@ -52,6 +56,14 @@ public class Worker extends BaseEntity {
 
     public void setUserApp(UserApp userApp) {
         this.userApp = userApp;
+    }
+
+    public LocalDate getDismission() {
+        return dismission;
+    }
+
+    public void setDismission(LocalDate dismission) {
+        this.dismission = dismission;
     }
     
 }

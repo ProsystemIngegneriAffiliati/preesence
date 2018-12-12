@@ -1,12 +1,80 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
-    <h:head>
-        <title>Facelet Title</title>
-    </h:head>
-    <h:body>
-        Hello from Facelets
-    </h:body>
-</html>
-
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:o="http://omnifaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                template="/WEB-INF/template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="metadata">
+        <f:metadata>
+            <f:importConstants type="com.prosystemingegneri.preesence.business.auth.control.Role" />
+            <o:viewParam name="id"
+                         value="#{workerPresenter.id}"
+                         converter="javax.faces.Long"
+                         required="true" />
+            <o:viewAction action="#{workerPresenter.detail()}" />
+        </f:metadata>
+    </ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <div class="ui-g ui-fluid">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1>#{msg['worker.worker']}</h1>
+                        <p>#{msg['worker.worker.tip']}</p>
+                        <p:panelGrid columns="3" columnClasses="ui-grid-col-4,ui-grid-col-4,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="name" value="#{workerPresenter.worker.name}" pt:autofocus="true" />
+                                <p:outputLabel for="name" value="#{msg['worker.worker.name']}" />
+                                <p:message for="name"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="dismission" pt:type="date" value="#{workerPresenter.worker.dismission}">
+                                    <f:convertDateTime type="localDate" pattern="yyyy-MM-dd" />
+                                </p:inputText>
+                                <p:outputLabel for="dismission" value="#{msg['worker.worker.dismission']}" />
+                                <p:message for="dismission"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:autoComplete id="userApp"
+                                                dropdown="true"
+                                                value="#{workerPresenter.worker.userApp}"
+                                                completeMethod="#{userListPresenter.completeUnassociatedUserApps}"
+                                                var="user"
+                                                itemLabel="#{user.username}"
+                                                itemValue="#{user}"
+                                                forceSelection="true">
+                                    <o:converter converterId="omnifaces.ListConverter" list="#{userListPresenter.getUnassociatedUserApps(workerPresenter.worker.userApp)}" />
+                                </p:autoComplete>
+                                <p:outputLabel for="userApp" value="#{msg['user.user']}"/>
+                                <p:message for="userApp"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+                </div>
+                <div class="ui-g-1 ui-md-2"></div>
+                <div class="ui-g-4 ui-md-3">
+                    <c:choose>
+                        <c:when test="#{request.isUserInRole(Role.HUMAN_RESOURCES)}">
+                            <p:button value="#{msg['cancel']}" title="#{msg['cancel.tip']}" outcome="/securedHr/worker/workers" styleClass="secondary" />
+                        </c:when>
+                        <c:otherwise>
+                            <p:commandButton value="#{msg['cancel']}"
+                                             action="#{workerPresenter.reload()}"
+                                             ajax="false"
+                                             styleClass="secondary" />
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+                <div class="ui-g-2 ui-md-2"></div>
+                <div class="ui-g-4 ui-md-3">
+                    <p:commandButton value="#{msg['save']}"
+                                     action="#{workerPresenter.save()}"
+                                     ajax="false"/>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

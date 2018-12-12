@@ -56,14 +56,14 @@ public class WorkerListPresenter implements Serializable{
     }
     
     public List<Worker> complete(String name) {
-        workers = service.list(0, 10, null, null, name);
+        workers = service.list(0, 10, null, null, name, Boolean.FALSE);
         return workers;
     }
     
     /**
      * Useful only for 'omnifaces.ListConverter' used in 'p:autoComplete'
      * 
-     * @param defaultWorker Needed when jsf page read not null autocomplete (when, for example, open a already saved entity)
+     * @param defaultWorker Needed when jsf page read not null autocomplete (when, for example, open an already saved entity)
      * @return 
      */
     public List<Worker> getWorkers(Worker defaultWorker) {

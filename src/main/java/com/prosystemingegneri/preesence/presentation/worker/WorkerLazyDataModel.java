@@ -45,6 +45,7 @@ public class WorkerLazyDataModel extends LazyDataModel<Worker>{
     public List<Worker> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
         Boolean isAscending = null;
         String name = null;
+        Boolean isDismissed = null;
         
         switch (sortOrder) {
             case ASCENDING:
@@ -61,12 +62,14 @@ public class WorkerLazyDataModel extends LazyDataModel<Worker>{
                 if (!filterProperty.isEmpty()) {
                     if (filterProperty.equalsIgnoreCase("name"))
                         name = String.valueOf(filters.get(filterProperty));
+                    if (filterProperty.equalsIgnoreCase("isDismissed"))
+                        isDismissed = (Boolean) filters.get(filterProperty);
                 }
             }
         }
         
-        List<Worker> result = service.list(first, pageSize, sortField, isAscending, name);
-        this.setRowCount(service.getCount(name).intValue());
+        List<Worker> result = service.list(first, pageSize, sortField, isAscending, name, isDismissed);
+        this.setRowCount(service.getCount(name, isDismissed).intValue());
         
         return result;
     }

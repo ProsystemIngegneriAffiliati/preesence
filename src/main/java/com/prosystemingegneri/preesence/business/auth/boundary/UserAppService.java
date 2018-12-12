@@ -28,10 +28,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -72,16 +72,14 @@ public class UserAppService implements Serializable {
         return find(username) != null;
     }
     
-    public UserApp getLoggedUser() {
+    public Optional<UserApp> getLoggedUser() {
         if (securityContext.getCallerPrincipal() != null) {
             UserApp user = find(securityContext.getCallerPrincipal().getName());
             if (user != null)
-                return user;
-            else
-                throw new EntityNotFoundException("user.changePassword.error.noUserInDatabase");
+                return Optional.of(user);
         }
-        else
-            throw new EntityNotFoundException("user.changePassword.error.noLoggedUser");
+        
+        return Optional.empty();
     }
     
     public UserApp create(String username, Password password) {
