@@ -1,0 +1,40 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:o="http://omnifaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                template="/WEB-INF/template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="metadata">
+    </ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <div class="ui-g ui-fluid">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1>#{msg['worker.worker']}</h1>
+                        <p>#{msg['worker.worker.tip']}</p>
+                        <p:panelGrid columns="2" columnClasses="ui-grid-col-6,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank form-group">
+
+                        </p:panelGrid>
+                    </div>
+                </div>
+                <div class="ui-g-1 ui-md-2"></div>
+                <div class="ui-g-4 ui-md-3">
+                    <p:commandButton value="#{msg['cancel']}"
+                                     action="#{workerPresenter.reload()}"
+                                     ajax="false"
+                                     styleClass="secondary" />
+                </div>
+                <div class="ui-g-2 ui-md-2"></div>
+                <div class="ui-g-4 ui-md-3">
+                    <p:commandButton value="#{msg['save']}"
+                                     action="#{workerPresenter.save()}"
+                                     ajax="false"/>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

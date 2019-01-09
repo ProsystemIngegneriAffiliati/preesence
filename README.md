@@ -1,6 +1,6 @@
 # preesence
 Working hours and days management
 ## Tenchology stack
-* **JavaEE 7** - EJB, CDI, BeanValidation, JPA
+* **JavaEE 8** - EJB, CDI, BeanValidation, JPA
 * **E**ntity-**C**ontrol-**B**oundary pattern for backend
-* **JSF** for frontend - bootsfaces and OmniFaces JSF frameworks
+* **JSF** for frontend - Primefaces (with Ultima layout) and OmniFaces JSF frameworks

@@ -18,10 +18,13 @@ package com.prosystemingegneri.preesence.business.presence.entity;
 
 import com.prosystemingegneri.preesence.business.entity.BaseEntity;
 import com.prosystemingegneri.preesence.business.presence.controller.EndAfterStart;
+import com.prosystemingegneri.preesence.business.presence.controller.PresenceEvent;
 import com.prosystemingegneri.preesence.business.worker.entity.Worker;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
@@ -35,15 +38,19 @@ public class Presence extends BaseEntity {
     @ManyToOne(optional = false)
     private @NotNull Worker worker;
     
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "date")
     private @NotNull LocalDateTime startTimeStamp;
     
+    @Column(columnDefinition = "date")
     private LocalDateTime endTimeStamp;
+    
+    @Enumerated(EnumType.ORDINAL)
+    @Column(nullable = false, columnDefinition = "smallint")
+    private @NotNull PresenceEvent event;
     
     private String notes;
 
     public Presence() {
-        startTimeStamp = LocalDateTime.now();
     }
 
     public Worker getWorker() {
@@ -76,6 +83,14 @@ public class Presence extends BaseEntity {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public PresenceEvent getEvent() {
+        return event;
+    }
+
+    public void setEvent(PresenceEvent event) {
+        this.event = event;
     }
     
 }
