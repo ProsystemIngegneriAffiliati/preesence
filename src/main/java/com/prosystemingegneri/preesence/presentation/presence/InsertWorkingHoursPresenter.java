@@ -23,8 +23,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
 import org.omnifaces.cdi.ViewScoped;
+import org.omnifaces.util.Messages;
 
 /**
  *
@@ -34,14 +37,29 @@ import org.omnifaces.cdi.ViewScoped;
 @ViewScoped
 public class InsertWorkingHoursPresenter implements Serializable{
     private Worker worker;
+    private String yearMonth;
     private LocalDate start;
     private LocalDate end;
+    
+    @Inject
+    private FacesContext facesContext;
     
     private List<Presence> presences;
     
     @PostConstruct
     public void init() {
         presences = new ArrayList<>();
+    }
+    
+    public String reload() {
+        return facesContext.getViewRoot().getViewId() + "?faces-redirect=true&includeViewParams=true";
+    }
+    
+    public String save() {
+        //worker = service.save(worker);
+        Messages.create("success").detail("saved").flash().add();
+        
+        return reload();
     }
 
     public Worker getWorker() {
@@ -70,6 +88,14 @@ public class InsertWorkingHoursPresenter implements Serializable{
 
     public List<Presence> getPresences() {
         return presences;
+    }
+
+    public String getYearMonth() {
+        return yearMonth;
+    }
+
+    public void setYearMonth(String yearMonth) {
+        this.yearMonth = yearMonth;
     }
     
 }
