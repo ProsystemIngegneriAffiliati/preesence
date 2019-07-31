@@ -45,7 +45,7 @@ public class PresenceListPresenter implements Serializable{
         lazyPresences = new PresenceLazyDataModel(service);
     }
     
-    public void deletePresence() {
+    public void delete() {
         if (selectedPresences != null && !selectedPresences.isEmpty())
             for (Presence presence : selectedPresences)
                 service.delete(presence.getId());

@@ -68,8 +68,8 @@ public class UserLazyDataModel extends LazyDataModel<UserApp>{
             }
         }
         
-        List<UserApp> result = service.listUserApps(first, pageSize, sortField, isAscending, username, groupAppName, null);
-        this.setRowCount(service.getUserAppsCount(username, groupAppName, null).intValue());
+        List<UserApp> result = service.list(first, pageSize, sortField, isAscending, username, groupAppName, null);
+        this.setRowCount(service.getCount(username, groupAppName, null).intValue());
         
         return result;
     }

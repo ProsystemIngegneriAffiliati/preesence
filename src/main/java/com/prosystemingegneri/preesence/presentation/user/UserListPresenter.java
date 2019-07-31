@@ -80,7 +80,7 @@ public class UserListPresenter implements Serializable {
     }
     
     public List<UserApp> completeUnassociatedUserApps(String nome) {
-        unassociatedUserApps = service.listUserApps(0, 10, null, null, nome, null, Boolean.FALSE);
+        unassociatedUserApps = service.list(0, 10, null, null, nome, null, Boolean.FALSE);
         return unassociatedUserApps;
     }
     

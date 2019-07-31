@@ -41,7 +41,7 @@ public class GroupAppService implements Serializable {
     @PersistenceContext
     EntityManager em;
     
-    public List<GroupApp> listGroupApps(int first, int pageSize, String sortField, Boolean isAscending, String name) {
+    public List<GroupApp> list(int first, int pageSize, String sortField, Boolean isAscending, String name) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<GroupApp> query = cb.createQuery(GroupApp.class);
         Root<GroupApp> root = query.from(GroupApp.class);
@@ -78,7 +78,7 @@ public class GroupAppService implements Serializable {
         return typedQuery.getResultList();
     }
     
-    public Long getGroupAppsCount(String name) {
+    public Long getCount(String name) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Long> query = cb.createQuery(Long.class);
         Root<GroupApp> root = query.from(GroupApp.class);

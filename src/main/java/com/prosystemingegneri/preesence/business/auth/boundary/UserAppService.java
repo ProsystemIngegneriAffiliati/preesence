@@ -127,7 +127,7 @@ public class UserAppService implements Serializable {
         return em.merge(userApp);
     }
     
-    public List<UserApp> listUserApps(int first, int pageSize, String sortField, Boolean isAscending, String username, String groupAppName, Boolean isAssociatedToPersona) {
+    public List<UserApp> list(int first, int pageSize, String sortField, Boolean isAscending, String username, String groupAppName, Boolean isAssociatedToPersona) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<UserApp> query = cb.createQuery(UserApp.class);
         Root<UserApp> root = query.from(UserApp.class);
@@ -167,7 +167,7 @@ public class UserAppService implements Serializable {
         return typedQuery.getResultList();
     }
     
-    public Long getUserAppsCount(String username, String groupAppName, Boolean isAssociatedToPersona) {
+    public Long getCount(String username, String groupAppName, Boolean isAssociatedToPersona) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Long> query = cb.createQuery(Long.class);
         Root<UserApp> root = query.from(UserApp.class);

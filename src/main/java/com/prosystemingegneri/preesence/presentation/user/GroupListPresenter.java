@@ -39,7 +39,7 @@ public class GroupListPresenter implements Serializable {
     
     @PostConstruct
     public void updateGroups() {
-        groups = service.listGroupApps(0, 0, null, null, null);
+        groups = service.list(0, 0, null, null, null);
     }
 
     public List<GroupApp> getGroups() {
