@@ -40,7 +40,7 @@ public class UserListPresenter implements Serializable {
     
     @Inject
     private ExternalContext externalContext;
-    
+
     private UserLazyDataModel lazyUserApps;
     private List<UserApp> selectedUserApps;
     

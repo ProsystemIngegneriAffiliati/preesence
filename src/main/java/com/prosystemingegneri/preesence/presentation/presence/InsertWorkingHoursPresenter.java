@@ -16,10 +16,14 @@
  */
 package com.prosystemingegneri.preesence.presentation.presence;
 
+import com.prosystemingegneri.preesence.business.presence.boundary.PresenceService;
+import com.prosystemingegneri.preesence.business.presence.controller.PresenceEvent;
 import com.prosystemingegneri.preesence.business.presence.entity.Presence;
 import com.prosystemingegneri.preesence.business.worker.entity.Worker;
 import java.io.Serializable;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -46,6 +50,9 @@ public class InsertWorkingHoursPresenter implements Serializable{
     
     private List<Presence> presences;
     
+    @Inject
+    private PresenceService service;
+    
     @PostConstruct
     public void init() {
         presences = new ArrayList<>();
@@ -60,6 +67,33 @@ public class InsertWorkingHoursPresenter implements Serializable{
         Messages.create("success").detail("saved").flash().add();
         
         return reload();
+    }
+    
+    public void onYearMonthUpdate() {
+        if (yearMonth != null && !yearMonth.isEmpty()) {
+            try {
+                start = LocalDate.of(
+                        Integer.parseInt(yearMonth.substring(0, 4)),
+                        Integer.parseInt(yearMonth.substring(5)),
+                        1
+                );  //start of month
+                end = start.plusMonths(1).minusDays(1); //end of month
+            } catch (IndexOutOfBoundsException | NumberFormatException e) {
+                Messages.create("warning").warn().detail("presence.insertWorkingHours.warning.yearMonth").add();
+            }
+        }
+    }
+    
+    public void populateDays() {
+        for (int i = 0; i < ChronoUnit.DAYS.between(end, start); i++) {
+            Presence presence = service.create();
+            presence.setWorker(worker);
+            presence.setDaytime(LocalDate.from(start.plusDays(i)));
+            if (start.getDayOfWeek().equals(DayOfWeek.SUNDAY))
+                presence.setEvent(PresenceEvent.HOLIDAY);
+            else
+                presence.setEvent(PresenceEvent.WORK);
+        }
     }
 
     public Worker getWorker() {

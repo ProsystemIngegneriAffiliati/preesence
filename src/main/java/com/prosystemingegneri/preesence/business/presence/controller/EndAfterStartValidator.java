@@ -32,6 +32,6 @@ public class EndAfterStartValidator implements ConstraintValidator<EndAfterStart
 
     @Override
     public boolean isValid(Presence presence, ConstraintValidatorContext context) {
-        return !presence.getEndTimeStamp().isBefore(presence.getStartTimeStamp());
+        return !presence.getEndMorning().isBefore(presence.getStartMorning());
     }
 }

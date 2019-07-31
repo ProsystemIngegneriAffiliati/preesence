@@ -20,7 +20,8 @@ import com.prosystemingegneri.preesence.business.entity.BaseEntity;
 import com.prosystemingegneri.preesence.business.presence.controller.EndAfterStart;
 import com.prosystemingegneri.preesence.business.presence.controller.PresenceEvent;
 import com.prosystemingegneri.preesence.business.worker.entity.Worker;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -38,11 +39,20 @@ public class Presence extends BaseEntity {
     @ManyToOne(optional = false)
     private @NotNull Worker worker;
     
-    @Column(nullable = false, columnDefinition = "date")
-    private @NotNull LocalDateTime startTimeStamp;
-    
     @Column(columnDefinition = "date")
-    private LocalDateTime endTimeStamp;
+    private LocalDate daytime;
+    
+    @Column(nullable = false, columnDefinition = "time")
+    private @NotNull LocalTime startMorning;
+    
+    @Column(nullable = false, columnDefinition = "time")
+    private @NotNull LocalTime endMorning;
+    
+    @Column(nullable = false, columnDefinition = "time")
+    private @NotNull LocalTime startAfternoon;
+    
+    @Column(nullable = false, columnDefinition = "time")
+    private @NotNull LocalTime endAfternoon;
     
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false, columnDefinition = "smallint")
@@ -61,20 +71,52 @@ public class Presence extends BaseEntity {
         this.worker = worker;
     }
 
-    public LocalDateTime getStartTimeStamp() {
-        return startTimeStamp;
+    public LocalDate getDaytime() {
+        return daytime;
     }
 
-    public void setStartTimeStamp(LocalDateTime startTimeStamp) {
-        this.startTimeStamp = startTimeStamp;
+    public void setDaytime(LocalDate daytime) {
+        this.daytime = daytime;
     }
 
-    public LocalDateTime getEndTimeStamp() {
-        return endTimeStamp;
+    public LocalTime getStartMorning() {
+        return startMorning;
     }
 
-    public void setEndTimeStamp(LocalDateTime endTimeStamp) {
-        this.endTimeStamp = endTimeStamp;
+    public void setStartMorning(LocalTime startMorning) {
+        this.startMorning = startMorning;
+    }
+
+    public LocalTime getEndMorning() {
+        return endMorning;
+    }
+
+    public void setEndMorning(LocalTime endMorning) {
+        this.endMorning = endMorning;
+    }
+
+    public LocalTime getStartAfternoon() {
+        return startAfternoon;
+    }
+
+    public void setStartAfternoon(LocalTime startAfternoon) {
+        this.startAfternoon = startAfternoon;
+    }
+
+    public LocalTime getEndAfternoon() {
+        return endAfternoon;
+    }
+
+    public void setEndAfternoon(LocalTime endAfternoon) {
+        this.endAfternoon = endAfternoon;
+    }
+
+    public PresenceEvent getEvent() {
+        return event;
+    }
+
+    public void setEvent(PresenceEvent event) {
+        this.event = event;
     }
 
     public String getNotes() {
@@ -85,12 +127,4 @@ public class Presence extends BaseEntity {
         this.notes = notes;
     }
 
-    public PresenceEvent getEvent() {
-        return event;
-    }
-
-    public void setEvent(PresenceEvent event) {
-        this.event = event;
-    }
-    
 }

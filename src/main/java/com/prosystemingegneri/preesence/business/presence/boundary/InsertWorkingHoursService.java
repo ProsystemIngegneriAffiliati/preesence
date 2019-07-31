@@ -17,15 +17,10 @@
 package com.prosystemingegneri.preesence.business.presence.boundary;
 
 import com.prosystemingegneri.preesence.business.auth.control.Role;
-import com.prosystemingegneri.preesence.business.presence.controller.PresenceEvent;
 import com.prosystemingegneri.preesence.business.presence.entity.Presence;
 import com.prosystemingegneri.preesence.business.worker.entity.Worker;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
@@ -40,15 +35,6 @@ public class InsertWorkingHoursService implements Serializable {
     
     @RolesAllowed({Role.Constants.FULL_CONTROL, Role.Constants.HUMAN_RESOURCES})
     public List<Presence> populatePresences(@NotNull Worker worker, @NotNull LocalDate start, @NotNull LocalDate end) {
-        List<Presence> presences = new ArrayList<>();
-        
-        for (int i = 0; i < ChronoUnit.DAYS.between(end, start); i++) {
-            Presence presence = new Presence();
-            presence.setWorker(worker);
-            presence.setStartTimeStamp(LocalDateTime.of(start.plusDays(i), LocalTime.MIDNIGHT));
-            presence.setEvent(PresenceEvent.REST);
-        }
-        
-        return presences;
+        return null;
     }
 }

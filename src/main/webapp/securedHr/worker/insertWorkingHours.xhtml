@@ -16,16 +16,35 @@
                     <div class="card card-w-title">
                         <h1>#{msg['worker.worker']}</h1>
                         <p>#{msg['worker.worker.tip']}</p>
-                        <p:panelGrid columns="3" columnClasses="ui-grid-col-4,ui-grid-col-4,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group">
-                            <h:panelGroup>
+                        <p:panelGrid columns="2" columnClasses="ui-grid-col-6,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank form-group">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:autoComplete id="userApp"
+                                                dropdown="true"
+                                                value="#{insertWorkingHoursPresenter.worker}"
+                                                completeMethod="#{workerListPresenter.complete}"
+                                                var="worker"
+                                                itemLabel="#{worker.name}"
+                                                itemValue="#{worker}"
+                                                forceSelection="true">
+                                    <p:ajax event="itemSelect" update="populateDaysButton" />
+                                    <o:converter converterId="omnifaces.ListConverter" list="#{workerListPresenter.getWorkers(insertWorkingHoursPresenter.worker)}" />
+                                </p:autoComplete>
+                                <p:outputLabel for="userApp" value="#{msg['user.user']}"/>
+                                <p:message for="userApp"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="yearMonth" pt:type="month" value="#{insertWorkingHoursPresenter.yearMonth}">
+                                    <p:ajax event="blur" listener="#{insertWorkingHoursPresenter.onYearMonthUpdate()}" update="start end populateDaysButton" />
+                                </p:inputText>
                                 <p:outputLabel for="yearMonth" value="#{msg['presence.insertWorkingHours.month']}" />
-                                <p:inputText id="yearMonth" pt:type="month" value="#{insertWorkingHoursPresenter.yearMonth}" />
                                 <p:message for="yearMonth"/>
                             </h:panelGroup>
+
                             <h:panelGroup>
                                 <p:outputLabel for="start" value="#{msg['presence.insertWorkingHours.start']}" />
                                 <p:inputText id="start" pt:type="date" value="#{insertWorkingHoursPresenter.start}">
                                     <f:convertDateTime type="localDate" pattern="yyyy-MM-dd" />
+                                    <p:ajax event="blur" update="populateDaysButton" />
                                 </p:inputText>
                                 <p:message for="start"/>
                             </h:panelGroup>
@@ -33,10 +52,20 @@
                                 <p:outputLabel for="end" value="#{msg['presence.insertWorkingHours.end']}" />
                                 <p:inputText id="end" pt:type="date" value="#{insertWorkingHoursPresenter.end}">
                                     <f:convertDateTime type="localDate" pattern="yyyy-MM-dd" />
+                                    <p:ajax event="blur" update="populateDaysButton" />
                                 </p:inputText>
                                 <p:message for="end"/>
                             </h:panelGroup>
                         </p:panelGrid>
+
+                        <div class="ui-g-2 ui-md-3"></div>
+                        <div class="ui-g-8 ui-md-6">
+                            <p:commandButton id="populateDaysButton"
+                                             disabled="#{empty insertWorkingHoursPresenter.worker or empty insertWorkingHoursPresenter.start or empty insertWorkingHoursPresenter.end}"
+                                             value="#{msg['presence.insertWorkingHours.populateDays']}"
+                                             action="#{insertWorkingHoursPresenter.populateDays()}"
+                                             styleClass="secondary" />
+                        </div>
                     </div>
                 </div>
                 <div class="ui-g-1 ui-md-2"></div>
