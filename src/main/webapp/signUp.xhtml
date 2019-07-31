@@ -3,6 +3,7 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:o="http://omnifaces.org/ui"
                 xmlns:p="http://primefaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
                 template="/WEB-INF/template.xhtml">
     <ui:define name="content">
 
@@ -14,7 +15,7 @@
                         <p>#{msg['signUp.tip']}</p>
                         <p:panelGrid columns="3" columnClasses="ui-grid-col-4,ui-grid-col-4,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group">
                             <h:panelGroup styleClass="md-inputfield">
-                                <p:inputText id="username" value="#{signUpPresenter.username}" />
+                                <p:inputText id="username" value="#{signUpPresenter.username}" pt:autofocus="true" />
                                 <p:outputLabel for="username" value="#{msg['signUp.username']}" />
                                 <p:message for="username"/>
                             </h:panelGroup>

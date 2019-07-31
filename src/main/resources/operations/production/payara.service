@@ -1,0 +1,13 @@
+[Unit]
+Description=Manage Payara Server
+Requires=postgresql
+After=postgresql
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/opt/payara5/bin/asadmin start-domain production
+ExecStop=/opt/payara5/bin/asadmin stop-domain production
+
+[Install]
+WantedBy=multi-user.target

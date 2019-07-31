@@ -1,14 +1,21 @@
 #!/bin/sh
-
+readonly IDE_WORKSPACE=$HOME/NetBeansProjects
+readonly AS_LIBFOLDER=$HOME/payara5/glassfish/domains/domain1/lib
 readonly APP_NAME=preesence
-readonly IP_ADDRESS=192.168.0.121
-readonly POSTGRESQL_JDBC_DRIVER=postgresql-42.2.5.jar
+readonly IP_ADDRESS=192.168.0.111
+readonly POSTGRESQL_JDBC_DRIVER_VERSION=42.2.6
 readonly DB_NAME="${APP_NAME}"
 readonly DB_USER_NAME="${APP_NAME}"
 readonly DB_USER_PASSWORD=aEsSV7ToimzThX6BbP6n
 
-wget -P ../glassfish/domains/domain1/lib/ext/ https://jdbc.postgresql.org/download/"${POSTGRESQL_JDBC_DRIVER}"
+mkdir $HOME/"${APP_NAME}"
+mkdir $HOME/"${APP_NAME}"/documents
+\
+mvn -f "${IDE_WORKSPACE}"/"${APP_NAME}"/pom.xml -DincludeScope=provided -DexcludeArtifactIds=javax.mail,javaee-api,activation -DoutputDirectory=$HOME/"${APP_NAME}"/ dependency:copy-dependencies
+mvn dependency:copy -Dartifact=org.postgresql:postgresql:"${POSTGRESQL_JDBC_DRIVER_VERSION}" -DoutputDirectory=$HOME/"${APP_NAME}"/
+\
 ./asadmin start-domain
+./asadmin add-library $HOME/"${APP_NAME}"/*.jar
 ./asadmin create-jdbc-connection-pool \
 --datasourceclassname=org.postgresql.ds.PGSimpleDataSource \
 --restype=javax.sql.DataSource \
