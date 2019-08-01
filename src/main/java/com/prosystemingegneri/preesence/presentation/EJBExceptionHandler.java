@@ -25,7 +25,6 @@ import javax.faces.context.ExceptionHandlerFactory;
 import javax.faces.context.ExceptionHandlerWrapper;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ExceptionQueuedEvent;
-import javax.transaction.RollbackException;
 import org.omnifaces.util.Messages;
 
 /**
@@ -56,13 +55,12 @@ public class EJBExceptionHandler extends ExceptionHandlerWrapper {
         if (!(exception instanceof EJBException)) {
             return;
         }
-        if (exception.getCause() instanceof RollbackException) {
-            exception = exception.getCause().getCause().getCause();
-        }
+        while (exception.getCause() != null)
+            exception = exception.getCause();
         context.addMessage(null,
                 Messages.create("error")
                         .fatal()
-                        .detail(exception.getCause().getLocalizedMessage())
+                        .detail(exception.getLocalizedMessage())
                         .get());
         context.validationFailed();
         context.getPartialViewContext().getRenderIds().add("globalMessages");

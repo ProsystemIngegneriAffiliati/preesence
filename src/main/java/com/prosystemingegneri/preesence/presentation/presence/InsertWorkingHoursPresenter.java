@@ -23,6 +23,7 @@ import com.prosystemingegneri.preesence.business.worker.entity.Worker;
 import java.io.Serializable;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +64,8 @@ public class InsertWorkingHoursPresenter implements Serializable{
     }
     
     public String save() {
-        //worker = service.save(worker);
+        for (Presence presence : presences)
+            service.save(presence);
         Messages.create("success").detail("saved").flash().add();
         
         return reload();
@@ -85,14 +87,17 @@ public class InsertWorkingHoursPresenter implements Serializable{
     }
     
     public void populateDays() {
-        for (int i = 0; i < ChronoUnit.DAYS.between(end, start); i++) {
+        presences.clear();
+        for (int i = 0; i < ChronoUnit.DAYS.between(start, end) + 1; i++) {
             Presence presence = service.create();
             presence.setWorker(worker);
-            presence.setDaytime(LocalDate.from(start.plusDays(i)));
-            if (start.getDayOfWeek().equals(DayOfWeek.SUNDAY))
+            LocalDate currentDay = start.plusDays(i);
+            presence.setDaytime(LocalDate.from(currentDay));
+            if (currentDay.getDayOfWeek().equals(DayOfWeek.SUNDAY))
                 presence.setEvent(PresenceEvent.HOLIDAY);
             else
                 presence.setEvent(PresenceEvent.WORK);
+            presences.add(presence);
         }
     }
 

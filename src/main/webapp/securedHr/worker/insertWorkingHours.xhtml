@@ -8,6 +8,9 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <ui:define name="metadata">
+        <f:metadata>
+            <f:importConstants type="com.prosystemingegneri.preesence.business.presence.controller.PresenceEvent" />
+        </f:metadata>
     </ui:define>
     <ui:define name="content">
         <h:form id="form">
@@ -64,8 +67,99 @@
                                              disabled="#{empty insertWorkingHoursPresenter.worker or empty insertWorkingHoursPresenter.start or empty insertWorkingHoursPresenter.end}"
                                              value="#{msg['presence.insertWorkingHours.populateDays']}"
                                              action="#{insertWorkingHoursPresenter.populateDays()}"
-                                             styleClass="secondary" />
+                                             styleClass="secondary"
+                                             update="presencesTable" />
                         </div>
+
+                        <p:dataTable id="presencesTable"
+                                     var="presence"
+                                     value="#{insertWorkingHoursPresenter.presences}"
+                                     editable="true" editMode="cell">
+                            <f:facet name="header">
+                                <p:panelGrid columns="2" columnClasses="lefted, righted" styleClass="ui-panelgrid-blank">
+                                    #{msg['presence.presences']}
+                                    <p:outputPanel>
+                                    </p:outputPanel>
+                                </p:panelGrid>
+                            </f:facet>
+                            <p:column headerText="#{msg['presence.presence.daytime']}">
+                                <h:outputText value="#{presence.daytime}">
+                                    <f:convertDateTime type="localDate" dateStyle="full" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="#{msg['presence.presence.daytime.startMorning']}">
+                                <p:cellEditor>
+                                    <f:facet name="output">
+                                        <h:outputText value="#{presence.startMorning}">
+                                            <f:convertDateTime type="localTime" timeStyle="short" />
+                                        </h:outputText>
+                                    </f:facet>
+                                    <f:facet name="input">
+                                        <p:inputText pt:type="time" value="#{presence.startMorning}">
+                                            <f:convertDateTime type="localTime" pattern="HH:mm" />
+                                        </p:inputText>
+                                    </f:facet>
+                                </p:cellEditor>
+                            </p:column>
+                            <p:column headerText="#{msg['presence.presence.daytime.endMorning']}">
+                                <p:cellEditor>
+                                    <f:facet name="output">
+                                        <h:outputText value="#{presence.endMorning}">
+                                            <f:convertDateTime type="localTime" timeStyle="short" />
+                                        </h:outputText>
+                                    </f:facet>
+                                    <f:facet name="input">
+                                        <p:inputText pt:type="time" value="#{presence.endMorning}">
+                                            <f:convertDateTime type="localTime" pattern="HH:mm" />
+                                        </p:inputText>
+                                    </f:facet>
+                                </p:cellEditor>
+                            </p:column>
+                            <p:column headerText="#{msg['presence.presence.daytime.startAfternoon']}">
+                                <p:cellEditor>
+                                    <f:facet name="output">
+                                        <h:outputText value="#{presence.startAfternoon}">
+                                            <f:convertDateTime type="localTime" timeStyle="short" />
+                                        </h:outputText>
+                                    </f:facet>
+                                    <f:facet name="input">
+                                        <p:inputText pt:type="time" value="#{presence.startAfternoon}">
+                                            <f:convertDateTime type="localTime" pattern="HH:mm" />
+                                        </p:inputText>
+                                    </f:facet>
+                                </p:cellEditor>
+                            </p:column>
+                            <p:column headerText="#{msg['presence.presence.daytime.endAfternoon']}">
+                                <p:cellEditor>
+                                    <f:facet name="output">
+                                        <h:outputText value="#{presence.endAfternoon}">
+                                            <f:convertDateTime type="localTime" timeStyle="short" />
+                                        </h:outputText>
+                                    </f:facet>
+                                    <f:facet name="input">
+                                        <p:inputText pt:type="time" value="#{presence.endAfternoon}">
+                                            <f:convertDateTime type="localTime" pattern="HH:mm" />
+                                        </p:inputText>
+                                    </f:facet>
+                                </p:cellEditor>
+                            </p:column>
+                            <p:column headerText="#{msg['presence.presenceEvent']}">
+                                <p:cellEditor>
+                                    <f:facet name="output">
+                                        <h:outputText value="#{msg['presence.presenceEvent.' += presence.event]}" />
+                                    </f:facet>
+                                    <f:facet name="input">
+                                        <p:selectOneMenu value="#{presence.event}">
+                                            <f:selectItems
+                                                value="#{PresenceEvent}"
+                                                var="event"
+                                                itemLabel="#{msg['presence.presenceEvent.' += event]}"
+                                                itemValue="#{event}" />
+                                        </p:selectOneMenu>
+                                    </f:facet>
+                                </p:cellEditor>
+                            </p:column>
+                        </p:dataTable>
                     </div>
                 </div>
                 <div class="ui-g-1 ui-md-2"></div>
