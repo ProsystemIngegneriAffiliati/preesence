@@ -16,11 +16,6 @@
                             <p:menuitem id="workersMenu" value="#{msg['worker.workers']}" icon="people_outline" outcome="/securedHr/worker/workers" />
                             <p:menuitem id="insertWorkingHoursMenu" value="#{msg['presence.insertWorkingHours']}" icon="playlist_add" outcome="/securedHr/worker/insertWorkingHours" />
                         </c:if>
-                        <c:if test="#{request.isUserInRole('WORKER') and not empty workerPresenter.idLoggedWorker}">
-                            <p:menuitem id="workerMenu" value="#{msg['worker.worker']}" icon="perm_contact_calendar" outcome="/securedWorker/worker/worker">
-                                <f:param name="id" value="#{workerPresenter.idLoggedWorker}" />
-                            </p:menuitem>
-                        </c:if>
                     </pu:menu>
                 </div>
             </div>

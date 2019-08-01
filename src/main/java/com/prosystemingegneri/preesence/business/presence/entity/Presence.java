@@ -42,17 +42,17 @@ public class Presence extends BaseEntity {
     @Column(columnDefinition = "date")
     private LocalDate daytime;
     
-    @Column(nullable = false, columnDefinition = "time")
-    private @NotNull LocalTime startMorning;
+    @Column(columnDefinition = "time")
+    private LocalTime startMorning;
     
-    @Column(nullable = false, columnDefinition = "time")
-    private @NotNull LocalTime endMorning;
+    @Column(columnDefinition = "time")
+    private LocalTime endMorning;
     
-    @Column(nullable = false, columnDefinition = "time")
-    private @NotNull LocalTime startAfternoon;
+    @Column(columnDefinition = "time")
+    private LocalTime startAfternoon;
     
-    @Column(nullable = false, columnDefinition = "time")
-    private @NotNull LocalTime endAfternoon;
+    @Column(columnDefinition = "time")
+    private LocalTime endAfternoon;
     
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false, columnDefinition = "smallint")

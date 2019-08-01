@@ -16,7 +16,9 @@
  */
 package com.prosystemingegneri.preesence.presentation;
 
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 import javax.ejb.EJBException;
 import javax.el.ELException;
 import javax.faces.FacesException;
@@ -25,6 +27,8 @@ import javax.faces.context.ExceptionHandlerFactory;
 import javax.faces.context.ExceptionHandlerWrapper;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ExceptionQueuedEvent;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import org.omnifaces.util.Messages;
 
 /**
@@ -57,10 +61,15 @@ public class EJBExceptionHandler extends ExceptionHandlerWrapper {
         }
         while (exception.getCause() != null)
             exception = exception.getCause();
+        String message;
+        if (exception instanceof ConstraintViolationException)
+            message = getViolationsMessage(((ConstraintViolationException) exception).getConstraintViolations());
+        else
+            message = exception.getLocalizedMessage();
         context.addMessage(null,
                 Messages.create("error")
                         .fatal()
-                        .detail(exception.getLocalizedMessage())
+                        .detail(message)
                         .get());
         context.validationFailed();
         context.getPartialViewContext().getRenderIds().add("globalMessages");
@@ -81,5 +90,25 @@ public class EJBExceptionHandler extends ExceptionHandlerWrapper {
         public ExceptionHandler getExceptionHandler() {
             return new EJBExceptionHandler(getWrapped().getExceptionHandler());
         }
+    }
+    
+    private String getViolationsMessage(Set<ConstraintViolation<?>> constraintViolations) {
+        String separator = " - ";
+        Set<String> violations = new HashSet<>();
+        for (ConstraintViolation<?> constraintViolation : constraintViolations)
+            if (!violations.contains(constraintViolation.getMessage()))
+                violations.add(constraintViolation.getMessage());
+        
+        StringBuilder result = new StringBuilder();
+        
+        for (String violation : violations)
+            result = result
+                    .append(violation)
+                    .append(separator);
+        
+        if (result.length() > 0)
+            result = result.delete(result.length() - separator.length(), result.length());
+        
+        return result.toString();
     }
 }
