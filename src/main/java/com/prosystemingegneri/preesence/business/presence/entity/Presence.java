@@ -64,6 +64,12 @@ public class Presence extends BaseEntity {
     @Transient
     private BigDecimal total;
     
+    @Transient
+    private BigDecimal overtime30;
+    
+    @Transient
+    private BigDecimal overtime50;
+    
     private String notes;
 
     public Presence() {
@@ -141,10 +147,12 @@ public class Presence extends BaseEntity {
         this.total = total;
     }
     
-    public void updateTotal() {
+    private void updateTotal() {
         total = null;
-        total = hoursBetweenTimes(startMorning, endMorning, total);
-        total = hoursBetweenTimes(startAfternoon, endAfternoon, total);
+        if (event != null && event != PresenceEvent.HOLIDAY) {
+            total = hoursBetweenTimes(startMorning, endMorning, total);
+            total = hoursBetweenTimes(startAfternoon, endAfternoon, total);
+        }
     }
     
     private BigDecimal hoursBetweenTimes(LocalTime start, LocalTime end, BigDecimal previous) {
@@ -156,4 +164,42 @@ public class Presence extends BaseEntity {
         
         return previous;
     }
+
+    public BigDecimal getOvertime30() {
+        return overtime30;
+    }
+
+    public void setOvertime30(BigDecimal overtime30) {
+        this.overtime30 = overtime30;
+    }
+    
+    private void updateOvertime30() {
+        overtime30 = null;
+        if (total != null && worker.getContract() != null)
+            if (total.compareTo(worker.getContract().getHoursDaily()) > 0)
+                overtime30 = total.subtract(worker.getContract().getHoursDaily());
+    }
+
+    public BigDecimal getOvertime50() {
+        return overtime50;
+    }
+
+    public void setOvertime50(BigDecimal overtime50) {
+        this.overtime50 = overtime50;
+    }
+    
+    private void updateOvertime50() {
+        overtime50 = null;
+        if (event != null && event == PresenceEvent.HOLIDAY) {
+            overtime50 = hoursBetweenTimes(startMorning, endMorning, overtime50);
+            overtime50 = hoursBetweenTimes(startAfternoon, endAfternoon, overtime50);
+        }
+    }
+    
+    public void updateAllTimings() {
+        updateTotal();
+        updateOvertime30();
+        updateOvertime50();
+    }
+    
 }

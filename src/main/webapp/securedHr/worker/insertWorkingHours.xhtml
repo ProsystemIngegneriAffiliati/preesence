@@ -97,7 +97,7 @@
                                     <f:facet name="input">
                                         <p:inputText pt:type="time" value="#{presence.startMorning}">
                                             <f:convertDateTime type="localTime" pattern="HH:mm" />
-                                            <p:ajax event="blur" listener="#{presence.updateTotal()}" update="total" />
+                                            <p:ajax event="blur" listener="#{presence.updateAllTimings()}" update="total overtime30 overtime50" />
                                         </p:inputText>
                                     </f:facet>
                                 </p:cellEditor>
@@ -112,7 +112,7 @@
                                     <f:facet name="input">
                                         <p:inputText pt:type="time" value="#{presence.endMorning}">
                                             <f:convertDateTime type="localTime" pattern="HH:mm" />
-                                            <p:ajax event="blur" listener="#{presence.updateTotal()}" update="total" />
+                                            <p:ajax event="blur" listener="#{presence.updateAllTimings()}" update="total overtime30 overtime50" />
                                         </p:inputText>
                                     </f:facet>
                                 </p:cellEditor>
@@ -127,7 +127,7 @@
                                     <f:facet name="input">
                                         <p:inputText pt:type="time" value="#{presence.startAfternoon}">
                                             <f:convertDateTime type="localTime" pattern="HH:mm" />
-                                            <p:ajax event="blur" listener="#{presence.updateTotal()}" update="total" />
+                                            <p:ajax event="blur" listener="#{presence.updateAllTimings()}" update="total overtime30 overtime50" />
                                         </p:inputText>
                                     </f:facet>
                                 </p:cellEditor>
@@ -142,7 +142,7 @@
                                     <f:facet name="input">
                                         <p:inputText pt:type="time" value="#{presence.endAfternoon}">
                                             <f:convertDateTime type="localTime" pattern="HH:mm" />
-                                            <p:ajax event="blur" listener="#{presence.updateTotal()}" update="total" />
+                                            <p:ajax event="blur" listener="#{presence.updateAllTimings()}" update="total overtime30 overtime50" />
                                         </p:inputText>
                                     </f:facet>
                                 </p:cellEditor>
@@ -159,12 +159,23 @@
                                                 var="event"
                                                 itemLabel="#{msg['presence.presenceEvent.' += event]}"
                                                 itemValue="#{event}" />
+                                            <p:ajax event="itemSelect" listener="#{presence.updateAllTimings()}" update="total overtime30 overtime50" />
                                         </p:selectOneMenu>
                                     </f:facet>
                                 </p:cellEditor>
                             </p:column>
                             <p:column headerText="#{msg['presence.presence.total']}">
                                 <h:outputText id="total" value="#{presence.total}">
+                                    <f:convertNumber />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="#{msg['presence.presence.overtime.30']}">
+                                <h:outputText id="overtime30" value="#{presence.overtime30}">
+                                    <f:convertNumber />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="#{msg['presence.presence.overtime.50']}">
+                                <h:outputText id="overtime50" value="#{presence.overtime50}">
                                     <f:convertNumber />
                                 </h:outputText>
                             </p:column>
