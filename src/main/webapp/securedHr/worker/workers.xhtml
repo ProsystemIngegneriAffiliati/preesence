@@ -34,6 +34,9 @@
                             <p:column headerText="#{msg['worker.worker.name']}" field="name" sortBy="#{name}" filterBy="#{name}" priority="0">
                                 <h:outputText value="#{worker.name}" />
                             </p:column>
+                            <p:column headerText="#{msg['worker.employmentContract.name']}" priority="3">
+                                <h:outputText value="#{worker.contract.name}" />
+                            </p:column>
                             <p:column headerText="#{msg['worker.worker.dismission']}" field="isDismissed" sortBy="#{isDismissed}" filterBy="#{isDismissed}" priority="4">
                                 <f:facet name="filter">
                                     <p:selectOneMenu onchange="PF('wrkst').filter()">

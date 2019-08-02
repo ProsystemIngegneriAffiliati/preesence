@@ -21,8 +21,10 @@ import com.prosystemingegneri.preesence.business.entity.BaseEntity;
 import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -35,6 +37,9 @@ public class Worker extends BaseEntity {
     
     @Column(columnDefinition = "date")
     private LocalDate dismission;
+    
+    @ManyToOne(optional = false)
+    private @NotNull EmploymentContract contract;
     
     @OneToOne
     private UserApp userApp;
@@ -64,6 +69,14 @@ public class Worker extends BaseEntity {
 
     public void setDismission(LocalDate dismission) {
         this.dismission = dismission;
+    }
+
+    public EmploymentContract getContract() {
+        return contract;
+    }
+
+    public void setContract(EmploymentContract contract) {
+        this.contract = contract;
     }
     
 }

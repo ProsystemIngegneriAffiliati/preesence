@@ -24,12 +24,27 @@
                     <div class="card card-w-title">
                         <h1>#{msg['worker.worker']}</h1>
                         <p>#{msg['worker.worker.tip']}</p>
-                        <p:panelGrid columns="3" columnClasses="ui-grid-col-4,ui-grid-col-4,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group">
+                        <p:panelGrid columns="2" columnClasses="ui-grid-col-6,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank form-group">
                             <h:panelGroup styleClass="md-inputfield">
                                 <p:inputText id="name" value="#{workerPresenter.worker.name}" pt:autofocus="true" />
                                 <p:outputLabel for="name" value="#{msg['worker.worker.name']}" />
                                 <p:message for="name"/>
                             </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:autoComplete id="contract"
+                                                dropdown="true"
+                                                value="#{workerPresenter.worker.contract}"
+                                                completeMethod="#{employmentContractListPresenter.complete}"
+                                                var="contract"
+                                                itemLabel="#{contract.name}"
+                                                itemValue="#{contract}"
+                                                forceSelection="true">
+                                    <o:converter converterId="omnifaces.ListConverter" list="#{employmentContractListPresenter.getEmploymentContracts(workerPresenter.worker.contract)}" />
+                                </p:autoComplete>
+                                <p:outputLabel for="contract" value="#{msg['worker.employmentContract.name']}"/>
+                                <p:message for="contract"/>
+                            </h:panelGroup>
+                            
                             <h:panelGroup styleClass="md-inputfield">
                                 <p:inputText id="dismission" pt:type="date" value="#{workerPresenter.worker.dismission}">
                                     <f:convertDateTime type="localDate" pattern="yyyy-MM-dd" />

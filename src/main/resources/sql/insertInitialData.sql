@@ -17,8 +17,8 @@ INSERT INTO userapp(username, password, groupapp_name) VALUES('maina', 'PBKDF2Wi
 INSERT INTO employmentcontract(name, hoursdaily, version) VALUES('Full time', 8, 0)
 INSERT INTO employmentcontract(name, hoursdaily, version) VALUES('Part time', 4, 0)
 
-INSERT INTO worker(name, userapp_username, version) VALUES('Mainardi Davide', 'maina', 0)
-INSERT INTO worker(name, userapp_username, version) VALUES('Rossi Mario', 'guestWorker', 0)
-INSERT INTO worker(name, userapp_username, version) VALUES('Neri Lucia', 'guestHr', 0)
-INSERT INTO worker(name, userapp_username, version) VALUES('Bianchi Luigi', null, 0)
-INSERT INTO worker(name, userapp_username, version) VALUES('Verdi Alessandro', null, 0)
+INSERT INTO worker(name, contract_id, userapp_username, version) VALUES('Mainardi Davide', 1, 'maina', 0)
+INSERT INTO worker(name, contract_id, userapp_username, version) VALUES('Rossi Mario', 1, 'guestWorker', 0)
+INSERT INTO worker(name, contract_id, userapp_username, version) VALUES('Neri Lucia', 2, 'guestHr', 0)
+INSERT INTO worker(name, contract_id, userapp_username, version) VALUES('Bianchi Luigi', 1, null, 0)
+INSERT INTO worker(name, contract_id, userapp_username, version) VALUES('Verdi Alessandro', 2, null, 0)
