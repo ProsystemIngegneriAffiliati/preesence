@@ -32,9 +32,9 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class EmploymentContract extends BaseEntity {
     @Transient
-    public static final int SCALE = 1; //If zero or positive, the scale is the number of digits to the right of the decimal point.
+    public static final int SCALE = 2; //If zero or positive, the scale is the number of digits to the right of the decimal point.
     @Transient
-    public static final int PRECISION = 3;
+    public static final int PRECISION = 4;
     
     @Column(nullable = false, unique = true)
     private @NotEmpty String name;

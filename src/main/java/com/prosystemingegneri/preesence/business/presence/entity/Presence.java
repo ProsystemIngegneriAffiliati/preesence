@@ -20,13 +20,16 @@ import com.prosystemingegneri.preesence.business.entity.BaseEntity;
 import com.prosystemingegneri.preesence.business.presence.controller.EndAfterStart;
 import com.prosystemingegneri.preesence.business.presence.controller.PresenceEvent;
 import com.prosystemingegneri.preesence.business.worker.entity.Worker;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -57,6 +60,9 @@ public class Presence extends BaseEntity {
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false, columnDefinition = "smallint")
     private @NotNull PresenceEvent event;
+    
+    @Transient
+    private BigDecimal total;
     
     private String notes;
 
@@ -127,4 +133,27 @@ public class Presence extends BaseEntity {
         this.notes = notes;
     }
 
+    public BigDecimal getTotal() {
+        return total;
+    }
+
+    public void setTotal(BigDecimal total) {
+        this.total = total;
+    }
+    
+    public void updateTotal() {
+        total = null;
+        total = hoursBetweenTimes(startMorning, endMorning, total);
+        total = hoursBetweenTimes(startAfternoon, endAfternoon, total);
+    }
+    
+    private BigDecimal hoursBetweenTimes(LocalTime start, LocalTime end, BigDecimal previous) {
+        if (start != null && end != null) {
+            if (previous == null)
+                previous = BigDecimal.ZERO;
+            previous = previous.add(BigDecimal.valueOf(ChronoUnit.MINUTES.between(start, end)).divide(BigDecimal.valueOf(60)));
+        }
+        
+        return previous;
+    }
 }

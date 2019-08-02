@@ -97,6 +97,7 @@
                                     <f:facet name="input">
                                         <p:inputText pt:type="time" value="#{presence.startMorning}">
                                             <f:convertDateTime type="localTime" pattern="HH:mm" />
+                                            <p:ajax event="blur" listener="#{presence.updateTotal()}" update="total" />
                                         </p:inputText>
                                     </f:facet>
                                 </p:cellEditor>
@@ -111,6 +112,7 @@
                                     <f:facet name="input">
                                         <p:inputText pt:type="time" value="#{presence.endMorning}">
                                             <f:convertDateTime type="localTime" pattern="HH:mm" />
+                                            <p:ajax event="blur" listener="#{presence.updateTotal()}" update="total" />
                                         </p:inputText>
                                     </f:facet>
                                 </p:cellEditor>
@@ -125,6 +127,7 @@
                                     <f:facet name="input">
                                         <p:inputText pt:type="time" value="#{presence.startAfternoon}">
                                             <f:convertDateTime type="localTime" pattern="HH:mm" />
+                                            <p:ajax event="blur" listener="#{presence.updateTotal()}" update="total" />
                                         </p:inputText>
                                     </f:facet>
                                 </p:cellEditor>
@@ -139,6 +142,7 @@
                                     <f:facet name="input">
                                         <p:inputText pt:type="time" value="#{presence.endAfternoon}">
                                             <f:convertDateTime type="localTime" pattern="HH:mm" />
+                                            <p:ajax event="blur" listener="#{presence.updateTotal()}" update="total" />
                                         </p:inputText>
                                     </f:facet>
                                 </p:cellEditor>
@@ -158,6 +162,11 @@
                                         </p:selectOneMenu>
                                     </f:facet>
                                 </p:cellEditor>
+                            </p:column>
+                            <p:column headerText="#{msg['presence.presence.total']}">
+                                <h:outputText id="total" value="#{presence.total}">
+                                    <f:convertNumber />
+                                </h:outputText>
                             </p:column>
                         </p:dataTable>
                     </div>
