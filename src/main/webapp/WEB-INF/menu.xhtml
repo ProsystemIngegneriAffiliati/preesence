@@ -14,6 +14,7 @@
                     <pu:menu widgetVar="me">
                         <c:if test="#{request.isUserInRole('HUMAN_RESOURCES')}">
                             <p:menuitem id="workersMenu" value="#{msg['worker.workers']}" icon="people_outline" outcome="/securedHr/worker/workers" />
+                            <p:menuitem id="employmentContractsMenu" value="#{msg['worker.employmentContracts']}" icon="collections_bookmark" outcome="/securedHr/worker/employmentContracts" />
                             <p:menuitem id="insertWorkingHoursMenu" value="#{msg['presence.insertWorkingHours']}" icon="playlist_add" outcome="/securedHr/worker/insertWorkingHours" />
                         </c:if>
                     </pu:menu>

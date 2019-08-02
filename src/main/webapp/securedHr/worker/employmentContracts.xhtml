@@ -1,0 +1,53 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:o="http://omnifaces.org/ui"
+                template="/WEB-INF/template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <h:form id="form">
+            <div class="ui-g ui-fluid">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1>#{msg['worker.employmentContracts']}</h1>
+                        <p:dataTable id="workesTable" widgetVar="wrkst"
+                                     var="employmentContract" value="#{employmentContractListPresenter.lazyEmploymentContracts}"
+                                     selectionMode="multiple" selection="#{employmentContractListPresenter.selectedEmploymentContracts}" rowKey="#{employmentContract.id}"
+                                     paginator="true" rows="10" paginatorAlwaysVisible="false"
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="10,25,50" lazy="true">
+                            <f:facet name="header">
+                                <p:panelGrid columns="2" columnClasses="lefted, righted" styleClass="ui-panelgrid-blank">
+                                    #{msg['worker.employmentContracts.tip']}
+                                    <p:outputPanel>
+                                        <p:button title="#{msg['new']}" icon="ui-icon-create" styleClass="AquaButton" outcome="/securedHr/worker/employmentContract">
+                                            <f:param name="id" value="0" />
+                                        </p:button>
+                                        <p:commandButton title="#{msg['delete']}" icon="ui-icon-delete" actionListener="#{employmentContractListPresenter.delete()}" update="workesTable">
+                                            <p:confirm header="#{msg['worker.workes.delete']}" message="#{msg['worker.workes.delete.tip']}" icon="ui-icon-alert"/>
+                                        </p:commandButton>
+                                    </p:outputPanel>
+                                </p:panelGrid>
+                            </f:facet>
+                            <p:column headerText="#{msg['worker.employmentContract.name']}" field="name" sortBy="#{name}" filterBy="#{name}" priority="0">
+                                <h:outputText value="#{employmentContract.name}" />
+                            </p:column>
+                            <p:column headerText="#{msg['worker.employmentContract.hoursDaily']}" field="hoursDaily" sortBy="#{name}" priority="0">
+                                <h:outputText value="#{employmentContract.hoursDaily}">
+                                    <f:convertNumber />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="#{msg['actions']}" style="width:64px; text-align:center" priority="0" exportable="false">
+                                <p:button title="#{msg['edit']}" icon="ui-icon-edit" styleClass="AquaButton" outcome="/securedHr/worker/employmentContract">
+                                    <f:param name="id" value="#{employmentContract.id}" />
+                                </p:button>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

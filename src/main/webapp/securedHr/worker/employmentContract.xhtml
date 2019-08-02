@@ -1,0 +1,54 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:o="http://omnifaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                template="/WEB-INF/template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="metadata">
+        <f:metadata>
+            <f:importConstants type="com.prosystemingegneri.preesence.business.worker.entity.EmploymentContract" />
+            <o:viewParam name="id"
+                         value="#{employmentContractPresenter.id}"
+                         converter="javax.faces.Long"
+                         required="true" />
+            <o:viewAction action="#{employmentContractPresenter.detail()}" />
+        </f:metadata>
+    </ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <div class="ui-g ui-fluid">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1>#{msg['worker.employmentContract']}</h1>
+                        <p>#{msg['worker.employmentContract.tip']}</p>
+                        <p:panelGrid columns="2" columnClasses="ui-grid-col-8,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="name" value="#{employmentContractPresenter.employmentContract.name}" pt:autofocus="true" />
+                                <p:outputLabel for="name" value="#{msg['worker.employmentContract.name']}" />
+                                <p:message for="name"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputNumber id="hoursDaily" value="#{employmentContractPresenter.employmentContract.hoursDaily}" decimalPlaces="#{EmploymentContract.SCALE}" minValue="0" />
+                                <p:outputLabel for="hoursDaily" value="#{msg['worker.employmentContract.hoursDaily']}" />
+                                <p:message for="hoursDaily"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+                </div>
+                <div class="ui-g-1 ui-md-2"></div>
+                <div class="ui-g-4 ui-md-3">
+                    <p:button value="#{msg['cancel']}" title="#{msg['cancel.tip']}" outcome="/securedHr/worker/employmentContracts" styleClass="secondary" />
+                </div>
+                <div class="ui-g-2 ui-md-2"></div>
+                <div class="ui-g-4 ui-md-3">
+                    <p:commandButton value="#{msg['save']}"
+                                     action="#{employmentContractPresenter.save()}"
+                                     ajax="false"/>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
