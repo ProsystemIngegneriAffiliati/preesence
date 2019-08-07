@@ -10,6 +10,7 @@
     <ui:define name="metadata">
         <f:metadata>
             <f:importConstants type="com.prosystemingegneri.preesence.business.presence.controller.PresenceEvent" />
+            <f:importConstants type="java.math.BigDecimal" />
         </f:metadata>
     </ui:define>
     <ui:define name="content">
@@ -97,7 +98,7 @@
                                     <f:facet name="input">
                                         <p:inputText pt:type="time" value="#{presence.startMorning}">
                                             <f:convertDateTime type="localTime" pattern="HH:mm" />
-                                            <p:ajax event="blur" listener="#{presence.updateAllTimings()}" update="total overtime30 overtime50" />
+                                            <p:ajax event="blur" listener="#{presence.updateAllTimings()}" update="total overtime30 overtime50 differencePanel differenceEventCellEditor" />
                                         </p:inputText>
                                     </f:facet>
                                 </p:cellEditor>
@@ -112,7 +113,7 @@
                                     <f:facet name="input">
                                         <p:inputText pt:type="time" value="#{presence.endMorning}">
                                             <f:convertDateTime type="localTime" pattern="HH:mm" />
-                                            <p:ajax event="blur" listener="#{presence.updateAllTimings()}" update="total overtime30 overtime50" />
+                                            <p:ajax event="blur" listener="#{presence.updateAllTimings()}" update="total overtime30 overtime50 differencePanel differenceEventCellEditor" />
                                         </p:inputText>
                                     </f:facet>
                                 </p:cellEditor>
@@ -127,7 +128,7 @@
                                     <f:facet name="input">
                                         <p:inputText pt:type="time" value="#{presence.startAfternoon}">
                                             <f:convertDateTime type="localTime" pattern="HH:mm" />
-                                            <p:ajax event="blur" listener="#{presence.updateAllTimings()}" update="total overtime30 overtime50" />
+                                            <p:ajax event="blur" listener="#{presence.updateAllTimings()}" update="total overtime30 overtime50 differencePanel differenceEventCellEditor" />
                                         </p:inputText>
                                     </f:facet>
                                 </p:cellEditor>
@@ -142,7 +143,7 @@
                                     <f:facet name="input">
                                         <p:inputText pt:type="time" value="#{presence.endAfternoon}">
                                             <f:convertDateTime type="localTime" pattern="HH:mm" />
-                                            <p:ajax event="blur" listener="#{presence.updateAllTimings()}" update="total overtime30 overtime50" />
+                                            <p:ajax event="blur" listener="#{presence.updateAllTimings()}" update="total overtime30 overtime50 differencePanel differenceEventCellEditor" />
                                         </p:inputText>
                                     </f:facet>
                                 </p:cellEditor>
@@ -159,7 +160,7 @@
                                                 var="event"
                                                 itemLabel="#{msg['presence.presenceEvent.' += event]}"
                                                 itemValue="#{event}" />
-                                            <p:ajax event="itemSelect" listener="#{presence.updateAllTimings()}" update="total overtime30 overtime50" />
+                                            <p:ajax event="itemSelect" listener="#{presence.updateAllTimings()}" update="total overtime30 overtime50 differencePanel differenceEventCellEditor" />
                                         </p:selectOneMenu>
                                     </f:facet>
                                 </p:cellEditor>
@@ -178,6 +179,30 @@
                                 <h:outputText id="overtime50" value="#{presence.overtime50}">
                                     <f:convertNumber />
                                 </h:outputText>
+                            </p:column>
+                            <p:column headerText="#{msg['presence.presence.difference']}">
+                                <h:panelGroup id="differencePanel">
+                                    <h:outputText rendered="#{presence.difference.compareTo(BigDecimal.ZERO) gt 0}" value="#{presence.difference}">
+                                        <f:convertNumber />
+                                    </h:outputText>
+                                </h:panelGroup>
+                            </p:column>
+                            <p:column headerText="#{msg['presence.presence.differenceEvent']}">
+                                <p:cellEditor id="differenceEventCellEditor">
+                                    <f:facet name="output">
+                                        <h:outputText rendered="#{not empty presence.differenceEvent}" value="#{msg['presence.presenceEvent.' += presence.differenceEvent]}" />
+                                    </f:facet>
+                                    <f:facet name="input">
+                                        <p:selectOneMenu value="#{presence.differenceEvent}" rendered="#{presence.difference.compareTo(BigDecimal.ZERO) gt 0}">
+                                            <f:selectItem itemLabel="" itemValue="" />
+                                            <f:selectItems
+                                                value="#{PresenceEvent}"
+                                                var="event"
+                                                itemLabel="#{msg['presence.presenceEvent.' += event]}"
+                                                itemValue="#{event}" />
+                                        </p:selectOneMenu>
+                                    </f:facet>
+                                </p:cellEditor>
                             </p:column>
                         </p:dataTable>
                     </div>

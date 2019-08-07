@@ -61,8 +61,15 @@ public class Presence extends BaseEntity {
     @Column(nullable = false, columnDefinition = "smallint")
     private @NotNull PresenceEvent event;
     
+    @Enumerated(EnumType.ORDINAL)
+    @Column(nullable = false, columnDefinition = "smallint")
+    private @NotNull PresenceEvent differenceEvent; //what the worker did if he/she worked less hours than expected?
+    
     @Transient
     private BigDecimal total;
+    
+    @Transient
+    private BigDecimal difference;
     
     @Transient
     private BigDecimal overtime30;
@@ -131,6 +138,14 @@ public class Presence extends BaseEntity {
         this.event = event;
     }
 
+    public PresenceEvent getDifferenceEvent() {
+        return differenceEvent;
+    }
+
+    public void setDifferenceEvent(PresenceEvent differenceEvent) {
+        this.differenceEvent = differenceEvent;
+    }
+
     public String getNotes() {
         return notes;
     }
@@ -153,6 +168,20 @@ public class Presence extends BaseEntity {
             total = hoursBetweenTimes(startMorning, endMorning, total);
             total = hoursBetweenTimes(startAfternoon, endAfternoon, total);
         }
+    }
+
+    public BigDecimal getDifference() {
+        return difference;
+    }
+
+    public void setDifference(BigDecimal difference) {
+        this.difference = difference;
+    }
+    
+    private void updateDifference() {
+        difference = BigDecimal.ZERO;
+        if (worker != null && total != null)
+            difference = worker.getContract().getHoursDaily().subtract(total);
     }
     
     private BigDecimal hoursBetweenTimes(LocalTime start, LocalTime end, BigDecimal previous) {
@@ -198,6 +227,7 @@ public class Presence extends BaseEntity {
     
     public void updateAllTimings() {
         updateTotal();
+        updateDifference();
         updateOvertime30();
         updateOvertime50();
     }
