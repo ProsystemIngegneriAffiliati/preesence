@@ -30,6 +30,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -69,6 +70,12 @@ public class Presence extends BaseEntity {
     private BigDecimal total;
     
     @Transient
+    private final BigDecimal REIMBURSE = new BigDecimal(0.07);     //€/km
+    
+    @Column(nullable = false)
+    private @NotNull @DecimalMin("0") Integer distanceTraveled;   //in km
+    
+    @Transient
     private BigDecimal difference;
     
     @Transient
@@ -77,9 +84,17 @@ public class Presence extends BaseEntity {
     @Transient
     private BigDecimal overtime50;
     
+    @Transient
+    private final BigDecimal HOURS_FOR_TICKET = new BigDecimal(5);
+    
+    @Transient
+    private @NotNull Boolean ticket;
+    
     private String notes;
 
     public Presence() {
+        ticket = Boolean.FALSE;
+        distanceTraveled = 0;
     }
 
     public Worker getWorker() {
@@ -167,6 +182,8 @@ public class Presence extends BaseEntity {
         if (event != null && event != PresenceEvent.HOLIDAY) {
             total = hoursBetweenTimes(startMorning, endMorning, total);
             total = hoursBetweenTimes(startAfternoon, endAfternoon, total);
+            if (total == null && startMorning != null && endAfternoon != null)
+                total = hoursBetweenTimes(startMorning, endAfternoon, total);
         }
     }
 
@@ -204,7 +221,7 @@ public class Presence extends BaseEntity {
     
     private void updateOvertime30() {
         overtime30 = null;
-        if (total != null && worker.getContract() != null)
+        if (total != null)
             if (total.compareTo(worker.getContract().getHoursDaily()) > 0)
                 overtime30 = total.subtract(worker.getContract().getHoursDaily());
     }
@@ -230,6 +247,42 @@ public class Presence extends BaseEntity {
         updateDifference();
         updateOvertime30();
         updateOvertime50();
+        updateTicket();
+    }
+
+    public Boolean getTicket() {
+        return ticket;
+    }
+
+    public void setTicket(Boolean ticket) {
+        this.ticket = ticket;
     }
     
+    private void updateTicket() {
+        if (
+                (startMorning != null && endMorning == null && startAfternoon == null && endAfternoon != null) ||
+                (total != null &&
+                total.compareTo(HOURS_FOR_TICKET) > 0 && (
+                        worker.getTicketEligibleInLunchBreak() || (
+                                hoursBetweenTimes(startMorning, endMorning, BigDecimal.ZERO).compareTo(HOURS_FOR_TICKET) > 0 ||
+                                hoursBetweenTimes(startAfternoon, endAfternoon, BigDecimal.ZERO).compareTo(HOURS_FOR_TICKET) > 0
+                                )
+                        )
+                ))
+            ticket = Boolean.TRUE;
+        else
+            ticket = Boolean.FALSE;
+    }
+
+    public Integer getDistanceTraveled() {
+        return distanceTraveled;
+    }
+
+    public void setDistanceTraveled(Integer distanceTraveled) {
+        this.distanceTraveled = distanceTraveled;
+    }
+    
+    public BigDecimal getMileageReimbursement() {
+        return REIMBURSE.multiply(new BigDecimal(distanceTraveled));
+    }
 }

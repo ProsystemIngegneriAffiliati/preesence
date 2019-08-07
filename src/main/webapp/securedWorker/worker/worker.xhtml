@@ -45,13 +45,21 @@
                                 <p:message for="contract"/>
                             </h:panelGroup>
                             
-                            <h:panelGroup styleClass="md-inputfield">
+                            <h:panelGroup>
+                                <p:outputLabel for="ticketEligibleInLunchBreak" value="#{msg['worker.worker.ticketEligibleInLunchBreak']}" title="#{msg['worker.worker.ticketEligibleInLunchBreak.tip']}" />
+                                <p:inputSwitch id="ticketEligibleInLunchBreak" value="#{workerPresenter.worker.ticketEligibleInLunchBreak}" />
+                                <p:message for="ticketEligibleInLunchBreak"/>
+                            </h:panelGroup>
+                            <h:panelGroup >
+                                <p:outputLabel for="dismission" value="#{msg['worker.worker.dismission']}" />
                                 <p:inputText id="dismission" pt:type="date" value="#{workerPresenter.worker.dismission}">
                                     <f:convertDateTime type="localDate" pattern="yyyy-MM-dd" />
                                 </p:inputText>
-                                <p:outputLabel for="dismission" value="#{msg['worker.worker.dismission']}" />
                                 <p:message for="dismission"/>
                             </h:panelGroup>
+                        </p:panelGrid>
+                        
+                        <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group">
                             <h:panelGroup styleClass="md-inputfield">
                                 <p:autoComplete id="userApp"
                                                 dropdown="true"

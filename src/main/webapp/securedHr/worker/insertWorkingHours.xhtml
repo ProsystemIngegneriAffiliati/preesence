@@ -98,7 +98,7 @@
                                     <f:facet name="input">
                                         <p:inputText pt:type="time" value="#{presence.startMorning}">
                                             <f:convertDateTime type="localTime" pattern="HH:mm" />
-                                            <p:ajax event="blur" listener="#{presence.updateAllTimings()}" update="total overtime30 overtime50 differencePanel differenceEventCellEditor" />
+                                            <p:ajax event="blur" listener="#{presence.updateAllTimings()}" update="total overtime30 overtime50 differencePanel differenceEventCellEditor ticket" />
                                         </p:inputText>
                                     </f:facet>
                                 </p:cellEditor>
@@ -113,7 +113,7 @@
                                     <f:facet name="input">
                                         <p:inputText pt:type="time" value="#{presence.endMorning}">
                                             <f:convertDateTime type="localTime" pattern="HH:mm" />
-                                            <p:ajax event="blur" listener="#{presence.updateAllTimings()}" update="total overtime30 overtime50 differencePanel differenceEventCellEditor" />
+                                            <p:ajax event="blur" listener="#{presence.updateAllTimings()}" update="total overtime30 overtime50 differencePanel differenceEventCellEditor ticket" />
                                         </p:inputText>
                                     </f:facet>
                                 </p:cellEditor>
@@ -128,7 +128,7 @@
                                     <f:facet name="input">
                                         <p:inputText pt:type="time" value="#{presence.startAfternoon}">
                                             <f:convertDateTime type="localTime" pattern="HH:mm" />
-                                            <p:ajax event="blur" listener="#{presence.updateAllTimings()}" update="total overtime30 overtime50 differencePanel differenceEventCellEditor" />
+                                            <p:ajax event="blur" listener="#{presence.updateAllTimings()}" update="total overtime30 overtime50 differencePanel differenceEventCellEditor ticket" />
                                         </p:inputText>
                                     </f:facet>
                                 </p:cellEditor>
@@ -143,7 +143,7 @@
                                     <f:facet name="input">
                                         <p:inputText pt:type="time" value="#{presence.endAfternoon}">
                                             <f:convertDateTime type="localTime" pattern="HH:mm" />
-                                            <p:ajax event="blur" listener="#{presence.updateAllTimings()}" update="total overtime30 overtime50 differencePanel differenceEventCellEditor" />
+                                            <p:ajax event="blur" listener="#{presence.updateAllTimings()}" update="total overtime30 overtime50 differencePanel differenceEventCellEditor ticket" />
                                         </p:inputText>
                                     </f:facet>
                                 </p:cellEditor>
@@ -160,7 +160,7 @@
                                                 var="event"
                                                 itemLabel="#{msg['presence.presenceEvent.' += event]}"
                                                 itemValue="#{event}" />
-                                            <p:ajax event="itemSelect" listener="#{presence.updateAllTimings()}" update="total overtime30 overtime50 differencePanel differenceEventCellEditor" />
+                                            <p:ajax event="itemSelect" listener="#{presence.updateAllTimings()}" update="total overtime30 overtime50 differencePanel differenceEventCellEditor ticket" />
                                         </p:selectOneMenu>
                                     </f:facet>
                                 </p:cellEditor>
@@ -201,6 +201,26 @@
                                                 itemLabel="#{msg['presence.presenceEvent.' += event]}"
                                                 itemValue="#{event}" />
                                         </p:selectOneMenu>
+                                    </f:facet>
+                                </p:cellEditor>
+                            </p:column>
+                            <p:column headerText="#{msg['presence.presence.ticket']}">
+                                <h:outputText id="ticket" value="#{presence.ticket ? 'X' : ''}" />
+                            </p:column>
+                            <p:column headerText="#{msg['presence.presence.mileageReimbursement']}">
+                                <p:cellEditor>
+                                    <f:facet name="output">
+                                        <h:outputText rendered="#{presence.distanceTraveled gt 0}" value="#{presence.mileageReimbursement}">
+                                            <f:convertNumber currencySymbol="#{msg['presence.presence.mileageReimbursement.um']}" minFractionDigits="2" type="currency" />
+                                        </h:outputText>
+                                    </f:facet>
+                                    <f:facet name="input">
+                                        <p:inputNumber value="#{presence.distanceTraveled}"
+                                                       decimalPlaces="0"
+                                                       minValue="0"
+                                                       symbol=" #{msg['presence.presence.distanceTraveled.um']}"
+                                                       symbolPosition="suffix">
+                                        </p:inputNumber>
                                     </f:facet>
                                 </p:cellEditor>
                             </p:column>
