@@ -54,7 +54,7 @@ apt-get -qy update; \
 apt-get -qy install maven; \
 ULTIMA_VERSION=`ls ${HOME}/ultima* | cut -f2 -d- | sed "s/.jar//g"`;\
 mvn install:install-file -Dfile=${HOME}/ultima-${ULTIMA_VERSION}.jar -DgroupId=org.primefaces.themes -DartifactId=ultima -Dversion=${ULTIMA_VERSION} -Dpackaging=jar; \
-mvn -f ${HOME}/pom.xml -DincludeScope=provided -DexcludeArtifactIds=javax.mail,javaee-api,activation -DoutputDirectory=${HOME}/'"$(config_get APP_NAME)"'/ dependency:copy-dependencies; \
+mvn -f ${HOME}/pom.xml -DincludeScope=provided -DexcludeArtifactIds=javax.mail,javaee-api,activation,microprofile -DexcludeTransitive=true -DoutputDirectory=${HOME}/'"$(config_get APP_NAME)"'/ dependency:copy-dependencies; \
 mvn dependency:copy -Dartifact=org.postgresql:postgresql:'"$(config_get POSTGRESQL_JDBC_DRIVER_VERSION)"' -DoutputDirectory=${HOME}/'"$(config_get APP_NAME)"'/; \
 rm ${HOME}/pom.xml; \
 rm ${HOME}/ultima*; \
