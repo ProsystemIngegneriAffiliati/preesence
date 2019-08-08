@@ -17,6 +17,9 @@
                             <p:menuitem id="employmentContractsMenu" value="#{msg['worker.employmentContracts']}" icon="collections_bookmark" outcome="/securedHr/worker/employmentContracts" />
                             <p:menuitem id="insertWorkingHoursMenu" value="#{msg['presence.insertWorkingHours']}" icon="playlist_add" outcome="/securedHr/worker/insertWorkingHours" />
                         </c:if>
+                        <c:if test="#{request.isUserInRole('FULL_CONTROL')}">
+                            <p:menuitem id="holidayUpdaterMenu" value="#{msg['holiday.holidayUpdater']}" icon="beach_access" outcome="/securedAdmin/holiday/holidayUpdater" />
+                        </c:if>
                     </pu:menu>
                 </div>
             </div>

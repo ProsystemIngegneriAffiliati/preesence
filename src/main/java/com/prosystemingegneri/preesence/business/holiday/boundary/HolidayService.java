@@ -65,19 +65,22 @@ public class HolidayService implements Serializable {
 
     private void updateBankHolidays(int year, int month) throws WebApplicationException {
         target = client.target(
-                "https://holidayapi.com/v1/holidays")
-                .queryParam("key", apikey)
+                "https://getfestivo.com/v1/holidays")
+                .queryParam("api_key", apikey)
                 .queryParam("country", "IT")
                 .queryParam("year", year)
                 .queryParam("month", month);
         JsonObject jsonObject = target
                     .request(MediaType.APPLICATION_JSON)
                     .get(JsonObject.class);
-        JsonArray emailsJson = jsonObject.getJsonArray("holidays");
-        for (JsonObject j : emailsJson.getValuesAs(JsonObject.class)) {
-            LocalDate newBankHoliday = LocalDate.parse(j.getString("date"));
-            if (em.find(BankHoliday.class, newBankHoliday) == null)
-                em.persist(new BankHoliday(newBankHoliday));
+        JsonObject holidayObject = jsonObject.getJsonObject("holidays");
+        if (!holidayObject.isEmpty()) {
+            JsonArray emailsJson = holidayObject.getJsonArray("holidays");
+            for (JsonObject j : emailsJson.getValuesAs(JsonObject.class)) {
+                LocalDate newBankHoliday = LocalDate.parse(j.getString("date"));
+                if (em.find(BankHoliday.class, newBankHoliday) == null)
+                    em.persist(new BankHoliday(newBankHoliday));
+            }
         }
     }
 

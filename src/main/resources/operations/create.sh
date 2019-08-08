@@ -11,7 +11,7 @@ readonly DB_USER_PASSWORD=aEsSV7ToimzThX6BbP6n
 mkdir $HOME/"${APP_NAME}"
 mkdir $HOME/"${APP_NAME}"/documents
 \
-mvn -f "${IDE_WORKSPACE}"/"${APP_NAME}"/pom.xml -DincludeScope=provided -DexcludeArtifactIds=javax.mail,javaee-api,activation -DoutputDirectory=$HOME/"${APP_NAME}"/ dependency:copy-dependencies
+mvn -f "${IDE_WORKSPACE}"/"${APP_NAME}"/pom.xml -DincludeScope=provided -DexcludeArtifactIds=javax.mail,javaee-api,activation,microprofile -DexcludeTransitive=true -DoutputDirectory=$HOME/"${APP_NAME}"/ dependency:copy-dependencies
 mvn dependency:copy -Dartifact=org.postgresql:postgresql:"${POSTGRESQL_JDBC_DRIVER_VERSION}" -DoutputDirectory=$HOME/"${APP_NAME}"/
 \
 ./asadmin start-domain
