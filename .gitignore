@@ -2,3 +2,4 @@
 /src/main/resources/operations/production/initial.gz
 /src/main/resources/operations/production/mailPassword
 /src/main/webapp/resources/ultima-layout/
+/src/main/resources/META-INF/microprofile-config.properties
