@@ -16,13 +16,18 @@
  */
 package com.prosystemingegneri.preesence.business.presence.boundary;
 
+import com.prosystemingegneri.preesence.business.holiday.boundary.HolidayService;
+import com.prosystemingegneri.preesence.business.presence.controller.PresenceEvent;
 import com.prosystemingegneri.preesence.business.presence.entity.Presence;
 import com.prosystemingegneri.preesence.business.presence.entity.Presence_;
 import com.prosystemingegneri.preesence.business.worker.boundary.WorkerService;
 import com.prosystemingegneri.preesence.business.worker.entity.Worker;
 import com.prosystemingegneri.preesence.business.worker.entity.Worker_;
 import java.io.Serializable;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -48,6 +53,9 @@ public class PresenceService implements Serializable {
     
     @Inject
     WorkerService workerService;
+    
+    @Inject
+    HolidayService holidayService;
     
     public Presence create() {
         return new Presence();
@@ -147,5 +155,22 @@ public class PresenceService implements Serializable {
             conditions.add(cb.equal(root.get(Presence_.worker), worker));
         
         return conditions;
+    }
+    
+    public List<Presence> populateDays(Worker worker, LocalDate start, LocalDate end) {
+        List<Presence> presences = new ArrayList<>();
+        for (int i = 0; i < ChronoUnit.DAYS.between(start, end) + 1; i++) {
+            Presence presence = create();
+            presence.setWorker(worker);
+            LocalDate currentDay = start.plusDays(i);
+            presence.setDaytime(LocalDate.from(currentDay));
+            if (currentDay.getDayOfWeek().equals(DayOfWeek.SUNDAY) || holidayService.find(currentDay) != null)
+                presence.setEvent(PresenceEvent.HOLIDAY);
+            else
+                presence.setEvent(PresenceEvent.WORK);
+            presences.add(presence);
+        }
+        
+        return presences;
     }
 }

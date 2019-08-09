@@ -86,18 +86,7 @@ public class InsertWorkingHoursPresenter implements Serializable{
     }
     
     public void populateDays() {
-        presences.clear();
-        for (int i = 0; i < ChronoUnit.DAYS.between(start, end) + 1; i++) {
-            Presence presence = service.create();
-            presence.setWorker(worker);
-            LocalDate currentDay = start.plusDays(i);
-            presence.setDaytime(LocalDate.from(currentDay));
-            if (currentDay.getDayOfWeek().equals(DayOfWeek.SUNDAY))
-                presence.setEvent(PresenceEvent.HOLIDAY);
-            else
-                presence.setEvent(PresenceEvent.WORK);
-            presences.add(presence);
-        }
+        presences = service.populateDays(worker, start, end);
     }
 
     public Worker getWorker() {

@@ -21,6 +21,7 @@ import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -32,13 +33,17 @@ public class BankHoliday implements Serializable {
     @Id
     @Column(nullable = false, columnDefinition = "date", unique = true, updatable = false)
     private @NotNull LocalDate daytime;
+    
+    @Column(nullable = false, updatable = false)
+    private @NotEmpty String name;
 
     public BankHoliday() {
     }
 
-    public BankHoliday(LocalDate daytime) {
+    public BankHoliday(LocalDate daytime, String name) {
         this();
         this.daytime = daytime;
+        this.name = name;
     }
 
     public LocalDate getDaytime() {
@@ -47,6 +52,14 @@ public class BankHoliday implements Serializable {
 
     public void setDaytime(LocalDate daytime) {
         this.daytime = daytime;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
     
 }

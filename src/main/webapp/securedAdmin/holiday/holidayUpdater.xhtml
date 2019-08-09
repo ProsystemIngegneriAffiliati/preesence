@@ -16,9 +16,36 @@
                     <div class="card card-w-title">
                         <h1>#{msg['holiday.holidayUpdater']}</h1>
                         <p>#{msg['holiday.holidayUpdater.tip']}</p>
-                        <p:commandButton value="#{msg['update']}"
+                        <p:commandButton style="margin-bottom: 25px"
+                                         value="#{msg['update']}"
                                          action="#{holidayPresenter.updateBankHolidaysCurrentYear()}"
                                          ajax="false"/>
+
+                        <p:dataTable id="bankHolidaysTable"
+                                     var="bankHoliday" value="#{holidayListPresenter.lazyBankHolidays}"
+                                     selectionMode="multiple" selection="#{holidayListPresenter.selectedBankHolidays}" rowKey="#{bankHoliday.daytime}"
+                                     paginator="true" rows="10" paginatorAlwaysVisible="false"
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="10,25,50" lazy="true">
+                            <f:facet name="header">
+                                <p:panelGrid columns="2" columnClasses="lefted, righted" styleClass="ui-panelgrid-blank">
+                                    #{msg['holiday.bankHolidays.tip']}
+                                    <p:outputPanel>
+                                        <p:commandButton title="#{msg['delete']}" icon="ui-icon-delete" actionListener="#{holidayListPresenter.delete()}" update="bankHolidaysTable">
+                                            <p:confirm header="#{msg['holiday.bankHolidays.delete']}" message="#{msg['holiday.bankHolidays.delete.tip']}" icon="ui-icon-alert"/>
+                                        </p:commandButton>
+                                    </p:outputPanel>
+                                </p:panelGrid>
+                            </f:facet>
+                            <p:column headerText="#{msg['holiday.bankHoliday.daytime']}">
+                                <h:outputText value="#{bankHoliday.daytime}">
+                                    <f:convertDateTime type="localDate" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="#{msg['holiday.bankHoliday.name']}">
+                                <h:outputText value="#{bankHoliday.name}" />
+                            </p:column>
+                        </p:dataTable>
                     </div>
                 </div>
             </div>
