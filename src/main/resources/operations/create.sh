@@ -2,8 +2,8 @@
 readonly IDE_WORKSPACE=$HOME/NetBeansProjects
 readonly AS_LIBFOLDER=$HOME/payara5/glassfish/domains/domain1/lib
 readonly APP_NAME=preesence
-readonly IP_ADDRESS=192.168.0.123
-readonly POSTGRESQL_JDBC_DRIVER_VERSION=42.2.6
+readonly IP_ADDRESS=192.168.1.10
+readonly POSTGRESQL_JDBC_DRIVER_VERSION=42.2.8
 readonly DB_NAME="${APP_NAME}"
 readonly DB_USER_NAME="${APP_NAME}"
 readonly DB_USER_PASSWORD=aEsSV7ToimzThX6BbP6n
