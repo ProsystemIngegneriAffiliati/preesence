@@ -19,13 +19,15 @@ package com.prosystemingegneri.preesence.presentation.presence;
 import com.prosystemingegneri.preesence.business.presence.boundary.PresenceService;
 import com.prosystemingegneri.preesence.business.presence.entity.Presence;
 import com.prosystemingegneri.preesence.business.worker.entity.Worker;
+import com.prosystemingegneri.preesence.presentation.LazyUtils;
+import static com.prosystemingegneri.preesence.presentation.LazyUtils.getAscending;
+import static com.prosystemingegneri.preesence.presentation.LazyUtils.getStringFromFilter;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import org.primefaces.model.FilterMeta;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
-import static org.primefaces.model.SortOrder.ASCENDING;
-import static org.primefaces.model.SortOrder.DESCENDING;
 
 /**
  *
@@ -48,33 +50,11 @@ public class PresenceLazyDataModel extends LazyDataModel<Presence>{
     }
     
     @Override
-    public List<Presence> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
-        Boolean isAscending = null;
-        String workerName = null;
-        Boolean isNotEnded = null;
+    public List<Presence> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, FilterMeta> filterBy) {
+        String workerName = getStringFromFilter(filterBy, "workerName");
+        Boolean isNotEnded = LazyUtils.getBooleanFromFilter(filterBy, "isNotEnded");
         
-        switch (sortOrder) {
-            case ASCENDING:
-                isAscending = Boolean.TRUE;
-                break;
-            case DESCENDING:
-                isAscending = Boolean.FALSE;
-                break;
-            default:
-        }
-        
-        if (filters != null && !filters.isEmpty()) {
-            for (String filterProperty : filters.keySet()) {
-                if (!filterProperty.isEmpty()) {
-                    if (filterProperty.equalsIgnoreCase("workerName"))
-                        workerName = String.valueOf(filters.get(filterProperty));
-                    if (filterProperty.equalsIgnoreCase("isNotEnded"))
-                        isNotEnded = (Boolean) filters.get(filterProperty);
-                }
-            }
-        }
-        
-        List<Presence> result = service.list(first, pageSize, sortField, isAscending, start, end, worker, workerName, isNotEnded);
+        List<Presence> result = service.list(first, pageSize, sortField, getAscending(sortOrder), start, end, worker, workerName, isNotEnded);
         this.setRowCount(service.getCount(start, end, worker, workerName, isNotEnded).intValue());
         
         return result;

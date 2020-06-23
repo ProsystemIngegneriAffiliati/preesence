@@ -18,12 +18,13 @@ package com.prosystemingegneri.preesence.presentation.user;
 
 import com.prosystemingegneri.preesence.business.auth.boundary.UserAppService;
 import com.prosystemingegneri.preesence.business.auth.entity.UserApp;
+import static com.prosystemingegneri.preesence.presentation.LazyUtils.getAscending;
+import static com.prosystemingegneri.preesence.presentation.LazyUtils.getStringFromFilter;
 import java.util.List;
 import java.util.Map;
+import org.primefaces.model.FilterMeta;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
-import static org.primefaces.model.SortOrder.ASCENDING;
-import static org.primefaces.model.SortOrder.DESCENDING;
 
 /**
  *
@@ -42,33 +43,11 @@ public class UserLazyDataModel extends LazyDataModel<UserApp>{
     }
     
     @Override
-    public List<UserApp> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
-        Boolean isAscending = null;
-        String username = null;
-        String groupAppName = null;
+    public List<UserApp> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, FilterMeta> filterBy) {
+        String username = getStringFromFilter(filterBy, "username");
+        String groupAppName = getStringFromFilter(filterBy, "groupAppName");
         
-        switch (sortOrder) {
-            case ASCENDING:
-                isAscending = Boolean.TRUE;
-                break;
-            case DESCENDING:
-                isAscending = Boolean.FALSE;
-                break;
-            default:
-        }
-        
-        if (filters != null && !filters.isEmpty()) {
-            for (String filterProperty : filters.keySet()) {
-                if (!filterProperty.isEmpty()) {
-                    if (filterProperty.equalsIgnoreCase("username"))
-                        username = String.valueOf(filters.get(filterProperty));
-                    if (filterProperty.equalsIgnoreCase("groupAppName"))
-                        groupAppName = String.valueOf(filters.get(filterProperty));
-                }
-            }
-        }
-        
-        List<UserApp> result = service.list(first, pageSize, sortField, isAscending, username, groupAppName, null);
+        List<UserApp> result = service.list(first, pageSize, sortField, getAscending(sortOrder), username, groupAppName, null);
         this.setRowCount(service.getCount(username, groupAppName, null).intValue());
         
         return result;

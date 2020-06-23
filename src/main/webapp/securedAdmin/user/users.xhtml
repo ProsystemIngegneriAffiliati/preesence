@@ -26,10 +26,10 @@
                                     </p:outputPanel>
                                 </p:panelGrid>
                             </f:facet>
-                            <p:column headerText="#{msg['login.username']}" field="username" sortBy="#{username}" filterBy="#{username}" priority="0">
+                            <p:column headerText="#{msg['login.username']}" sortBy="#{username}" filterBy="#{username}" priority="0">
                                 <h:outputText value="#{user.username}" />
                             </p:column>
-                            <p:column headerText="#{msg['user.group.name']}" field="groupAppName" sortBy="#{groupAppName}" filterBy="#{groupAppName}" priority="0">
+                            <p:column headerText="#{msg['user.group.name']}" sortBy="#{groupAppName}" filterBy="#{groupAppName}" priority="0">
                                 <h:outputText value="#{user.groupApp.name}" />
                             </p:column>
                             <p:column headerText="#{msg['actions']}" style="width:64px; text-align:center" priority="0" exportable="false">

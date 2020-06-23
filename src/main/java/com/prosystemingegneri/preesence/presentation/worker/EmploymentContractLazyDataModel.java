@@ -18,12 +18,13 @@ package com.prosystemingegneri.preesence.presentation.worker;
 
 import com.prosystemingegneri.preesence.business.worker.boundary.EmploymentContractService;
 import com.prosystemingegneri.preesence.business.worker.entity.EmploymentContract;
+import static com.prosystemingegneri.preesence.presentation.LazyUtils.getAscending;
+import static com.prosystemingegneri.preesence.presentation.LazyUtils.getStringFromFilter;
 import java.util.List;
 import java.util.Map;
+import org.primefaces.model.FilterMeta;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
-import static org.primefaces.model.SortOrder.ASCENDING;
-import static org.primefaces.model.SortOrder.DESCENDING;
 
 /**
  *
@@ -42,30 +43,10 @@ public class EmploymentContractLazyDataModel extends LazyDataModel<EmploymentCon
     }
     
     @Override
-    public List<EmploymentContract> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
-        Boolean isAscending = null;
-        String name = null;
+    public List<EmploymentContract> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, FilterMeta> filterBy) {
+        String name = getStringFromFilter(filterBy, "name");
         
-        switch (sortOrder) {
-            case ASCENDING:
-                isAscending = Boolean.TRUE;
-                break;
-            case DESCENDING:
-                isAscending = Boolean.FALSE;
-                break;
-            default:
-        }
-        
-        if (filters != null && !filters.isEmpty()) {
-            for (String filterProperty : filters.keySet()) {
-                if (!filterProperty.isEmpty()) {
-                    if (filterProperty.equalsIgnoreCase("name"))
-                        name = String.valueOf(filters.get(filterProperty));
-                }
-            }
-        }
-        
-        List<EmploymentContract> result = service.list(first, pageSize, sortField, isAscending, name);
+        List<EmploymentContract> result = service.list(first, pageSize, sortField, getAscending(sortOrder), name);
         this.setRowCount(service.getCount(name).intValue());
         
         return result;

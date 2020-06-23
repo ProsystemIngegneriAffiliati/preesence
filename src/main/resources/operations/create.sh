@@ -3,7 +3,6 @@ readonly IDE_WORKSPACE=$HOME/NetBeansProjects
 readonly AS_LIBFOLDER=$HOME/payara5/glassfish/domains/domain1/lib
 readonly APP_NAME=preesence
 readonly IP_ADDRESS=192.168.1.10
-readonly POSTGRESQL_JDBC_DRIVER_VERSION=42.2.8
 readonly DB_NAME="${APP_NAME}"
 readonly DB_USER_NAME="${APP_NAME}"
 readonly DB_USER_PASSWORD=aEsSV7ToimzThX6BbP6n
@@ -11,8 +10,7 @@ readonly DB_USER_PASSWORD=aEsSV7ToimzThX6BbP6n
 mkdir $HOME/"${APP_NAME}"
 mkdir $HOME/"${APP_NAME}"/documents
 \
-mvn -f "${IDE_WORKSPACE}"/"${APP_NAME}"/pom.xml -DincludeScope=provided -DexcludeArtifactIds=javax.mail,javaee-api,activation,microprofile -DexcludeTransitive=true -DoutputDirectory=$HOME/"${APP_NAME}"/ dependency:copy-dependencies
-mvn dependency:copy -Dartifact=org.postgresql:postgresql:"${POSTGRESQL_JDBC_DRIVER_VERSION}" -DoutputDirectory=$HOME/"${APP_NAME}"/
+mvn -f "${IDE_WORKSPACE}"/"${APP_NAME}"/pom.xml -DincludeScope=provided -DexcludeArtifactIds=javax.mail,jakarta.jakartaee-api,activation,microprofile -DexcludeTransitive=true -DoutputDirectory=$HOME/"${APP_NAME}"/ dependency:copy-dependencies
 \
 ./asadmin start-domain
 ./asadmin add-library $HOME/"${APP_NAME}"/*.jar

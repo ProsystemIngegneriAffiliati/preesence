@@ -18,12 +18,14 @@ package com.prosystemingegneri.preesence.presentation.worker;
 
 import com.prosystemingegneri.preesence.business.worker.boundary.WorkerService;
 import com.prosystemingegneri.preesence.business.worker.entity.Worker;
+import com.prosystemingegneri.preesence.presentation.LazyUtils;
+import static com.prosystemingegneri.preesence.presentation.LazyUtils.getAscending;
+import static com.prosystemingegneri.preesence.presentation.LazyUtils.getStringFromFilter;
 import java.util.List;
 import java.util.Map;
+import org.primefaces.model.FilterMeta;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
-import static org.primefaces.model.SortOrder.ASCENDING;
-import static org.primefaces.model.SortOrder.DESCENDING;
 
 /**
  *
@@ -42,33 +44,11 @@ public class WorkerLazyDataModel extends LazyDataModel<Worker>{
     }
     
     @Override
-    public List<Worker> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
-        Boolean isAscending = null;
-        String name = null;
-        Boolean isDismissed = null;
+    public List<Worker> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, FilterMeta> filterBy) {
+        String name = getStringFromFilter(filterBy, "name");
+        Boolean isDismissed = LazyUtils.getBooleanFromFilter(filterBy, "isDismissed");
         
-        switch (sortOrder) {
-            case ASCENDING:
-                isAscending = Boolean.TRUE;
-                break;
-            case DESCENDING:
-                isAscending = Boolean.FALSE;
-                break;
-            default:
-        }
-        
-        if (filters != null && !filters.isEmpty()) {
-            for (String filterProperty : filters.keySet()) {
-                if (!filterProperty.isEmpty()) {
-                    if (filterProperty.equalsIgnoreCase("name"))
-                        name = String.valueOf(filters.get(filterProperty));
-                    if (filterProperty.equalsIgnoreCase("isDismissed"))
-                        isDismissed = (Boolean) filters.get(filterProperty);
-                }
-            }
-        }
-        
-        List<Worker> result = service.list(first, pageSize, sortField, isAscending, name, isDismissed);
+        List<Worker> result = service.list(first, pageSize, sortField, getAscending(sortOrder), name, isDismissed);
         this.setRowCount(service.getCount(name, isDismissed).intValue());
         
         return result;

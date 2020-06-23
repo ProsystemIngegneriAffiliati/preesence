@@ -56,7 +56,7 @@ import static org.omnifaces.util.Utils.isEmpty;
         }
 )
 @ApplicationScoped
-@FacesConfig(version = FacesConfig.Version.JSF_2_3)
+@FacesConfig
 public class ApplicationConfig implements Serializable {
 
     @PostConstruct

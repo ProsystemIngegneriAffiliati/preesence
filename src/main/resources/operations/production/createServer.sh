@@ -33,10 +33,19 @@ rm '"$(config_get DB_INITIAL_FILENAME)"''
 #chmod +x backupDb.sh; \
 #(crontab -l && echo "15 1 * * 0 /root/backupDb.sh >/dev/null 2>&1") | crontab -'
 
+#Copy provided jars into target folder, ready to be copied to production
+mvn -f "$(config_get IDE_WORKSPACE)"/"$(config_get APP_NAME)"/pom.xml -DincludeScope=provided -DexcludeArtifactIds=javax.mail,jakarta.jakartaee-api,activation -DoutputDirectory="$(config_get IDE_WORKSPACE)"/"$(config_get APP_NAME)"/target/libs-temp/ dependency:copy-dependencies
+#Copy jars into production
+scp -P "$(config_get EXTERNAL_SSH_PORT)" "$(config_get IDE_WORKSPACE)"/"$(config_get APP_NAME)"/target/libs-temp/* root@"$(config_get IP_ADDRESS)":/root/
+
+#Application server (Payara) automatically starts and stops
+scp -P "$(config_get EXTERNAL_SSH_PORT)" payara.service root@"$(config_get IP_ADDRESS)":/etc/systemd/system/
+ssh root@"$(config_get IP_ADDRESS)" -p "$(config_get EXTERNAL_SSH_PORT)" '\
+systemctl enable payara'
+
 #Application server (Payara) installation and configuration
-scp -P "$(config_get EXTERNAL_SSH_PORT)" "$(config_get IDE_WORKSPACE)"/"$(config_get APP_NAME)"/pom.xml root@"$(config_get IP_ADDRESS)":/root/
-scp -P "$(config_get EXTERNAL_SSH_PORT)" "$(config_get IDE_WORKSPACE)"/"$(config_get APP_NAME)"/target/"$(config_get APP_NAME)"/WEB-INF/lib/ultima* root@"$(config_get IP_ADDRESS)":/root/
 scp -P "$(config_get EXTERNAL_SSH_PORT)" *Password root@"$(config_get IP_ADDRESS)":/root/
+scp -P "$(config_get EXTERNAL_SSH_PORT)" "$(config_get IDE_WORKSPACE)"/"$(config_get APP_NAME)"/target/"$(config_get APP_NAME)".war root@"$(config_get IP_ADDRESS)":/root/
 ssh root@"$(config_get IP_ADDRESS)" -p "$(config_get EXTERNAL_SSH_PORT)" '\
 apt-get -qy update; \
 apt-get -qy install default-jdk; \
@@ -49,20 +58,10 @@ rm payara-'"$(config_get AS_VERSION)"'.zip; \
 mkdir ${HOME}/'"$(config_get APP_NAME)"'; \
 mkdir ${HOME}/'"$(config_get APP_NAME)"'/documents; \
 \
-cd ${HOME}; \
-apt-get -qy update; \
-apt-get -qy install maven; \
-ULTIMA_VERSION=`ls ${HOME}/ultima* | cut -f2 -d- | sed "s/.jar//g"`;\
-mvn install:install-file -Dfile=${HOME}/ultima-${ULTIMA_VERSION}.jar -DgroupId=org.primefaces.themes -DartifactId=ultima -Dversion=${ULTIMA_VERSION} -Dpackaging=jar; \
-mvn -f ${HOME}/pom.xml -DincludeScope=provided -DexcludeArtifactIds=javax.mail,javaee-api,activation,microprofile -DexcludeTransitive=true -DoutputDirectory=${HOME}/'"$(config_get APP_NAME)"'/ dependency:copy-dependencies; \
-mvn dependency:copy -Dartifact=org.postgresql:postgresql:'"$(config_get POSTGRESQL_JDBC_DRIVER_VERSION)"' -DoutputDirectory=${HOME}/'"$(config_get APP_NAME)"'/; \
-rm ${HOME}/pom.xml; \
-rm ${HOME}/ultima*; \
-\
 sh '"$(config_get AS_BIN)"'/asadmin start-domain '"$(config_get AS_DOMAIN_NAME)"'; \
 \
-sh '"$(config_get AS_BIN)"'/asadmin add-library ${HOME}/'"$(config_get APP_NAME)"'/*.jar; \
-rm ${HOME}/'"$(config_get APP_NAME)"'/*.jar; \
+sh '"$(config_get AS_BIN)"'/asadmin add-library ${HOME}/*.jar; \
+rm ${HOME}/*.jar; \
 \
 sh '"$(config_get AS_BIN)"'/asadmin --passwordfile ${HOME}/dbUserPassword create-password-alias '"$(config_get AS_PASSWORD_ALIAS_NAME)"'; \
 rm ${HOME}/dbUserPassword; \

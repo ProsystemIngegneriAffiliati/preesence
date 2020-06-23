@@ -18,13 +18,13 @@ package com.prosystemingegneri.preesence.presentation.holiday;
 
 import com.prosystemingegneri.preesence.business.holiday.boundary.HolidayService;
 import com.prosystemingegneri.preesence.business.holiday.entity.BankHoliday;
+import static com.prosystemingegneri.preesence.presentation.LazyUtils.getAscending;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import org.primefaces.model.FilterMeta;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
-import static org.primefaces.model.SortOrder.ASCENDING;
-import static org.primefaces.model.SortOrder.DESCENDING;
 
 /**
  *
@@ -43,20 +43,8 @@ public class HolidayLazyDataModel extends LazyDataModel<BankHoliday>{
     }
     
     @Override
-    public List<BankHoliday> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
-        Boolean isAscending = null;
-        
-        switch (sortOrder) {
-            case ASCENDING:
-                isAscending = Boolean.TRUE;
-                break;
-            case DESCENDING:
-                isAscending = Boolean.FALSE;
-                break;
-            default:
-        }
-        
-        List<BankHoliday> result = service.list(first, pageSize, sortField, isAscending);
+    public List<BankHoliday> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, FilterMeta> filterBy) {
+        List<BankHoliday> result = service.list(first, pageSize, sortField, getAscending(sortOrder));
         this.setRowCount(service.getCount().intValue());
         
         return result;

@@ -31,10 +31,10 @@
                                     </p:outputPanel>
                                 </p:panelGrid>
                             </f:facet>
-                            <p:column headerText="#{msg['worker.employmentContract.name']}" field="name" sortBy="#{name}" filterBy="#{name}" priority="0">
+                            <p:column headerText="#{msg['worker.employmentContract.name']}" sortBy="#{name}" filterBy="#{name}" priority="0">
                                 <h:outputText value="#{employmentContract.name}" />
                             </p:column>
-                            <p:column headerText="#{msg['worker.employmentContract.hoursDaily']}" field="hoursDaily" sortBy="#{name}" priority="0">
+                            <p:column headerText="#{msg['worker.employmentContract.hoursDaily']}" sortBy="#{name}" priority="0">
                                 <h:outputText value="#{employmentContract.hoursDaily}">
                                     <f:convertNumber />
                                 </h:outputText>
