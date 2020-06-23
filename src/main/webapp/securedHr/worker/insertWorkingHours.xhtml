@@ -29,11 +29,12 @@
                                                 var="worker"
                                                 itemLabel="#{worker.name}"
                                                 itemValue="#{worker}"
-                                                forceSelection="true">
+                                                forceSelection="true"
+                                                pt:autofocus="true">
                                     <p:ajax event="itemSelect" update="populateDaysButton" />
                                     <o:converter converterId="omnifaces.ListConverter" list="#{workerListPresenter.getWorkers(insertWorkingHoursPresenter.worker)}" />
                                 </p:autoComplete>
-                                <p:outputLabel for="userApp" value="#{msg['user.user']}"/>
+                                <p:outputLabel for="userApp" value="#{msg['worker.worker']}"/>
                                 <p:message for="userApp"/>
                             </h:panelGroup>
                             <h:panelGroup styleClass="md-inputfield">
@@ -75,7 +76,7 @@
                         <p:dataTable id="presencesTable"
                                      var="presence"
                                      value="#{insertWorkingHoursPresenter.presences}"
-                                     stickyHeader="true"
+                                     stickyHeader="true" stickyTopAt=".topbar"
                                      editable="true" editMode="cell">
                             <f:facet name="header">
                                 <p:panelGrid columns="2" columnClasses="lefted, righted" styleClass="ui-panelgrid-blank">

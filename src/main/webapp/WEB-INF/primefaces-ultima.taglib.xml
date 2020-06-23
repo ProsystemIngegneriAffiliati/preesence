@@ -60,7 +60,6 @@
             <name>stateful</name>
             <required>false</required>
             <type>java.lang.Boolean</type>
-            <defaultValue>true</defaultValue>
         </attribute>
     </tag>
     

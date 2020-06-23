@@ -17,6 +17,7 @@
 package com.prosystemingegneri.preesence.business.presence.entity;
 
 import com.prosystemingegneri.preesence.business.entity.BaseEntity;
+import com.prosystemingegneri.preesence.business.presence.controller.CompulsoryPreesenceEventWhenDifference;
 import com.prosystemingegneri.preesence.business.presence.controller.EndAfterStart;
 import com.prosystemingegneri.preesence.business.presence.controller.PresenceEvent;
 import com.prosystemingegneri.preesence.business.worker.entity.Worker;
@@ -39,6 +40,7 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @EndAfterStart
+@CompulsoryPreesenceEventWhenDifference
 public class Presence extends BaseEntity {
     @ManyToOne(optional = false)
     private @NotNull Worker worker;
@@ -63,8 +65,8 @@ public class Presence extends BaseEntity {
     private @NotNull PresenceEvent event;
     
     @Enumerated(EnumType.ORDINAL)
-    @Column(nullable = false, columnDefinition = "smallint")
-    private @NotNull PresenceEvent differenceEvent; //what the worker did if he/she worked less hours than expected?
+    @Column(columnDefinition = "smallint")
+    private PresenceEvent differenceEvent; //what the worker did if he/she worked less hours than expected?
     
     @Transient
     private BigDecimal total;
