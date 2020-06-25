@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2020 Prosystem Ingegneri Affiliati
+ * Copyright (C) 2020 Prosystem Ingegneri Affiliati
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,10 +27,10 @@ import javax.validation.constraints.NotNull;
 
 /**
  *
- * @author Mainardi Davide <davide at mainardisoluzioni.com>
+ * @author Mainardi Davide <davide@mainardisoluzioni.com>
  */
 @Entity
-public class EmploymentContract extends BaseEntity {
+public class LunchBreakTicket extends BaseEntity {
     @Transient
     public static final int SCALE = 2; //If zero or positive, the scale is the number of digits to the right of the decimal point.
     @Transient
@@ -40,26 +40,6 @@ public class EmploymentContract extends BaseEntity {
     private @NotBlank String name;
     
     @Column(nullable = false, scale = SCALE, precision = PRECISION)
-    private @NotNull @DecimalMin(value = "0", inclusive = false) BigDecimal hoursDaily;
-
-    public EmploymentContract() {
-        hoursDaily = BigDecimal.ZERO;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public BigDecimal getHoursDaily() {
-        return hoursDaily;
-    }
-
-    public void setHoursDaily(BigDecimal hoursDaily) {
-        this.hoursDaily = hoursDaily;
-    }
+    private @NotNull @DecimalMin(value = "0", inclusive = false) BigDecimal value;
     
 }

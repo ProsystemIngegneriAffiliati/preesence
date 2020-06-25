@@ -26,7 +26,7 @@ import javax.faces.context.ExternalContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.security.enterprise.credential.Password;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
 import org.omnifaces.util.Faces;
 import org.omnifaces.util.Messages;
 
@@ -45,8 +45,8 @@ public class ChangePasswordPresenter {
     
     private String username;
     
-    private @NotEmpty String currentPassword;
-    private @NotEmpty String newPassword;
+    private @NotBlank String currentPassword;
+    private @NotBlank String newPassword;
     
     @PostConstruct
     public void init() {

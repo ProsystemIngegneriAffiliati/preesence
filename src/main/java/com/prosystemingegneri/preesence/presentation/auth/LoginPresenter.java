@@ -29,7 +29,7 @@ import javax.security.enterprise.credential.Password;
 import javax.security.enterprise.credential.UsernamePasswordCredential;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
 import org.omnifaces.util.Messages;
 
 /**
@@ -47,8 +47,8 @@ public class LoginPresenter {
     @Inject
     private SecurityContext securityContext;
 
-    private @NotEmpty String password;
-    private @NotEmpty String username;
+    private @NotBlank String password;
+    private @NotBlank String username;
 
     public void login() {
         Credential credential = new UsernamePasswordCredential(username, new Password(password));

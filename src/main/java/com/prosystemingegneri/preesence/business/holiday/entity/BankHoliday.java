@@ -21,7 +21,7 @@ import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -35,7 +35,7 @@ public class BankHoliday implements Serializable {
     private @NotNull LocalDate daytime;
     
     @Column(nullable = false, updatable = false)
-    private @NotEmpty String name;
+    private @NotBlank String name;
 
     public BankHoliday() {
     }

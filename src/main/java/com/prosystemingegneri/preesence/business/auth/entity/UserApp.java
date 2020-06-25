@@ -24,7 +24,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -35,10 +35,10 @@ import javax.validation.constraints.NotNull;
 public class UserApp implements Serializable {
 
     @Id
-    private @NotEmpty String username;
+    private @NotBlank String username;
 
     @Column(nullable = false)
-    private @NotEmpty String password;
+    private @NotBlank String password;
     
     @ManyToOne(optional = false)
     private @NotNull GroupApp groupApp;

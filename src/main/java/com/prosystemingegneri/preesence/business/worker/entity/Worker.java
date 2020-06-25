@@ -23,7 +23,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -33,7 +33,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class Worker extends BaseEntity {
     @Column(nullable = false, unique = true)
-    private @NotEmpty String name;
+    private @NotBlank String name;
     
     @Column(columnDefinition = "date")
     private LocalDate dismission;
