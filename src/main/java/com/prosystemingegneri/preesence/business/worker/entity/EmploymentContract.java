@@ -17,9 +17,13 @@
 package com.prosystemingegneri.preesence.business.worker.entity;
 
 import com.prosystemingegneri.preesence.business.entity.BaseEntity;
+import com.prosystemingegneri.preesence.business.worker.control.EmploymentContractTime;
 import java.math.BigDecimal;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
@@ -36,11 +40,18 @@ public class EmploymentContract extends BaseEntity {
     @Transient
     public static final int PRECISION = 4;
     
+    @Enumerated(EnumType.ORDINAL)
+    @Column(nullable = false, columnDefinition = "smallint")
+    private @NotNull EmploymentContractTime contractTime;
+    
     @Column(nullable = false, unique = true)
     private @NotBlank String name;
     
     @Column(nullable = false, scale = SCALE, precision = PRECISION)
     private @NotNull @DecimalMin(value = "0", inclusive = false) BigDecimal hoursDaily;
+    
+    @ManyToOne
+    private LunchBreakTicket lunchBreakTicket;
 
     public EmploymentContract() {
         hoursDaily = BigDecimal.ZERO;
@@ -60,6 +71,22 @@ public class EmploymentContract extends BaseEntity {
 
     public void setHoursDaily(BigDecimal hoursDaily) {
         this.hoursDaily = hoursDaily;
+    }
+
+    public LunchBreakTicket getLunchBreakTicket() {
+        return lunchBreakTicket;
+    }
+
+    public void setLunchBreakTicket(LunchBreakTicket lunchBreakTicket) {
+        this.lunchBreakTicket = lunchBreakTicket;
+    }
+
+    public EmploymentContractTime getContractTime() {
+        return contractTime;
+    }
+
+    public void setContractTime(EmploymentContractTime contractTime) {
+        this.contractTime = contractTime;
     }
     
 }

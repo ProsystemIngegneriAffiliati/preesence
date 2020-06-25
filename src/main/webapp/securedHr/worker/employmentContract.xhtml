@@ -8,6 +8,7 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core">
     <ui:define name="metadata">
         <f:metadata>
+            <f:importConstants type="com.prosystemingegneri.preesence.business.worker.control.EmploymentContractTime" />
             <f:importConstants type="com.prosystemingegneri.preesence.business.worker.entity.EmploymentContract" />
             <o:viewParam name="id"
                          value="#{employmentContractPresenter.id}"
@@ -23,16 +24,44 @@
                     <div class="card card-w-title">
                         <h1>#{msg['worker.employmentContract']}</h1>
                         <p>#{msg['worker.employmentContract.tip']}</p>
-                        <p:panelGrid columns="2" columnClasses="ui-grid-col-8,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group">
+                        <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" styleClass="ui-panelgrid-blank form-group">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:selectOneMenu id="contractTime" value="#{employmentContractPresenter.employmentContract.contractTime}">
+                                    <f:selectItem itemLabel="" itemValue="" />
+                                    <f:selectItems
+                                        value="#{EmploymentContractTime}"
+                                        var="contractTime"
+                                        itemLabel="#{msg['worker.employmentContractTime.' += contractTime]}"
+                                        itemValue="#{contractTime}" />
+                                </p:selectOneMenu>
+                                <p:outputLabel for="contractTime" value="#{msg['worker.employmentContractTime']}" />
+                                <p:message for="contractTime"/>
+                            </h:panelGroup>
                             <h:panelGroup styleClass="md-inputfield">
                                 <p:inputText id="name" value="#{employmentContractPresenter.employmentContract.name}" pt:autofocus="true" />
                                 <p:outputLabel for="name" value="#{msg['worker.employmentContract.name']}" />
                                 <p:message for="name"/>
                             </h:panelGroup>
+                        </p:panelGrid>
+                        <p:panelGrid columns="2" columnClasses="ui-grid-col-6,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank form-group">
                             <h:panelGroup styleClass="md-inputfield">
                                 <p:inputNumber id="hoursDaily" value="#{employmentContractPresenter.employmentContract.hoursDaily}" decimalPlaces="#{EmploymentContract.SCALE}" minValue="0" />
                                 <p:outputLabel for="hoursDaily" value="#{msg['worker.employmentContract.hoursDaily']}" />
                                 <p:message for="hoursDaily"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:autoComplete id="lunchBreakTicket"
+                                                dropdown="true"
+                                                value="#{employmentContractPresenter.employmentContract.lunchBreakTicket}"
+                                                completeMethod="#{lunchBreakTicketListPresenter.complete}"
+                                                var="ticket"
+                                                itemLabel="#{ticket.name}"
+                                                itemValue="#{ticket}"
+                                                forceSelection="true">
+                                    <o:converter converterId="omnifaces.ListConverter" list="#{lunchBreakTicketListPresenter.getLunchBreakTickets(employmentContractPresenter.employmentContract.lunchBreakTicket)}" />
+                                </p:autoComplete>
+                                <p:outputLabel for="lunchBreakTicket" value="#{msg['worker.lunchBreakTicket.name']}"/>
+                                <p:message for="lunchBreakTicket"/>
                             </h:panelGroup>
                         </p:panelGrid>
                     </div>

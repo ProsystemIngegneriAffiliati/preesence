@@ -35,9 +35,6 @@
                             <p:column headerText="#{msg['worker.employmentContract.name']}" priority="3">
                                 <h:outputText value="#{worker.contract.name}" />
                             </p:column>
-                            <p:column headerText="#{msg['worker.lunchBreakTicket']}" priority="6">
-                                <h:outputText value="#{worker.lunchBreakTicket.name}" />
-                            </p:column>
                             <p:column headerText="#{msg['worker.worker.dismission']}" sortBy="#{isDismissed}" filterBy="#{isDismissed}" priority="4">
                                 <f:facet name="filter">
                                     <p:selectOneMenu onchange="PF('wrkst').filter()">

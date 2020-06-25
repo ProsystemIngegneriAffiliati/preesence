@@ -206,7 +206,22 @@
                                 </p:cellEditor>
                             </p:column>
                             <p:column headerText="#{msg['presence.presence.ticket']}">
-                                <h:outputText id="ticket" value="#{presence.ticket ? 'X' : ''}" />
+                                <p:cellEditor id="ticket">
+                                    <f:facet name="output">
+                                        <h:outputText value="#{presence.lunchBreakTicket.name}" />
+                                    </f:facet>
+                                    <f:facet name="input">
+                                        <p:autoComplete dropdown="true"
+                                                        value="#{presence.lunchBreakTicket}"
+                                                        completeMethod="#{lunchBreakTicketListPresenter.complete}"
+                                                        var="ticket"
+                                                        itemLabel="#{ticket.name}"
+                                                        itemValue="#{ticket}"
+                                                        forceSelection="true">
+                                            <o:converter converterId="omnifaces.ListConverter" list="#{lunchBreakTicketListPresenter.getLunchBreakTickets(presence.lunchBreakTicket)}" />
+                                        </p:autoComplete>
+                                    </f:facet>
+                                </p:cellEditor>
                             </p:column>
                             <p:column headerText="#{msg['presence.presence.mileageReimbursement']}">
                                 <p:cellEditor>

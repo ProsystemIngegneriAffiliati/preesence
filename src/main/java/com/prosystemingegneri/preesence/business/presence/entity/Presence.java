@@ -20,11 +20,13 @@ import com.prosystemingegneri.preesence.business.entity.BaseEntity;
 import com.prosystemingegneri.preesence.business.presence.controller.CompulsoryPreesenceEventWhenDifference;
 import com.prosystemingegneri.preesence.business.presence.controller.EndAfterStart;
 import com.prosystemingegneri.preesence.business.presence.controller.PresenceEvent;
+import com.prosystemingegneri.preesence.business.worker.entity.LunchBreakTicket;
 import com.prosystemingegneri.preesence.business.worker.entity.Worker;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -77,6 +79,9 @@ public class Presence extends BaseEntity {
     @Column(nullable = false)
     private @NotNull @DecimalMin("0") Integer distanceTraveled;   //in km
     
+    @ManyToOne
+    private LunchBreakTicket lunchBreakTicket;
+    
     @Transient
     private BigDecimal difference;
     
@@ -87,15 +92,12 @@ public class Presence extends BaseEntity {
     private BigDecimal overtime50;
     
     @Transient
-    private final BigDecimal HOURS_FOR_TICKET = new BigDecimal(5);
-    
-    @Transient
-    private @NotNull Boolean ticket;
+    private final BigDecimal HOURS_FOR_TICKET_FULL_TIME = new BigDecimal(5);
+    private final BigDecimal HOURS_FOR_TICKET_PART_TIME = new BigDecimal(4);
     
     private String notes;
 
     public Presence() {
-        ticket = Boolean.FALSE;
         distanceTraveled = 0;
     }
 
@@ -252,30 +254,6 @@ public class Presence extends BaseEntity {
         updateTicket();
     }
 
-    public Boolean getTicket() {
-        return ticket;
-    }
-
-    public void setTicket(Boolean ticket) {
-        this.ticket = ticket;
-    }
-    
-    private void updateTicket() {
-        if (
-                (startMorning != null && endMorning == null && startAfternoon == null && endAfternoon != null) ||
-                (total != null &&
-                total.compareTo(HOURS_FOR_TICKET) > 0 && (
-                        worker.getTicketEligibleInLunchBreak() || (
-                                hoursBetweenTimes(startMorning, endMorning, BigDecimal.ZERO).compareTo(HOURS_FOR_TICKET) > 0 ||
-                                hoursBetweenTimes(startAfternoon, endAfternoon, BigDecimal.ZERO).compareTo(HOURS_FOR_TICKET) > 0
-                                )
-                        )
-                ))
-            ticket = Boolean.TRUE;
-        else
-            ticket = Boolean.FALSE;
-    }
-
     public Integer getDistanceTraveled() {
         return distanceTraveled;
     }
@@ -287,4 +265,31 @@ public class Presence extends BaseEntity {
     public BigDecimal getMileageReimbursement() {
         return REIMBURSE.multiply(new BigDecimal(distanceTraveled));
     }
+    
+    private void updateTicket() {
+        if (lunchBreakTicket == null && worker != null && event.equals(PresenceEvent.WORK)) {
+            BigDecimal workingHours = hoursBetweenTimes(startAfternoon, endAfternoon, hoursBetweenTimes(startMorning, endMorning, BigDecimal.ZERO));
+            switch (worker.getContract().getContractTime()) {
+                case FULL_TIME:
+                    if (workingHours.compareTo(HOURS_FOR_TICKET_FULL_TIME) > 0)
+                        lunchBreakTicket = worker.getContract().getLunchBreakTicket();
+                    break;
+                case PART_TIME:
+                    if (workingHours.compareTo(HOURS_FOR_TICKET_PART_TIME) > 0)
+                        lunchBreakTicket = worker.getContract().getLunchBreakTicket();
+                    break;
+                default:
+                    return;
+            }
+        }
+    }
+
+    public LunchBreakTicket getLunchBreakTicket() {
+        return lunchBreakTicket;
+    }
+
+    public void setLunchBreakTicket(LunchBreakTicket lunchBreakTicket) {
+        this.lunchBreakTicket = lunchBreakTicket;
+    }
+    
 }

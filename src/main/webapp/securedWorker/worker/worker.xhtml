@@ -46,30 +46,7 @@
                             </h:panelGroup>
 
                             <h:panelGroup>
-                                <p:outputLabel for="lunchBreakTicket" value="#{msg['worker.lunchBreakTicket.name']}"/>
-                                <p:autoComplete id="lunchBreakTicket"
-                                                dropdown="true"
-                                                value="#{workerPresenter.worker.lunchBreakTicket}"
-                                                completeMethod="#{lunchBreakTicketListPresenter.complete}"
-                                                var="ticket"
-                                                itemLabel="#{ticket.name}"
-                                                itemValue="#{ticket}"
-                                                forceSelection="true">
-                                    <o:converter converterId="omnifaces.ListConverter" list="#{lunchBreakTicketListPresenter.getLunchBreakTickets(workerPresenter.worker.lunchBreakTicket)}" />
-                                </p:autoComplete>
-                                <p:message for="lunchBreakTicket"/>
-                            </h:panelGroup>
-                            <h:panelGroup >
-                                <p:outputLabel for="dismission" value="#{msg['worker.worker.dismission']}" />
-                                <p:inputText id="dismission" pt:type="date" value="#{workerPresenter.worker.dismission}">
-                                    <f:convertDateTime type="localDate" pattern="yyyy-MM-dd" />
-                                </p:inputText>
-                                <p:message for="dismission"/>
-                            </h:panelGroup>
-                        </p:panelGrid>
-
-                        <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group">
-                            <h:panelGroup styleClass="md-inputfield">
+                                <p:outputLabel for="userApp" value="#{msg['user.user']}"/>
                                 <p:autoComplete id="userApp"
                                                 dropdown="true"
                                                 value="#{workerPresenter.worker.userApp}"
@@ -80,8 +57,14 @@
                                                 forceSelection="true">
                                     <o:converter converterId="omnifaces.ListConverter" list="#{userListPresenter.getUnassociatedUserApps(workerPresenter.worker.userApp)}" />
                                 </p:autoComplete>
-                                <p:outputLabel for="userApp" value="#{msg['user.user']}"/>
                                 <p:message for="userApp"/>
+                            </h:panelGroup>
+                            <h:panelGroup >
+                                <p:outputLabel for="dismission" value="#{msg['worker.worker.dismission']}" />
+                                <p:inputText id="dismission" pt:type="date" value="#{workerPresenter.worker.dismission}">
+                                    <f:convertDateTime type="localDate" pattern="yyyy-MM-dd" />
+                                </p:inputText>
+                                <p:message for="dismission"/>
                             </h:panelGroup>
                         </p:panelGrid>
                     </div>

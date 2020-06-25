@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2020 Prosystem Ingegneri Affiliati
+ * Copyright (C) 2020 Prosystem Ingegneri Affiliati
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,19 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.prosystemingegneri.preesence.business.worker.entity;
-
-import java.math.BigDecimal;
-import javax.persistence.metamodel.SingularAttribute;
-import javax.persistence.metamodel.StaticMetamodel;
+package com.prosystemingegneri.preesence.business.worker.control;
 
 /**
  *
- * @author Mainardi Davide <davide at mainardisoluzioni.com>
+ * @author Mainardi Davide <davide@mainardisoluzioni.com>
  */
-@StaticMetamodel(EmploymentContract.class)
-public class EmploymentContract_ {
-    public static volatile SingularAttribute<EmploymentContract, String> name;
-    public static volatile SingularAttribute<EmploymentContract, BigDecimal> hoursDaily;
-    public static volatile SingularAttribute<EmploymentContract, LunchBreakTicket> lunchBreakTicket;
+public enum EmploymentContractTime {
+    FULL_TIME(0),
+    PART_TIME(1);
+    
+    private final int value;
+
+    private EmploymentContractTime(int value) {
+        this.value = value;
+    }
 }

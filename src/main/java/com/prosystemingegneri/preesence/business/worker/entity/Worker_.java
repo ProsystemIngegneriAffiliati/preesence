@@ -30,6 +30,5 @@ public class Worker_ {
     public static volatile SingularAttribute<Worker, String> name;
     public static volatile SingularAttribute<Worker, LocalDate> dismission;
     public static volatile SingularAttribute<Worker, EmploymentContract> contract;
-    public static volatile SingularAttribute<Worker, LunchBreakTicket> lunchBreakTicket;
     public static volatile SingularAttribute<Worker, UserApp> userApp;
 }
