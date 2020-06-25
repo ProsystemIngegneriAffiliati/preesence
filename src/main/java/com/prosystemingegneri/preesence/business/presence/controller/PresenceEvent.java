@@ -26,7 +26,9 @@ public enum PresenceEvent {
     VACATION(2),
     REST(3),
     OFF(4),
-    SICK(5);
+    SICK(5),
+    INJURY(6),
+    FORMER_HOLIDAY(7);
     
     private final int value;
 
