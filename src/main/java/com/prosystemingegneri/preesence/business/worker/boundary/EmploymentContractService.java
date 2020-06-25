@@ -37,7 +37,7 @@ import javax.persistence.criteria.Root;
  * @author Mainardi Davide <davide at mainardisoluzioni.com>
  */
 @Stateless
-public class EmploymentContractService implements Serializable {
+public class EmploymentContractService {
     @PersistenceContext
     EntityManager em;
     

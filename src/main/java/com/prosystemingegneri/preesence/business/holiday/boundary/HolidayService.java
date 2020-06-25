@@ -45,7 +45,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
  * @author Mainardi Davide <davide at mainardisoluzioni.com>
  */
 @Stateless
-public class HolidayService implements Serializable {
+public class HolidayService {
 
     @PersistenceContext
     EntityManager em;

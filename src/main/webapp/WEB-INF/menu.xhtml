@@ -14,8 +14,11 @@
                     <pu:menu widgetVar="me">
                         <c:if test="#{request.isUserInRole('HUMAN_RESOURCES')}">
                             <p:menuitem id="workersMenu" value="#{msg['worker.workers']}" icon="people_outline" outcome="/securedHr/worker/workers" />
-                            <p:menuitem id="employmentContractsMenu" value="#{msg['worker.employmentContracts']}" icon="collections_bookmark" outcome="/securedHr/worker/employmentContracts" />
                             <p:menuitem id="insertWorkingHoursMenu" value="#{msg['presence.insertWorkingHours']}" icon="playlist_add" outcome="/securedHr/worker/insertWorkingHours" />
+                            <p:submenu id="utilsMenu" label="#{msg['utils']}" icon="list">
+                                <p:menuitem id="employmentContractsMenu" value="#{msg['worker.employmentContracts']}" icon="collections_bookmark" outcome="/securedHr/worker/employmentContracts" />
+                                <p:menuitem id="lunchBreakTicketsMenu" value="#{msg['worker.lunchBreakTickets']}" icon="local_dining" outcome="/securedHr/worker/lunchBreakTickets" />
+                            </p:submenu>
                         </c:if>
                         <c:if test="#{request.isUserInRole('FULL_CONTROL')}">
                             <p:menuitem id="holidayUpdaterMenu" value="#{msg['holiday.holidayUpdater']}" icon="beach_access" outcome="/securedAdmin/holiday/holidayUpdater" />

@@ -50,7 +50,7 @@ import javax.security.enterprise.identitystore.Pbkdf2PasswordHash;
  * @author Davide Mainardi <ingmainardi at live.com>
  */
 @Stateless
-public class UserAppService implements Serializable {
+public class UserAppService {
     @PersistenceContext
     EntityManager em;
     

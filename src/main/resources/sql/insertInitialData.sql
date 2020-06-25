@@ -17,6 +17,9 @@ INSERT INTO userapp(username, password, groupapp_name) VALUES('maina', 'PBKDF2Wi
 INSERT INTO employmentcontract(name, hoursdaily, version) VALUES('Full time', 8, 0)
 INSERT INTO employmentcontract(name, hoursdaily, version) VALUES('Part time', 4, 0)
 
+INSERT INTO lunchbreakticket(name, value, version) VALUES('Ticket 5', 5, 0)
+INSERT INTO lunchbreakticket(name, value, version) VALUES('Ticket 7', 6.97, 0)
+
 INSERT INTO worker(name, contract_id, ticketeligibleinlunchbreak, userapp_username, version) VALUES('Mainardi Davide', 1, false, 'maina', 0)
 INSERT INTO worker(name, contract_id, ticketeligibleinlunchbreak, userapp_username, version) VALUES('Rossi Mario', 1, true, 'guestWorker', 0)
 INSERT INTO worker(name, contract_id, ticketeligibleinlunchbreak, userapp_username, version) VALUES('Neri Lucia', 2, false, 'guestHr', 0)

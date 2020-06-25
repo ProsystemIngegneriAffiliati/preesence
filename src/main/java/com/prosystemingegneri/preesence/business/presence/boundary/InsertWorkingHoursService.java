@@ -31,7 +31,7 @@ import javax.validation.constraints.NotNull;
  * @author Davide Mainardi <ingmainardi at live.com>
  */
 @Stateless
-public class InsertWorkingHoursService implements Serializable {
+public class InsertWorkingHoursService {
     
     @RolesAllowed({Role.Constants.FULL_CONTROL, Role.Constants.HUMAN_RESOURCES})
     public List<Presence> populatePresences(@NotNull Worker worker, @NotNull LocalDate start, @NotNull LocalDate end) {

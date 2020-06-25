@@ -9,37 +9,37 @@
             <div class="ui-g ui-fluid">
                 <div class="ui-g-12">
                     <div class="card card-w-title">
-                        <h1>#{msg['worker.employmentContracts']}</h1>
+                        <h1>#{msg['worker.lunchBreakTickets']}</h1>
                         <p:dataTable id="workesTable" widgetVar="wrkst"
-                                     var="employmentContract" value="#{employmentContractListPresenter.lazyEmploymentContracts}"
-                                     selectionMode="multiple" selection="#{employmentContractListPresenter.selectedEmploymentContracts}" rowKey="#{employmentContract.id}"
+                                     var="lunchBreakTicket" value="#{lunchBreakTicketListPresenter.lazyLunchBreakTickets}"
+                                     selectionMode="multiple" selection="#{lunchBreakTicketListPresenter.selectedLunchBreakTickets}" rowKey="#{lunchBreakTicket.id}"
                                      paginator="true" rows="10" paginatorAlwaysVisible="false"
                                      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                      rowsPerPageTemplate="10,25,50" lazy="true">
                             <f:facet name="header">
                                 <p:panelGrid columns="2" columnClasses="lefted, righted" styleClass="ui-panelgrid-blank">
-                                    #{msg['worker.employmentContracts.tip']}
+                                    #{msg['worker.lunchBreakTickets.tip']}
                                     <p:outputPanel>
-                                        <p:button title="#{msg['new']}" icon="ui-icon-create" styleClass="AquaButton" outcome="/securedHr/worker/employmentContract">
+                                        <p:button title="#{msg['new']}" icon="ui-icon-create" styleClass="AquaButton" outcome="/securedHr/worker/lunchBreakTicket">
                                             <f:param name="id" value="0" />
                                         </p:button>
-                                        <p:commandButton title="#{msg['delete']}" icon="ui-icon-delete" actionListener="#{employmentContractListPresenter.delete()}" update="workesTable">
+                                        <p:commandButton title="#{msg['delete']}" icon="ui-icon-delete" actionListener="#{lunchBreakTicketListPresenter.delete()}" update="workesTable">
                                             <p:confirm header="#{msg['worker.workes.delete']}" message="#{msg['worker.workes.delete.tip']}" icon="ui-icon-alert"/>
                                         </p:commandButton>
                                     </p:outputPanel>
                                 </p:panelGrid>
                             </f:facet>
-                            <p:column headerText="#{msg['worker.employmentContract.name']}" sortBy="#{name}" filterBy="#{name}" priority="0">
-                                <h:outputText value="#{employmentContract.name}" />
+                            <p:column headerText="#{msg['worker.lunchBreakTicket.name']}" sortBy="#{name}" filterBy="#{name}" priority="0">
+                                <h:outputText value="#{lunchBreakTicket.name}" />
                             </p:column>
-                            <p:column headerText="#{msg['worker.employmentContract.hoursDaily']}" sortBy="#{hoursDaily}" priority="0">
-                                <h:outputText value="#{employmentContract.hoursDaily}">
+                            <p:column headerText="#{msg['worker.lunchBreakTicket.value']}" sortBy="#{value}" priority="0">
+                                <h:outputText value="#{lunchBreakTicket.value}">
                                     <f:convertNumber />
                                 </h:outputText>
                             </p:column>
                             <p:column headerText="#{msg['actions']}" style="width:64px; text-align:center" priority="0" exportable="false">
-                                <p:button title="#{msg['edit']}" icon="ui-icon-edit" styleClass="AquaButton" outcome="/securedHr/worker/employmentContract">
-                                    <f:param name="id" value="#{employmentContract.id}" />
+                                <p:button title="#{msg['edit']}" icon="ui-icon-edit" styleClass="AquaButton" outcome="/securedHr/worker/lunchBreakTicket">
+                                    <f:param name="id" value="#{lunchBreakTicket.id}" />
                                 </p:button>
                             </p:column>
                         </p:dataTable>

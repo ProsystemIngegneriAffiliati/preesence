@@ -47,7 +47,7 @@ import javax.persistence.criteria.Root;
  * @author Davide Mainardi <ingmainardi@live.com>
  */
 @Stateless
-public class PresenceService implements Serializable {
+public class PresenceService {
     @PersistenceContext
     EntityManager em;
     

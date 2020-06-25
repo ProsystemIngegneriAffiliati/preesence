@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2020 Prosystem Ingegneri Affiliati
+ * Copyright (C) 2020 Prosystem Ingegneri Affiliati
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,11 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.prosystemingegneri.preesence.business.auth.boundary;
+package com.prosystemingegneri.preesence.business.worker.boundary;
 
-import com.prosystemingegneri.preesence.business.auth.entity.GroupApp;
-import com.prosystemingegneri.preesence.business.auth.entity.GroupApp_;
-import java.io.Serializable;
+import com.prosystemingegneri.preesence.business.worker.entity.LunchBreakTicket;
+import com.prosystemingegneri.preesence.business.worker.entity.LunchBreakTicket_;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -34,30 +33,54 @@ import javax.persistence.criteria.Root;
 
 /**
  *
- * @author Davide Mainardi <ingmainardi at live.com>
+ * @author Mainardi Davide <davide@mainardisoluzioni.com>
  */
 @Stateless
-public class GroupAppService {
+public class LunchBreakTicketService {
     @PersistenceContext
     EntityManager em;
     
-    public List<GroupApp> list(int first, int pageSize, String sortField, Boolean isAscending, String name) {
+    public LunchBreakTicket create() {
+        return new LunchBreakTicket();
+    }
+    
+    public LunchBreakTicket save(LunchBreakTicket lunchBreakTicket) {
+        if (lunchBreakTicket.getId() == null)
+            em.persist(lunchBreakTicket);
+        else
+            return em.merge(lunchBreakTicket);
+        
+        return lunchBreakTicket;
+    }
+    
+    public LunchBreakTicket find(Long id) {
+        return em.find(LunchBreakTicket.class, id);
+    }
+    
+    public void delete(Long id) {
+        em.remove(find(id));
+    }
+    
+    public List<LunchBreakTicket> list(int first, int pageSize, String sortField, Boolean isAscending, String name) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<GroupApp> query = cb.createQuery(GroupApp.class);
-        Root<GroupApp> root = query.from(GroupApp.class);
-        CriteriaQuery<GroupApp> select = query.select(root).distinct(true);
+        CriteriaQuery<LunchBreakTicket> query = cb.createQuery(LunchBreakTicket.class);
+        Root<LunchBreakTicket> root = query.from(LunchBreakTicket.class);
+        CriteriaQuery<LunchBreakTicket> select = query.select(root).distinct(true);
         
         List<Predicate> conditions = calculateConditions(cb, root, name);
 
         if (!conditions.isEmpty())
             query.where(conditions.toArray(new Predicate[conditions.size()]));
         
-        Order order = cb.asc(root.get(GroupApp_.name));
+        Order order = cb.asc(root.get(LunchBreakTicket_.name));
         if (isAscending != null && sortField != null && !sortField.isEmpty()) {
             Path<?> path;
             switch (sortField) {
                 case "name":
-                    path = root.get(GroupApp_.name);
+                    path = root.get(LunchBreakTicket_.name);
+                    break;
+                case "value":
+                    path = root.get(LunchBreakTicket_.value);
                     break;
                 default:
                     path = root.get(sortField);
@@ -69,10 +92,10 @@ public class GroupAppService {
         }
         query.orderBy(order);
         
-        TypedQuery<GroupApp> typedQuery = em.createQuery(select);
+        TypedQuery<LunchBreakTicket> typedQuery = em.createQuery(select);
         if (pageSize > 0) {
             typedQuery.setMaxResults(pageSize);
-            typedQuery.setFirstResult(first);
+            typedQuery.setFirstResult(first);   
         }
 
         return typedQuery.getResultList();
@@ -81,7 +104,7 @@ public class GroupAppService {
     public Long getCount(String name) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Long> query = cb.createQuery(Long.class);
-        Root<GroupApp> root = query.from(GroupApp.class);
+        Root<LunchBreakTicket> root = query.from(LunchBreakTicket.class);
         CriteriaQuery<Long> select = query.select(cb.count(root));
 
         List<Predicate> conditions = calculateConditions(cb, root, name);
@@ -92,13 +115,14 @@ public class GroupAppService {
         return em.createQuery(select).getSingleResult();
     }
     
-    private List<Predicate> calculateConditions(CriteriaBuilder cb, Root<GroupApp> root, String name) {
+    private List<Predicate> calculateConditions(CriteriaBuilder cb, Root<LunchBreakTicket> root, String name) {
         List<Predicate> conditions = new ArrayList<>();
-
-        //name
+        
+        //LunchBreakTicket's name
         if (name != null && !name.isEmpty())
-            conditions.add(cb.like(cb.lower(root.get(GroupApp_.name)), "%" + name.toLowerCase() + "%"));
+            conditions.add(cb.like(cb.lower(root.get(LunchBreakTicket_.name)), "%" + name.toLowerCase() + "%"));
         
         return conditions;
     }
+    
 }

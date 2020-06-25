@@ -1,0 +1,53 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:o="http://omnifaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                template="/WEB-INF/template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:define name="metadata">
+        <f:metadata>
+            <f:importConstants type="com.prosystemingegneri.preesence.business.worker.entity.LunchBreakTicket" />
+            <o:viewParam name="id"
+                         value="#{lunchBreakTicketPresenter.id}"
+                         converter="javax.faces.Long"
+                         required="true" />
+            <o:viewAction action="#{lunchBreakTicketPresenter.detail()}" />
+        </f:metadata>
+    </ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <div class="ui-g ui-fluid">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1>#{msg['worker.lunchBreakTicket']}</h1>
+                        <p>#{msg['worker.lunchBreakTicket.tip']}</p>
+                        <p:panelGrid columns="2" columnClasses="ui-grid-col-8,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="name" value="#{lunchBreakTicketPresenter.lunchBreakTicket.name}" pt:autofocus="true" />
+                                <p:outputLabel for="name" value="#{msg['worker.lunchBreakTicket.name']}" />
+                                <p:message for="name"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputNumber id="value" value="#{lunchBreakTicketPresenter.lunchBreakTicket.value}" decimalPlaces="#{LunchBreakTicket.SCALE}" minValue="0" symbolPosition="s" symbol=" #{msg['worker.lunchBreakTicket.value.um']}" />
+                                <p:outputLabel for="value" value="#{msg['worker.lunchBreakTicket.value']}" />
+                                <p:message for="value"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+                </div>
+                <div class="ui-g-1 ui-md-2"></div>
+                <div class="ui-g-4 ui-md-3">
+                    <p:button value="#{msg['cancel']}" title="#{msg['cancel.tip']}" outcome="/securedHr/worker/lunchBreakTickets" styleClass="secondary" />
+                </div>
+                <div class="ui-g-2 ui-md-2"></div>
+                <div class="ui-g-4 ui-md-3">
+                    <p:commandButton value="#{msg['save']}"
+                                     action="#{lunchBreakTicketPresenter.save()}"
+                                     ajax="false"/>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
