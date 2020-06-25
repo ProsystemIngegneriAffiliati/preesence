@@ -28,7 +28,10 @@ public enum PresenceEvent {
     OFF(4),
     SICK(5),
     INJURY(6),
-    FORMER_HOLIDAY(7);
+    FORMER_HOLIDAY(7),
+    LEGGE_104(8),
+    LEAVE_OF_ABSENCE(9),
+    LACTATION(10);
     
     private final int value;
 
