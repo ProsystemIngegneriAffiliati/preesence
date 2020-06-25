@@ -17,14 +17,15 @@
 package com.prosystemingegneri.preesence.business.worker.boundary;
 
 import com.prosystemingegneri.preesence.business.auth.boundary.UserAppService;
+import com.prosystemingegneri.preesence.business.auth.control.Role;
 import com.prosystemingegneri.preesence.business.auth.entity.UserApp;
 import com.prosystemingegneri.preesence.business.auth.entity.UserApp_;
 import com.prosystemingegneri.preesence.business.worker.entity.Worker;
 import com.prosystemingegneri.preesence.business.worker.entity.Worker_;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -54,6 +55,7 @@ public class WorkerService {
         return new Worker();
     }
     
+    @RolesAllowed(Role.Constants.HUMAN_RESOURCES)
     public Worker save(Worker worker) {
         if (worker.getId() == null)
             em.persist(worker);

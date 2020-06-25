@@ -42,17 +42,13 @@ public class WorkerPresenter implements Serializable{
     private Worker worker;
     private Long id;
     
-    public String reload() {
-        return facesContext.getViewRoot().getViewId() + "?faces-redirect=true&includeViewParams=true";
-    }
-    
     public String save() {
         worker = service.save(worker);
         Messages.create("success").detail("saved").flash().add();
         if (id == 0L)
             id = worker.getId();
         
-        return reload();
+        return facesContext.getViewRoot().getViewId() + "?faces-redirect=true&includeViewParams=true";
     }
     
     public void detail() {

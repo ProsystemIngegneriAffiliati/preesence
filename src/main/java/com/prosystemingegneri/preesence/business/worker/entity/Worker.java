@@ -44,6 +44,9 @@ public class Worker extends BaseEntity {
     @OneToOne
     private UserApp userApp;
     
+    @ManyToOne
+    private LunchBreakTicket lunchBreakTicket;
+    
     @Column(nullable = false)
     private @NotNull Boolean ticketEligibleInLunchBreak; //se vero allora il ticket viene concesso quando si lavorano più di cinque ore, se falso le ore devono essere consecutive
 
@@ -88,6 +91,14 @@ public class Worker extends BaseEntity {
 
     public void setTicketEligibleInLunchBreak(Boolean ticketEligibleInLunchBreak) {
         this.ticketEligibleInLunchBreak = ticketEligibleInLunchBreak;
+    }
+
+    public LunchBreakTicket getLunchBreakTicket() {
+        return lunchBreakTicket;
+    }
+
+    public void setLunchBreakTicket(LunchBreakTicket lunchBreakTicket) {
+        this.lunchBreakTicket = lunchBreakTicket;
     }
     
 }

@@ -44,11 +44,20 @@
                                 <p:outputLabel for="contract" value="#{msg['worker.employmentContract.name']}"/>
                                 <p:message for="contract"/>
                             </h:panelGroup>
-                            
+
                             <h:panelGroup>
-                                <p:outputLabel for="ticketEligibleInLunchBreak" value="#{msg['worker.worker.ticketEligibleInLunchBreak']}" title="#{msg['worker.worker.ticketEligibleInLunchBreak.tip']}" />
-                                <p:inputSwitch id="ticketEligibleInLunchBreak" value="#{workerPresenter.worker.ticketEligibleInLunchBreak}" />
-                                <p:message for="ticketEligibleInLunchBreak"/>
+                                <p:outputLabel for="lunchBreakTicket" value="#{msg['worker.lunchBreakTicket.name']}"/>
+                                <p:autoComplete id="lunchBreakTicket"
+                                                dropdown="true"
+                                                value="#{workerPresenter.worker.lunchBreakTicket}"
+                                                completeMethod="#{lunchBreakTicketListPresenter.complete}"
+                                                var="ticket"
+                                                itemLabel="#{ticket.name}"
+                                                itemValue="#{ticket}"
+                                                forceSelection="true">
+                                    <o:converter converterId="omnifaces.ListConverter" list="#{lunchBreakTicketListPresenter.getLunchBreakTickets(workerPresenter.worker.lunchBreakTicket)}" />
+                                </p:autoComplete>
+                                <p:message for="lunchBreakTicket"/>
                             </h:panelGroup>
                             <h:panelGroup >
                                 <p:outputLabel for="dismission" value="#{msg['worker.worker.dismission']}" />
@@ -58,7 +67,7 @@
                                 <p:message for="dismission"/>
                             </h:panelGroup>
                         </p:panelGrid>
-                        
+
                         <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group">
                             <h:panelGroup styleClass="md-inputfield">
                                 <p:autoComplete id="userApp"
@@ -77,26 +86,18 @@
                         </p:panelGrid>
                     </div>
                 </div>
-                <div class="ui-g-1 ui-md-2"></div>
-                <div class="ui-g-4 ui-md-3">
-                    <c:choose>
-                        <c:when test="#{request.isUserInRole(Role.HUMAN_RESOURCES)}">
-                            <p:button value="#{msg['cancel']}" title="#{msg['cancel.tip']}" outcome="/securedHr/worker/workers" styleClass="secondary" />
-                        </c:when>
-                        <c:otherwise>
-                            <p:commandButton value="#{msg['cancel']}"
-                                             action="#{workerPresenter.reload()}"
-                                             ajax="false"
-                                             styleClass="secondary" />
-                        </c:otherwise>
-                    </c:choose>
-                </div>
-                <div class="ui-g-2 ui-md-2"></div>
-                <div class="ui-g-4 ui-md-3">
-                    <p:commandButton value="#{msg['save']}"
-                                     action="#{workerPresenter.save()}"
-                                     ajax="false"/>
-                </div>
+                <c:if test="#{request.isUserInRole(Role.HUMAN_RESOURCES)}">
+                    <div class="ui-g-1 ui-md-2"></div>
+                    <div class="ui-g-4 ui-md-3">
+                        <p:button value="#{msg['cancel']}" title="#{msg['cancel.tip']}" outcome="/securedHr/worker/workers" styleClass="secondary" />
+                    </div>
+                    <div class="ui-g-2 ui-md-2"></div>
+                    <div class="ui-g-4 ui-md-3">
+                        <p:commandButton value="#{msg['save']}"
+                                         action="#{workerPresenter.save()}"
+                                         ajax="false"/>
+                    </div>
+                </c:if>
             </div>
         </h:form>
     </ui:define>
