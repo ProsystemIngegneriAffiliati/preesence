@@ -23,6 +23,8 @@ import com.prosystemingegneri.preesence.business.presence.controller.PresenceEve
 import com.prosystemingegneri.preesence.business.worker.entity.LunchBreakTicket;
 import com.prosystemingegneri.preesence.business.worker.entity.Worker;
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
@@ -209,7 +211,7 @@ public class Presence extends BaseEntity {
         if (start != null && end != null) {
             if (previous == null)
                 previous = BigDecimal.ZERO;
-            previous = previous.add(BigDecimal.valueOf(ChronoUnit.MINUTES.between(start, end)).divide(BigDecimal.valueOf(60)));
+            previous = previous.add(BigDecimal.valueOf(ChronoUnit.MINUTES.between(start, end)).divide(BigDecimal.valueOf(60), 2, RoundingMode.DOWN));
         }
         
         return previous;
