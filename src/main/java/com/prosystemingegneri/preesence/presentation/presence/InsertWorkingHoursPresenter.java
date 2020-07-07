@@ -17,13 +17,10 @@
 package com.prosystemingegneri.preesence.presentation.presence;
 
 import com.prosystemingegneri.preesence.business.presence.boundary.PresenceService;
-import com.prosystemingegneri.preesence.business.presence.controller.PresenceEvent;
 import com.prosystemingegneri.preesence.business.presence.entity.Presence;
 import com.prosystemingegneri.preesence.business.worker.entity.Worker;
 import java.io.Serializable;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -63,9 +60,17 @@ public class InsertWorkingHoursPresenter implements Serializable{
     }
     
     public String save() {
-        for (Presence presence : presences)
-            service.save(presence);
-        Messages.create("success").detail("saved").flash().add();
+        boolean isSaved = false;
+        for (Presence presence : presences) {
+            if (presence.getStartMorning() != null || presence.getEndMorning() != null || presence.getStartAfternoon() != null || presence.getEndAfternoon() != null) {
+                service.save(presence);
+                isSaved = true;
+            }
+        }
+        if (isSaved)
+            Messages.create("success").detail("saved").flash().add();
+        else
+            Messages.create("warning").warn().detail("presence.insertWorkingHours.warning.noPresencesSaved").flash().add();
         
         return reload();
     }

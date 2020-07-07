@@ -59,7 +59,8 @@ public @interface EndAfterStart {
                 return !presence.getEndAfternoon().isBefore(presence.getStartAfternoon());
             }
 
-            return true;
+            //valid is everything is null or nothing is null, not valid otherwise
+            return ! (Boolean.logicalXor(presence.getStartMorning() == null, presence.getEndMorning() == null) && Boolean.logicalXor(presence.getStartAfternoon() == null, presence.getEndAfternoon() == null));
         }
     }
 }
