@@ -16,8 +16,10 @@
  */
 package com.prosystemingegneri.preesence.business.presence.entity;
 
+import com.prosystemingegneri.preesence.business.presence.controller.PresenceEvent;
 import com.prosystemingegneri.preesence.business.worker.entity.Worker;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
@@ -28,6 +30,11 @@ import javax.persistence.metamodel.StaticMetamodel;
 @StaticMetamodel(Presence.class)
 public class Presence_ {
     public static volatile SingularAttribute<Presence, Worker> worker;
-    public static volatile SingularAttribute<Presence, LocalDateTime> startTimeStamp;
-    public static volatile SingularAttribute<Presence, LocalDateTime> endTimeStamp;
+    public static volatile SingularAttribute<Presence, LocalDate> daytime;
+    public static volatile SingularAttribute<Presence, LocalTime> startMorning;
+    public static volatile SingularAttribute<Presence, LocalTime> endMorning;
+    public static volatile SingularAttribute<Presence, LocalTime> startAfternoon;
+    public static volatile SingularAttribute<Presence, LocalTime> endAfternoon;
+    public static volatile SingularAttribute<Presence, PresenceEvent> event;
+    public static volatile SingularAttribute<Presence, PresenceEvent> differenceEvent;
 }

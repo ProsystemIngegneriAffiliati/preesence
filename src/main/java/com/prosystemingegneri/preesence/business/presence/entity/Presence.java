@@ -23,12 +23,10 @@ import com.prosystemingegneri.preesence.business.presence.controller.PresenceEve
 import com.prosystemingegneri.preesence.business.worker.entity.LunchBreakTicket;
 import com.prosystemingegneri.preesence.business.worker.entity.Worker;
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;

@@ -19,10 +19,8 @@ package com.prosystemingegneri.preesence.presentation.presence;
 import com.prosystemingegneri.preesence.business.presence.boundary.PresenceService;
 import com.prosystemingegneri.preesence.business.presence.entity.Presence;
 import com.prosystemingegneri.preesence.business.worker.entity.Worker;
-import com.prosystemingegneri.preesence.presentation.LazyUtils;
 import static com.prosystemingegneri.preesence.presentation.LazyUtils.getAscending;
-import static com.prosystemingegneri.preesence.presentation.LazyUtils.getStringFromFilter;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import org.primefaces.model.FilterMeta;
@@ -37,8 +35,8 @@ public class PresenceLazyDataModel extends LazyDataModel<Presence>{
     private final PresenceService service;
     
     private Worker worker;
-    private LocalDateTime start;
-    private LocalDateTime end;
+    private LocalDate start;
+    private LocalDate end;
 
     public PresenceLazyDataModel(PresenceService service) {
         this.service = service;
@@ -51,11 +49,8 @@ public class PresenceLazyDataModel extends LazyDataModel<Presence>{
     
     @Override
     public List<Presence> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, FilterMeta> filterBy) {
-        String workerName = getStringFromFilter(filterBy, "workerName");
-        Boolean isNotEnded = LazyUtils.getBooleanFromFilter(filterBy, "isNotEnded");
-        
-        List<Presence> result = service.list(first, pageSize, sortField, getAscending(sortOrder), start, end, worker, workerName, isNotEnded);
-        this.setRowCount(service.getCount(start, end, worker, workerName, isNotEnded).intValue());
+        List<Presence> result = service.list(first, pageSize, sortField, getAscending(sortOrder), start, end, worker);
+        this.setRowCount(service.getCount(start, end, worker).intValue());
         
         return result;
     }
@@ -69,19 +64,19 @@ public class PresenceLazyDataModel extends LazyDataModel<Presence>{
         }
     }
 
-    public LocalDateTime getStart() {
+    public LocalDate getStart() {
         return start;
     }
 
-    public void setStart(LocalDateTime start) {
+    public void setStart(LocalDate start) {
         this.start = start;
     }
 
-    public LocalDateTime getEnd() {
+    public LocalDate getEnd() {
         return end;
     }
 
-    public void setEnd(LocalDateTime end) {
+    public void setEnd(LocalDate end) {
         this.end = end;
     }
 

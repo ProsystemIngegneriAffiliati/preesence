@@ -22,11 +22,8 @@ import com.prosystemingegneri.preesence.business.presence.entity.Presence;
 import com.prosystemingegneri.preesence.business.presence.entity.Presence_;
 import com.prosystemingegneri.preesence.business.worker.boundary.WorkerService;
 import com.prosystemingegneri.preesence.business.worker.entity.Worker;
-import com.prosystemingegneri.preesence.business.worker.entity.Worker_;
-import java.io.Serializable;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -80,29 +77,23 @@ public class PresenceService {
         em.remove(find(id));
     }
     
-    public List<Presence> list(int first, int pageSize, String sortField, Boolean isAscending, LocalDateTime start, LocalDateTime end, Worker worker, String workerName, Boolean isNotEnded) {
+    public List<Presence> list(int first, int pageSize, String sortField, Boolean isAscending, LocalDate start, LocalDate end, Worker worker) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Presence> query = cb.createQuery(Presence.class);
         Root<Presence> root = query.from(Presence.class);
         CriteriaQuery<Presence> select = query.select(root).distinct(true);
         
-        List<Predicate> conditions = calculateConditions(cb, root, start, end, worker, workerName, isNotEnded);
+        List<Predicate> conditions = calculateConditions(cb, root, start, end, worker);
 
         if (!conditions.isEmpty())
             query.where(conditions.toArray(new Predicate[conditions.size()]));
         
-        Order order = cb.desc(root.get(Presence_.startTimeStamp));
+        Order order = cb.desc(root.get(Presence_.daytime));
         if (isAscending != null && sortField != null && !sortField.isEmpty()) {
             Path<?> path;
             switch (sortField) {
-                case "start":
-                    path = root.get(Presence_.startTimeStamp);
-                    break;
-                case "end":
-                    path = root.get(Presence_.endTimeStamp);
-                    break;
-                case "workerName":
-                    path = root.get(Presence_.worker).get(Worker_.name);
+                case "daytime":
+                    path = root.get(Presence_.daytime);
                     break;
                 default:
                     path = root.get(sortField);
@@ -123,13 +114,13 @@ public class PresenceService {
         return typedQuery.getResultList();
     }
     
-    public Long getCount(LocalDateTime start, LocalDateTime end, Worker worker, String workerName, Boolean isNotEnded) {
+    public Long getCount(LocalDate start, LocalDate end, Worker worker) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Long> query = cb.createQuery(Long.class);
         Root<Presence> root = query.from(Presence.class);
         CriteriaQuery<Long> select = query.select(cb.count(root));
 
-        List<Predicate> conditions = calculateConditions(cb, root, start, end, worker, workerName, isNotEnded);
+        List<Predicate> conditions = calculateConditions(cb, root, start, end, worker);
 
         if (!conditions.isEmpty())
             query.where(conditions.toArray(new Predicate[conditions.size()]));
@@ -137,19 +128,11 @@ public class PresenceService {
         return em.createQuery(select).getSingleResult();
     }
     
-    private List<Predicate> calculateConditions(CriteriaBuilder cb, Root<Presence> root, LocalDateTime start, LocalDateTime end, Worker worker, String workerName, Boolean isNotEnded) {
+    private List<Predicate> calculateConditions(CriteriaBuilder cb, Root<Presence> root, LocalDate start, LocalDate end, Worker worker) {
         List<Predicate> conditions = new ArrayList<>();
         
-        if (isNotEnded != null && isNotEnded) {
-            conditions.add(cb.isNull(root.get(Presence_.endTimeStamp)));
-            if (start != null)
-                conditions.add(cb.greaterThanOrEqualTo(root.get(Presence_.startTimeStamp), start));
-        }
-        
         if (start != null && end != null)
-            conditions.add(cb.or(
-                    cb.between(root.get(Presence_.startTimeStamp), start, end),
-                    cb.between(root.get(Presence_.endTimeStamp), start, end)));
+            conditions.add(cb.between(root.get(Presence_.daytime), start, end));
         
         if (worker != null)
             conditions.add(cb.equal(root.get(Presence_.worker), worker));
@@ -160,14 +143,20 @@ public class PresenceService {
     public List<Presence> populateDays(Worker worker, LocalDate start, LocalDate end) {
         List<Presence> presences = new ArrayList<>();
         for (int i = 0; i < ChronoUnit.DAYS.between(start, end) + 1; i++) {
-            Presence presence = create();
-            presence.setWorker(worker);
             LocalDate currentDay = start.plusDays(i);
-            presence.setDaytime(LocalDate.from(currentDay));
-            if (currentDay.getDayOfWeek().equals(DayOfWeek.SUNDAY) || holidayService.find(currentDay) != null)
-                presence.setEvent(PresenceEvent.HOLIDAY);
-            else
-                presence.setEvent(PresenceEvent.WORK);
+            List<Presence> savedPresences = list(0, 1, null, null, currentDay, currentDay, worker);
+            Presence presence;
+            if (savedPresences != null && !savedPresences.isEmpty())
+                presence = savedPresences.get(0);
+            else {
+                presence = create();
+                presence.setWorker(worker);
+                presence.setDaytime(currentDay);
+                if (currentDay.getDayOfWeek().equals(DayOfWeek.SUNDAY) || holidayService.find(currentDay) != null)
+                    presence.setEvent(PresenceEvent.HOLIDAY);
+                else
+                    presence.setEvent(PresenceEvent.WORK);
+            }
             presences.add(presence);
         }
         
