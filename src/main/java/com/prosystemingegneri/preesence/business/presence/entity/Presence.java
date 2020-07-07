@@ -93,6 +93,7 @@ public class Presence extends BaseEntity {
     
     @Transient
     private final BigDecimal HOURS_FOR_TICKET_FULL_TIME = new BigDecimal(5);
+    @Transient
     private final BigDecimal HOURS_FOR_TICKET_PART_TIME = new BigDecimal(4);
     
     private String notes;

@@ -146,8 +146,10 @@ public class PresenceService {
             LocalDate currentDay = start.plusDays(i);
             List<Presence> savedPresences = list(0, 1, null, null, currentDay, currentDay, worker);
             Presence presence;
-            if (savedPresences != null && !savedPresences.isEmpty())
+            if (savedPresences != null && !savedPresences.isEmpty()) {
                 presence = savedPresences.get(0);
+                presence.updateAllTimings();
+            }
             else {
                 presence = create();
                 presence.setWorker(worker);
