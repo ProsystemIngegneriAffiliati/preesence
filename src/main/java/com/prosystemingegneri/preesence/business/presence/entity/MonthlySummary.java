@@ -53,9 +53,6 @@ public class MonthlySummary extends BaseEntity {
     @Column(nullable = false)
     private @NotNull @DecimalMin("0") BigDecimal overtime50;
     
-    @Column(nullable = false)
-    private @NotNull @DecimalMin("0") Integer workingSunday;
-    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "monthlySummary", orphanRemoval = true)
     private List<PresenceEventSummary> presenceEventSummaries;
     
@@ -72,7 +69,6 @@ public class MonthlySummary extends BaseEntity {
         hours = BigDecimal.ZERO;
         overtime30 = BigDecimal.ZERO;
         overtime50 = BigDecimal.ZERO;
-        workingSunday = 0;
         presenceEventSummaries = new ArrayList<>();
         ticketSummaries = new ArrayList<>();
         totalReimburseForDistanceTraveled = BigDecimal.ZERO;
@@ -101,14 +97,6 @@ public class MonthlySummary extends BaseEntity {
 
     public void setOvertime50(BigDecimal overtime50) {
         this.overtime50 = overtime50;
-    }
-
-    public Integer getWorkingSunday() {
-        return workingSunday;
-    }
-
-    public void setWorkingSunday(Integer workingSunday) {
-        this.workingSunday = workingSunday;
     }
     
     public void addPresenceEventSummary(PresenceEventSummary eventSummary) {
