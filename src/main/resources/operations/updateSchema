@@ -1,0 +1,42 @@
+#!/bin/sh
+
+#WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
+#Make sure you have already saved 'initialEmpty' UNCOMPRESSED new database dump into internal server
+#WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
+
+readonly IDE_WORKSPACE=$HOME/NetBeansProjects
+readonly BACKUP_FOLDER=$HOME/Scrivania/mana
+readonly APP_NAME=preesence
+readonly IP_ADDRESS=demo.prosystemingegneri.com
+readonly EXTERNAL_SSH_PORT=54022
+readonly TODAY=$(date +%Y%m%d)
+readonly INTERNAL_IP_ADDRESS=192.168.1.20
+
+#Connect to production server, make dump and save backup on local developer machine
+ssh -p "${EXTERNAL_SSH_PORT}" root@"${IP_ADDRESS}" '\
+pg_dump -Fc '"${APP_NAME}"' | gzip > initial.gz'
+scp -P "${EXTERNAL_SSH_PORT}" root@"${IP_ADDRESS}":/root/initial.gz "${BACKUP_FOLDER}"/"${APP_NAME}""${TODAY}".gz
+
+#Copy backup into internal server
+scp "${BACKUP_FOLDER}"/"${APP_NAME}""${TODAY}".gz root@"${INTERNAL_IP_ADDRESS}":/root/initial.gz
+
+#Connect to internal server and create dump of production data with updated schema
+ssh root@"${INTERNAL_IP_ADDRESS}" '\
+\
+psql postgres -c "ALTER DATABASE '"${APP_NAME}"' CONNECTION LIMIT 1"; \
+psql postgres -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '\'"${APP_NAME}"\''"; \
+psql postgres -c "DROP DATABASE '"${APP_NAME}"'"; \
+createdb --owner='"${APP_NAME}"' --encoding=UTF8 '"${APP_NAME}"'; \
+gzip --uncompress initial.gz; \
+pg_restore -d '"${APP_NAME}"' initial; \
+rm initial; \
+\
+pg_dump -a '"${APP_NAME}"' > data.sql; \
+psql postgres -c "DROP DATABASE '"${APP_NAME}"'"; \
+createdb --owner='"${APP_NAME}"' --encoding=UTF8 '"${APP_NAME}"'; \
+pg_restore -d '"${APP_NAME}"' initialEmpty; \
+psql -d '"${APP_NAME}"' -f data.sql; \
+pg_dump -Fc '"${APP_NAME}"' | gzip > initial.gz'
+
+#Copy production-data-and-updated-schema into developer folder, ready to be updated in production
+scp root@"${INTERNAL_IP_ADDRESS}":/root/initial.gz "${IDE_WORKSPACE}"/"${APP_NAME}"/src/main/resources/operations/production/

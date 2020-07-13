@@ -2,7 +2,7 @@
 readonly IDE_WORKSPACE=$HOME/NetBeansProjects
 readonly AS_LIBFOLDER=$HOME/payara5/glassfish/domains/domain1/lib
 readonly APP_NAME=preesence
-readonly IP_ADDRESS=192.168.1.8
+readonly IP_ADDRESS=192.168.1.20
 readonly DB_NAME="${APP_NAME}"
 readonly DB_USER_NAME="${APP_NAME}"
 readonly DB_USER_PASSWORD=aEsSV7ToimzThX6BbP6n
