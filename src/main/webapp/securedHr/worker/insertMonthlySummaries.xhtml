@@ -1,0 +1,126 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:o="http://omnifaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                template="/WEB-INF/template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:define name="metadata">
+        <f:metadata>
+            <f:importConstants type="com.prosystemingegneri.preesence.business.presence.controller.PresenceEvent" />
+        </f:metadata>
+    </ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <div class="ui-g ui-fluid">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1>#{msg['presence.insertMonthlySummaries']}</h1>
+                        <p>#{msg['presence.insertMonthlySummaries.tip']}</p>
+                        <p:panelGrid columns="2" columnClasses="ui-grid-col-6,ui-grid-col-6" layout="grid" styleClass="ui-panelgrid-blank form-group">
+                            <h:panelGroup>
+                                <p:outputLabel for="selectedWorkers" value="#{msg['worker.workers']}"/>
+                                <p:selectManyMenu id="selectedWorkers" value="#{insertMonthlySummariesPresenter.selectedWorkers}"
+                                                  converter="omnifaces.SelectItemsConverter"
+                                                  var="worker" filter="true" filterMatchMode="contains"
+                                                  showCheckbox="true"
+                                                  scrollHeight="145">
+                                    <f:selectItems
+                                        value="#{insertMonthlySummariesPresenter.workers}"
+                                        var="worker"
+                                        itemLabel="#{worker.name}"
+                                        itemValue="#{worker}" />
+                                    <p:column>
+                                        <h:outputText value="#{worker.name}" />
+                                    </p:column>
+                                </p:selectManyMenu>
+                                <p:message for="selectedWorkers"/>
+                                <p:ajax event="click" update="populateSummariesButton" />
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:outputLabel for="monthStr" value="#{msg['presence.insertMonthlySummaries.month']}" />
+                                <p:inputText id="monthStr" required="true" pt:type="month" value="#{insertMonthlySummariesPresenter.monthStr}">
+                                    <p:ajax event="blur" update="populateSummariesButton" />
+                                </p:inputText>
+                                <p:message for="monthStr"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+
+                        <div class="ui-g-2 ui-md-3"></div>
+                        <div class="ui-g-8 ui-md-6">
+                            <p:commandButton id="populateSummariesButton"
+                                             disabled="#{empty insertMonthlySummariesPresenter.selectedWorkers or empty insertMonthlySummariesPresenter.monthStr}"
+                                             value="#{msg['presence.insertMonthlySummaries.populateSummaries']}"
+                                             action="#{insertMonthlySummariesPresenter.populateSummaries()}"
+                                             styleClass="secondary"
+                                             update="summariesTable" />
+                        </div>
+
+                        <p:dataTable id="summariesTable"
+                                     var="summary"
+                                     value="#{insertMonthlySummariesPresenter.summaries}"
+                                     stickyHeader="true" stickyTopAt=".topbar"
+                                     editable="true" editMode="cell">
+                            <f:facet name="header">
+                                <p:panelGrid columns="2" columnClasses="lefted, righted" styleClass="ui-panelgrid-blank">
+                                    #{msg['presence.insertMonthlySummaries']}
+                                    <p:outputPanel>
+                                    </p:outputPanel>
+                                </p:panelGrid>
+                            </f:facet>
+                            <p:column headerText="#{msg['worker.worker']}">
+                                <h:outputText value="#{summary.worker.name}" />
+                            </p:column>
+                            <p:column headerText="#{msg['presence.monthlySummary.hours']}">
+                                <h:outputText value="#{summary.hours}">
+                                    <f:convertNumber />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="#{msg['presence.presence.overtime.30']}">
+                                <h:outputText value="#{summary.overtime30}">
+                                    <f:convertNumber />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="#{msg['presence.presence.overtime.50']}">
+                                <h:outputText value="#{summary.overtime50}">
+                                    <f:convertNumber />
+                                </h:outputText>
+                            </p:column>
+                            <p:columns value="#{insertMonthlySummariesPresenter.events}" var="event">
+                                <f:facet name="header">
+                                    <h:outputText value="#{msg['presence.presenceEvent.' += event]}" />
+                                </f:facet>
+                                <h:outputText value="#{summary.presenceEventSummaries.get(event)}" />
+                            </p:columns>
+                            <p:columns value="#{insertMonthlySummariesPresenter.lunchBreakTickets}" var="ticket">
+                                <f:facet name="header">
+                                    <h:outputText value="#{ticket.name}" />
+                                </f:facet>
+                                <h:outputText value="#{summary.ticketSummaries.get(ticket.id)}" />
+                            </p:columns>
+                            <p:column headerText="#{msg['presence.presence.mileageReimbursement']}">
+                                <h:outputText value="#{summary.totalReimburseForDistanceTraveled}">
+                                    <f:convertNumber currencySymbol="#{msg['presence.presence.mileageReimbursement.um']}" minFractionDigits="2" type="currency" />
+                                </h:outputText>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                    <div class="ui-g-1 ui-md-2"></div>
+                    <div class="ui-g-4 ui-md-3">
+                        <p:commandButton value="#{msg['cancel']}"
+                                         action="#{insertMonthlySummariesPresenter.reload()}"
+                                         ajax="false"
+                                         styleClass="secondary" />
+                    </div>
+                    <div class="ui-g-2 ui-md-2"></div>
+                    <div class="ui-g-4 ui-md-3">
+                        <p:commandButton value="#{msg['save']}"
+                                         action="#{insertMonthlySummariesPresenter.save()}"
+                                         ajax="false"/>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -15,6 +15,7 @@
                         <c:if test="#{request.isUserInRole('HUMAN_RESOURCES')}">
                             <p:menuitem id="workersMenu" value="#{msg['worker.workers']}" icon="people_outline" outcome="/securedHr/worker/workers" />
                             <p:menuitem id="insertWorkingHoursMenu" value="#{msg['presence.insertWorkingHours']}" icon="playlist_add" outcome="/securedHr/worker/insertWorkingHours" />
+                            <p:menuitem id="insertMonthlySummariesMenu" value="#{msg['presence.insertMonthlySummaries']}" icon="playlist_add" outcome="/securedHr/worker/insertMonthlySummaries" />
                             <p:submenu id="utilsMenu" label="#{msg['utils']}" icon="list">
                                 <p:menuitem id="employmentContractsMenu" value="#{msg['worker.employmentContracts']}" icon="collections_bookmark" outcome="/securedHr/worker/employmentContracts" />
                                 <p:menuitem id="lunchBreakTicketsMenu" value="#{msg['worker.lunchBreakTickets']}" icon="local_dining" outcome="/securedHr/worker/lunchBreakTickets" />

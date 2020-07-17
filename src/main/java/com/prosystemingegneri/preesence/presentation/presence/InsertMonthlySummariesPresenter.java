@@ -16,12 +16,25 @@
  */
 package com.prosystemingegneri.preesence.presentation.presence;
 
+import com.prosystemingegneri.preesence.business.presence.boundary.MonthlySummaryService;
+import com.prosystemingegneri.preesence.business.presence.controller.PresenceEvent;
+import com.prosystemingegneri.preesence.business.presence.entity.MonthlySummary;
+import com.prosystemingegneri.preesence.business.worker.boundary.LunchBreakTicketService;
+import com.prosystemingegneri.preesence.business.worker.boundary.WorkerService;
+import com.prosystemingegneri.preesence.business.worker.entity.LunchBreakTicket;
+import com.prosystemingegneri.preesence.business.worker.entity.Worker;
 import java.io.Serializable;
 import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.PostConstruct;
+import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.NotEmpty;
 import org.omnifaces.cdi.ViewScoped;
+import org.omnifaces.util.Messages;
 
 /**
  *
@@ -30,5 +43,113 @@ import org.omnifaces.cdi.ViewScoped;
 @Named
 @ViewScoped
 public class InsertMonthlySummariesPresenter implements Serializable {
-    private @NotNull @PastOrPresent YearMonth month;
+    @Inject
+    private FacesContext facesContext;
+    
+    private String monthStr;
+    
+    @Inject
+    private LunchBreakTicketService lunchBreakTicketService;
+    private List<LunchBreakTicket> lunchBreakTickets = new ArrayList<>();
+    
+    private List<PresenceEvent> events = new ArrayList<>();
+    
+    @Inject
+    private WorkerService workerService;
+    private List<Worker> workers = new ArrayList<>();
+    private @NotEmpty List<Worker> selectedWorkers = new ArrayList<>();
+    
+    private @NotEmpty List<MonthlySummary> summaries = new ArrayList<>();
+    
+    @Inject
+    private MonthlySummaryService service;
+    
+    @PostConstruct
+    public void init() {
+        workers = workerService.list(0, 0, null, null, null, null);
+        selectedWorkers.clear();
+        for (Worker worker : workers)
+            if (worker.getDismission() == null)
+                selectedWorkers.add(worker);
+        monthStr = YearMonth.now().minusMonths(1).format(DateTimeFormatter.ofPattern("yyyy-MM"));
+    }
+    
+    public String reload() {
+        return facesContext.getViewRoot().getViewId() + "?faces-redirect=true";
+    }
+    
+    public String save() {
+        for (MonthlySummary summary : summaries)
+            service.save(summary);
+        
+        Messages.create("success").detail("saved").flash().add();
+        
+        return reload();
+    }
+    
+    public void populateSummaries() {
+        summaries = service.populateSummaries(selectedWorkers, YearMonth.parse(monthStr));
+        events.clear();
+        lunchBreakTickets.clear();
+        List<Long> lunchBreakTicketIds = new ArrayList<>();
+        for (MonthlySummary summary : summaries) {
+            for (PresenceEvent event : summary.getPresenceEventSummaries().keySet())
+                if (!events.contains(event))
+                    events.add(event);
+            for (Long idLunchBreakTicket : summary.getTicketSummaries().keySet())
+                if (!lunchBreakTicketIds.contains(idLunchBreakTicket))
+                    lunchBreakTicketIds.add(idLunchBreakTicket);
+        }
+        for (Long lunchBreakTicketId : lunchBreakTicketIds)
+            lunchBreakTickets.add(lunchBreakTicketService.find(lunchBreakTicketId));
+    }
+
+    public List<Worker> getSelectedWorkers() {
+        return selectedWorkers;
+    }
+
+    public void setSelectedWorkers(List<Worker> selectedWorkers) {
+        this.selectedWorkers = selectedWorkers;
+    }
+
+    public List<Worker> getWorkers() {
+        return workers;
+    }
+
+    public void setWorkers(List<Worker> workers) {
+        this.workers = workers;
+    }
+
+    public List<MonthlySummary> getSummaries() {
+        return summaries;
+    }
+
+    public void setSummaries(List<MonthlySummary> summaries) {
+        this.summaries = summaries;
+    }
+
+    public String getMonthStr() {
+        return monthStr;
+    }
+
+    public void setMonthStr(String monthStr) {
+        this.monthStr = monthStr;
+    }
+
+    public List<LunchBreakTicket> getLunchBreakTickets() {
+        return lunchBreakTickets;
+    }
+
+    public void setLunchBreakTickets(List<LunchBreakTicket> lunchBreakTickets) {
+        this.lunchBreakTickets = lunchBreakTickets;
+    }
+
+    public List<PresenceEvent> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<PresenceEvent> events) {
+        this.events = events;
+    }
+    
 }

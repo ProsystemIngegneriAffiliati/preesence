@@ -16,14 +16,18 @@
  */
 package com.prosystemingegneri.preesence.business.presence.boundary;
 
+import com.prosystemingegneri.preesence.business.presence.controller.PresenceEvent;
 import com.prosystemingegneri.preesence.business.presence.entity.MonthlySummary;
 import com.prosystemingegneri.preesence.business.presence.entity.MonthlySummary_;
+import com.prosystemingegneri.preesence.business.presence.entity.Presence;
 import com.prosystemingegneri.preesence.business.worker.entity.Worker;
 import com.prosystemingegneri.preesence.business.worker.entity.Worker_;
+import java.math.BigDecimal;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -33,6 +37,8 @@ import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -42,6 +48,9 @@ import javax.persistence.criteria.Root;
 public class MonthlySummaryService {
     @PersistenceContext
     EntityManager em;
+    
+    @Inject
+    private PresenceService presenceService;
     
     public MonthlySummary create() {
         return new MonthlySummary();
@@ -130,5 +139,53 @@ public class MonthlySummaryService {
             conditions.add(cb.equal(root.get(MonthlySummary_.worker), worker));
         
         return conditions;
+    }
+
+    public List<MonthlySummary> populateSummaries(@NotEmpty List<Worker> selectedWorkers, @NotNull YearMonth month) {
+        List<MonthlySummary> summaryies = new ArrayList<>();
+        for (Worker worker : selectedWorkers) {
+            List<MonthlySummary> savedWorkerSummary = list(0, 1, null, null, month, month, worker);
+            if (savedWorkerSummary != null && !savedWorkerSummary.isEmpty())
+                summaryies.add(savedWorkerSummary.get(0));
+            else
+                summaryies.add(populateWorkerSummary(worker, month));
+        }
+        
+        return summaryies;
+    }
+    
+    private MonthlySummary populateWorkerSummary(@NotNull Worker worker, @NotNull YearMonth month) {
+        MonthlySummary result = new MonthlySummary(worker, month);
+        
+        Integer distanceTraveled = 0;
+        BigDecimal hours = BigDecimal.ZERO;
+        BigDecimal overtime30 = BigDecimal.ZERO;
+        BigDecimal overtime50 = BigDecimal.ZERO;
+        BigDecimal totalReimburseForDistanceTraveled = BigDecimal.ZERO;
+
+        List<Presence> presences = presenceService.list(0, 0, null, null, month.atDay(1), month.atEndOfMonth(), worker);
+        
+        for (Presence presence : presences) {
+            presence.updateAllTimings();
+            distanceTraveled += presence.getDistanceTraveled();
+            hours = hours.add(presence.getTotal() == null ? BigDecimal.ZERO : presence.getTotal());
+            overtime30 = overtime30.add(presence.getOvertime30() == null ? BigDecimal.ZERO : presence.getOvertime30());
+            overtime50 = overtime50.add(presence.getOvertime50() == null ? BigDecimal.ZERO : presence.getOvertime50());
+            totalReimburseForDistanceTraveled = totalReimburseForDistanceTraveled.add(presence.getMileageReimbursement());
+            if (presence.getLunchBreakTicket() != null)
+                result.getTicketSummaries().merge(presence.getLunchBreakTicket().getId(), 1, Integer::sum);
+            if (presence.getEvent() != PresenceEvent.WORK)
+                result.getPresenceEventSummaries().merge(presence.getEvent(), presence.getWorker().getContract().getHoursDaily(), BigDecimal::add);
+            if (BigDecimal.ZERO.compareTo(presence.getDifference()) < 0)
+                result.getPresenceEventSummaries().merge(presence.getDifferenceEvent(), presence.getDifference(), BigDecimal::add);
+        }
+
+        result.setDistanceTraveled(distanceTraveled);
+        result.setHours(hours);
+        result.setOvertime30(overtime30);
+        result.setOvertime50(overtime50);
+        result.setTotalReimburseForDistanceTraveled(totalReimburseForDistanceTraveled);
+        
+        return result;
     }
 }

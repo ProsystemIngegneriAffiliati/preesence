@@ -17,17 +17,20 @@
 package com.prosystemingegneri.preesence.business.presence.entity;
 
 import com.prosystemingegneri.preesence.business.entity.BaseEntity;
-import com.prosystemingegneri.preesence.business.worker.entity.LunchBreakTicketSummary;
+import com.prosystemingegneri.preesence.business.presence.controller.PresenceEvent;
+import com.prosystemingegneri.preesence.business.worker.entity.LunchBreakTicket;
 import com.prosystemingegneri.preesence.business.worker.entity.Worker;
 import java.math.BigDecimal;
 import java.time.YearMonth;
-import java.util.ArrayList;
-import java.util.List;
-import javax.persistence.CascadeType;
+import java.util.HashMap;
+import java.util.Map;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.MapKeyColumn;
+import javax.persistence.MapKeyEnumerated;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 
@@ -53,11 +56,12 @@ public class MonthlySummary extends BaseEntity {
     @Column(nullable = false)
     private @NotNull @DecimalMin("0") BigDecimal overtime50;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "monthlySummary", orphanRemoval = true)
-    private List<PresenceEventSummary> presenceEventSummaries;
+    private Map<Long, Integer> ticketSummaries;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "monthlySummary", orphanRemoval = true)
-    private List<LunchBreakTicketSummary> ticketSummaries;
+    @ElementCollection
+    @MapKeyColumn(columnDefinition = "smallint")
+    @MapKeyEnumerated(EnumType.ORDINAL)
+    private Map<PresenceEvent, BigDecimal> presenceEventSummaries;
     
     @Column(nullable = false)
     private @NotNull @DecimalMin("0") BigDecimal totalReimburseForDistanceTraveled;
@@ -69,10 +73,16 @@ public class MonthlySummary extends BaseEntity {
         hours = BigDecimal.ZERO;
         overtime30 = BigDecimal.ZERO;
         overtime50 = BigDecimal.ZERO;
-        presenceEventSummaries = new ArrayList<>();
-        ticketSummaries = new ArrayList<>();
+        presenceEventSummaries = new HashMap<>();
+        ticketSummaries = new HashMap<>();
         totalReimburseForDistanceTraveled = BigDecimal.ZERO;
         distanceTraveled = 0;
+    }
+
+    public MonthlySummary(Worker worker, YearMonth month) {
+        this();
+        this.worker = worker;
+        this.month = month;
     }
 
     public BigDecimal getHours() {
@@ -97,42 +107,6 @@ public class MonthlySummary extends BaseEntity {
 
     public void setOvertime50(BigDecimal overtime50) {
         this.overtime50 = overtime50;
-    }
-    
-    public void addPresenceEventSummary(PresenceEventSummary eventSummary) {
-        if (!presenceEventSummaries.contains(eventSummary)) {
-            presenceEventSummaries.add(eventSummary);
-            eventSummary.setMonthlySummary(this);
-        }
-    }
-    
-    public void removePresenceEventSummary(PresenceEventSummary eventSummary) {
-        if (presenceEventSummaries.contains(eventSummary)) {
-            presenceEventSummaries.remove(eventSummary);
-            eventSummary.setMonthlySummary(null);
-        }
-    }
-
-    public List<PresenceEventSummary> getPresenceEventSummaries() {
-        return presenceEventSummaries;
-    }
-    
-    public void addLunchBreakTicketSummary(LunchBreakTicketSummary ticketSummary) {
-        if (!ticketSummaries.contains(ticketSummary)) {
-            ticketSummaries.add(ticketSummary);
-            ticketSummary.setMonthlySummary(this);
-        }
-    }
-    
-    public void removeLunchBreakTicketSummary(LunchBreakTicketSummary ticketSummary) {
-        if (ticketSummaries.contains(ticketSummary)) {
-            ticketSummaries.remove(ticketSummary);
-            ticketSummary.setMonthlySummary(null);
-        }
-    }
-    
-    public List<LunchBreakTicketSummary> getTicketSummaries() {
-        return ticketSummaries;
     }
 
     public BigDecimal getTotalReimburseForDistanceTraveled() {
@@ -165,6 +139,22 @@ public class MonthlySummary extends BaseEntity {
 
     public void setMonth(YearMonth month) {
         this.month = month;
+    }
+
+    public Map<Long, Integer> getTicketSummaries() {
+        return ticketSummaries;
+    }
+
+    public void setTicketSummaries(Map<Long, Integer> ticketSummaries) {
+        this.ticketSummaries = ticketSummaries;
+    }
+
+    public Map<PresenceEvent, BigDecimal> getPresenceEventSummaries() {
+        return presenceEventSummaries;
+    }
+
+    public void setPresenceEventSummaries(Map<PresenceEvent, BigDecimal> presenceEventSummaries) {
+        this.presenceEventSummaries = presenceEventSummaries;
     }
     
 }
