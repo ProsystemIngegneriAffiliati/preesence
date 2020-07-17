@@ -34,7 +34,7 @@ rm '"$(config_get DB_INITIAL_FILENAME)"''
 #(crontab -l && echo "15 1 * * 0 /root/backupDb.sh >/dev/null 2>&1") | crontab -'
 
 #Copy provided jars into target folder, ready to be copied to production
-mvn -f "$(config_get IDE_WORKSPACE)"/"$(config_get APP_NAME)"/pom.xml -DincludeScope=provided -DexcludeArtifactIds=javax.mail,jakarta.jakartaee-api,activation,microprofile -DexcludeTransitive=true -DoutputDirectory="$(config_get IDE_WORKSPACE)"/"$(config_get APP_NAME)"/target/libs-temp/ dependency:copy-dependencies
+mvn -f "$(config_get IDE_WORKSPACE)"/"$(config_get APP_NAME)"/pom.xml -DincludeScope=provided -DexcludeArtifactIds=javax.mail,jakarta.jakartaee-api,activation,microprofile -DoutputDirectory="$(config_get IDE_WORKSPACE)"/"$(config_get APP_NAME)"/target/libs-temp/ dependency:copy-dependencies
 #Copy jars into production
 scp -P "$(config_get EXTERNAL_SSH_PORT)" "$(config_get IDE_WORKSPACE)"/"$(config_get APP_NAME)"/target/libs-temp/* root@"$(config_get IP_ADDRESS)":/root/
 

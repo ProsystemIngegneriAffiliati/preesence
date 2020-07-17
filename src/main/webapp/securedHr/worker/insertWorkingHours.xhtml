@@ -81,6 +81,9 @@
                                 <p:panelGrid columns="2" columnClasses="lefted, righted" styleClass="ui-panelgrid-blank">
                                     #{msg['presence.presences']}
                                     <p:outputPanel>
+                                        <p:commandButton title="#{msg['presence.insertWorkingHours.export.tip']}" icon="ui-icon-file-download" ajax="false">
+                                            <p:dataExporter type="xlsx" target="presencesTable" fileName="#{msg['presence.presences']} #{insertWorkingHoursPresenter.yearMonth}" />
+                                        </p:commandButton>
                                     </p:outputPanel>
                                 </p:panelGrid>
                             </f:facet>

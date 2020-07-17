@@ -10,7 +10,7 @@ readonly DB_USER_PASSWORD=aEsSV7ToimzThX6BbP6n
 mkdir $HOME/"${APP_NAME}"
 mkdir $HOME/"${APP_NAME}"/documents
 \
-mvn -f "${IDE_WORKSPACE}"/"${APP_NAME}"/pom.xml -DincludeScope=provided -DexcludeArtifactIds=javax.mail,jakarta.jakartaee-api,activation,microprofile -DexcludeTransitive=true -DoutputDirectory=$HOME/"${APP_NAME}"/ dependency:copy-dependencies
+mvn -f "${IDE_WORKSPACE}"/"${APP_NAME}"/pom.xml -DincludeScope=provided -DexcludeArtifactIds=javax.mail,jakarta.jakartaee-api,activation,microprofile -DoutputDirectory=$HOME/"${APP_NAME}"/ dependency:copy-dependencies
 \
 ./asadmin start-domain
 ./asadmin add-library $HOME/"${APP_NAME}"/*.jar

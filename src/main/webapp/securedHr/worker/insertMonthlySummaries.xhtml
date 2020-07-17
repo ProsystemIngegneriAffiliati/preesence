@@ -66,6 +66,9 @@
                                 <p:panelGrid columns="2" columnClasses="lefted, righted" styleClass="ui-panelgrid-blank">
                                     #{msg['presence.insertMonthlySummaries']}
                                     <p:outputPanel>
+                                        <p:commandButton title="#{msg['presence.monthlySummary.export.tip']}" icon="ui-icon-file-download" ajax="false">
+                                            <p:dataExporter type="xlsx" target="summariesTable" fileName="#{msg['presence.insertMonthlySummaries']} #{insertMonthlySummariesPresenter.monthStr}" />
+                                        </p:commandButton>
                                     </p:outputPanel>
                                 </p:panelGrid>
                             </f:facet>
