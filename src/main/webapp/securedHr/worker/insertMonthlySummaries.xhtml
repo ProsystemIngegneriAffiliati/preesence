@@ -69,40 +69,104 @@
                                     </p:outputPanel>
                                 </p:panelGrid>
                             </f:facet>
-                            <p:column headerText="#{msg['worker.worker']}">
+                            <p:ajax event="rowEdit" listener="#{insertMonthlySummariesPresenter.updateFooterSummary()}" update="summariesTable" />
+                            <p:column headerText="#{msg['worker.worker']}" footerText="#{msg['total']}">
                                 <h:outputText value="#{summary.worker.name}" />
                             </p:column>
                             <p:column headerText="#{msg['presence.monthlySummary.hours']}">
                                 <h:outputText value="#{summary.hours}">
                                     <f:convertNumber />
                                 </h:outputText>
+                                <f:facet name="footer">
+                                    <h:outputText value="#{insertMonthlySummariesPresenter.footerSummary.hours}">
+                                        <f:convertNumber />
+                                    </h:outputText>
+                                </f:facet>
                             </p:column>
                             <p:column headerText="#{msg['presence.presence.overtime.30']}">
                                 <h:outputText value="#{summary.overtime30}">
                                     <f:convertNumber />
                                 </h:outputText>
+                                <f:facet name="footer">
+                                    <h:outputText value="#{insertMonthlySummariesPresenter.footerSummary.overtime30}">
+                                        <f:convertNumber />
+                                    </h:outputText>
+                                </f:facet>
                             </p:column>
                             <p:column headerText="#{msg['presence.presence.overtime.50']}">
                                 <h:outputText value="#{summary.overtime50}">
                                     <f:convertNumber />
                                 </h:outputText>
+                                <f:facet name="footer">
+                                    <h:outputText value="#{insertMonthlySummariesPresenter.footerSummary.overtime50}">
+                                        <f:convertNumber />
+                                    </h:outputText>
+                                </f:facet>
                             </p:column>
                             <p:columns value="#{insertMonthlySummariesPresenter.events}" var="event">
                                 <f:facet name="header">
                                     <h:outputText value="#{msg['presence.presenceEvent.' += event]}" />
                                 </f:facet>
                                 <h:outputText value="#{summary.presenceEventSummaries.get(event)}" />
+                                <f:facet name="footer">
+                                    <h:outputText value="#{insertMonthlySummariesPresenter.footerSummary.presenceEventSummaries.get(event)}" />
+                                </f:facet>
                             </p:columns>
                             <p:columns value="#{insertMonthlySummariesPresenter.lunchBreakTickets}" var="ticket">
                                 <f:facet name="header">
                                     <h:outputText value="#{ticket.name}" />
                                 </f:facet>
                                 <h:outputText value="#{summary.ticketSummaries.get(ticket.id)}" />
+                                <f:facet name="footer">
+                                    <h:outputText value="#{insertMonthlySummariesPresenter.footerSummary.ticketSummaries.get(ticket.id)}" />
+                                </f:facet>
                             </p:columns>
                             <p:column headerText="#{msg['presence.presence.mileageReimbursement']}">
                                 <h:outputText value="#{summary.totalReimburseForDistanceTraveled}">
                                     <f:convertNumber currencySymbol="#{msg['presence.presence.mileageReimbursement.um']}" minFractionDigits="2" type="currency" />
                                 </h:outputText>
+                                <f:facet name="footer">
+                                    <h:outputText value="#{insertMonthlySummariesPresenter.footerSummary.totalReimburseForDistanceTraveled}">
+                                        <f:convertNumber currencySymbol="#{msg['presence.presence.mileageReimbursement.um']}" minFractionDigits="2" type="currency" />
+                                    </h:outputText>
+                                </f:facet>
+                            </p:column>
+                            <p:column headerText="#{msg['presence.monthlySummary.dressingAllowance']}">
+                                <p:cellEditor>
+                                    <f:facet name="output">
+                                        <h:outputText rendered="#{summary.dressingAllowance gt 0}" value="#{summary.dressingAllowance}">
+                                            <f:convertNumber currencySymbol="#{msg['presence.monthlySummary.dressingAllowance.um']}" minFractionDigits="2" type="currency" />
+                                        </h:outputText>
+                                    </f:facet>
+                                    <f:facet name="input">
+                                        <p:inputNumber value="#{summary.dressingAllowance}"
+                                                       decimalPlaces="0"
+                                                       minValue="0"
+                                                       symbol=" #{msg['presence.monthlySummary.dressingAllowance.um']}"
+                                                       symbolPosition="s">
+                                        </p:inputNumber>
+                                    </f:facet>
+                                </p:cellEditor>
+                                <f:facet name="footer">
+                                    <h:outputText value="#{insertMonthlySummariesPresenter.footerSummary.dressingAllowance}">
+                                        <f:convertNumber currencySymbol="#{msg['presence.monthlySummary.dressingAllowance.um']}" minFractionDigits="2" type="currency" />
+                                    </h:outputText>
+                                </f:facet>
+                            </p:column>
+                            <p:column headerText="#{msg['presence.monthlySummary.presenceNumber']}">
+                                <h:outputText value="#{summary.presenceNumber}">
+                                    <f:convertNumber />
+                                </h:outputText>
+                                <f:facet name="footer">
+                                    <h:outputText value="#{insertMonthlySummariesPresenter.footerSummary.presenceNumber}">
+                                        <f:convertNumber />
+                                    </h:outputText>
+                                </f:facet>
+                            </p:column>
+                            <p:column headerText="#{msg['actions']}" style="width:5em; text-align:center" priority="0" exportable="false">
+                                <p:commandButton title="#{msg['presence.monthlySummary.reset']}" icon="ui-icon-delete" actionListener="#{insertMonthlySummariesPresenter.reset(summary)}" update="summariesTable">
+                                    <p:confirm header="#{msg['presence.monthlySummary.reset']}" message="#{msg['presence.monthlySummary.reset.tip']}" icon="ui-icon-alert"/>
+                                </p:commandButton>
                             </p:column>
                         </p:dataTable>
                     </div>

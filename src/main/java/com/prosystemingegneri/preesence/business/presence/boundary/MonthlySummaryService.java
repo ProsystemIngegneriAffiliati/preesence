@@ -154,10 +154,11 @@ public class MonthlySummaryService {
         return summaryies;
     }
     
-    private MonthlySummary populateWorkerSummary(@NotNull Worker worker, @NotNull YearMonth month) {
+    public MonthlySummary populateWorkerSummary(@NotNull Worker worker, @NotNull YearMonth month) {
         MonthlySummary result = new MonthlySummary(worker, month);
         
         Integer distanceTraveled = 0;
+        Integer presenceNumber = 0;
         BigDecimal hours = BigDecimal.ZERO;
         BigDecimal overtime30 = BigDecimal.ZERO;
         BigDecimal overtime50 = BigDecimal.ZERO;
@@ -174,13 +175,16 @@ public class MonthlySummaryService {
             totalReimburseForDistanceTraveled = totalReimburseForDistanceTraveled.add(presence.getMileageReimbursement());
             if (presence.getLunchBreakTicket() != null)
                 result.getTicketSummaries().merge(presence.getLunchBreakTicket().getId(), 1, Integer::sum);
-            if (presence.getEvent() != PresenceEvent.WORK)
+            if (presence.getEvent() != PresenceEvent.WORK && presence.getEvent() != PresenceEvent.HOLIDAY)
                 result.getPresenceEventSummaries().merge(presence.getEvent(), presence.getWorker().getContract().getHoursDaily(), BigDecimal::add);
             if (BigDecimal.ZERO.compareTo(presence.getDifference()) < 0)
                 result.getPresenceEventSummaries().merge(presence.getDifferenceEvent(), presence.getDifference(), BigDecimal::add);
+            if (presence.getTotal() != null || presence.getOvertime50() != null)
+                presenceNumber++;
         }
 
         result.setDistanceTraveled(distanceTraveled);
+        result.setPresenceNumber(presenceNumber);
         result.setHours(hours);
         result.setOvertime30(overtime30);
         result.setOvertime50(overtime50);

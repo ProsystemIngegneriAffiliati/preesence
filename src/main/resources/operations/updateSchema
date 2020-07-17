@@ -10,7 +10,7 @@ readonly APP_NAME=preesence
 readonly IP_ADDRESS=demo.prosystemingegneri.com
 readonly EXTERNAL_SSH_PORT=54022
 readonly TODAY=$(date +%Y%m%d)
-readonly INTERNAL_IP_ADDRESS=192.168.1.20
+readonly INTERNAL_IP_ADDRESS=192.168.1.11
 
 #Connect to production server, make dump and save backup on local developer machine
 ssh -p "${EXTERNAL_SSH_PORT}" root@"${IP_ADDRESS}" '\

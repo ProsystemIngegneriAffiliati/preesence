@@ -18,7 +18,6 @@ package com.prosystemingegneri.preesence.business.presence.entity;
 
 import com.prosystemingegneri.preesence.business.entity.BaseEntity;
 import com.prosystemingegneri.preesence.business.presence.controller.PresenceEvent;
-import com.prosystemingegneri.preesence.business.worker.entity.LunchBreakTicket;
 import com.prosystemingegneri.preesence.business.worker.entity.Worker;
 import java.math.BigDecimal;
 import java.time.YearMonth;
@@ -68,15 +67,22 @@ public class MonthlySummary extends BaseEntity {
     
     @Column(nullable = false)
     private @NotNull @DecimalMin("0") Integer distanceTraveled;   //in km
+    
+    @Column(nullable = false)
+    private @NotNull @DecimalMin("0") BigDecimal dressingAllowance;
+    
+    private @NotNull @DecimalMin("0") Integer presenceNumber;
 
     public MonthlySummary() {
         hours = BigDecimal.ZERO;
         overtime30 = BigDecimal.ZERO;
         overtime50 = BigDecimal.ZERO;
+        dressingAllowance = BigDecimal.ZERO;
         presenceEventSummaries = new HashMap<>();
         ticketSummaries = new HashMap<>();
         totalReimburseForDistanceTraveled = BigDecimal.ZERO;
         distanceTraveled = 0;
+        presenceNumber = 0;
     }
 
     public MonthlySummary(Worker worker, YearMonth month) {
@@ -155,6 +161,39 @@ public class MonthlySummary extends BaseEntity {
 
     public void setPresenceEventSummaries(Map<PresenceEvent, BigDecimal> presenceEventSummaries) {
         this.presenceEventSummaries = presenceEventSummaries;
+    }
+
+    public BigDecimal getDressingAllowance() {
+        return dressingAllowance;
+    }
+
+    public void setDressingAllowance(BigDecimal dressingAllowance) {
+        this.dressingAllowance = dressingAllowance;
+    }
+
+    public Integer getPresenceNumber() {
+        return presenceNumber;
+    }
+
+    public void setPresenceNumber(Integer presenceNumber) {
+        this.presenceNumber = presenceNumber;
+    }
+
+    public boolean isEmpty() {
+        if (
+                BigDecimal.ZERO.compareTo(hours) < 0 ||
+                BigDecimal.ZERO.compareTo(overtime30) < 0 ||
+                BigDecimal.ZERO.compareTo(overtime50) < 0 ||
+                !ticketSummaries.isEmpty() ||
+                !presenceEventSummaries.isEmpty() ||
+                BigDecimal.ZERO.compareTo(totalReimburseForDistanceTraveled) < 0 ||
+                distanceTraveled > 0 ||
+                BigDecimal.ZERO.compareTo(dressingAllowance) < 0 ||
+                presenceNumber > 0
+                )
+            return false;
+        
+        return true;
     }
     
 }

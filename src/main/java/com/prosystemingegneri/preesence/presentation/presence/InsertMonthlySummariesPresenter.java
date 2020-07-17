@@ -24,10 +24,12 @@ import com.prosystemingegneri.preesence.business.worker.boundary.WorkerService;
 import com.prosystemingegneri.preesence.business.worker.entity.LunchBreakTicket;
 import com.prosystemingegneri.preesence.business.worker.entity.Worker;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
@@ -60,6 +62,8 @@ public class InsertMonthlySummariesPresenter implements Serializable {
     private @NotEmpty List<Worker> selectedWorkers = new ArrayList<>();
     
     private @NotEmpty List<MonthlySummary> summaries = new ArrayList<>();
+    private MonthlySummary footerSummary = new MonthlySummary();
+    private List<MonthlySummary> summariesToBeDeleted = new ArrayList<>();
     
     @Inject
     private MonthlySummaryService service;
@@ -79,8 +83,12 @@ public class InsertMonthlySummariesPresenter implements Serializable {
     }
     
     public String save() {
-        for (MonthlySummary summary : summaries)
-            service.save(summary);
+        for (MonthlySummary toBeDeleted : summariesToBeDeleted)
+            service.delete(toBeDeleted.getId());
+        for (MonthlySummary summary : summaries) {
+            if (!summary.isEmpty())
+                service.save(summary);
+        }
         
         Messages.create("success").detail("saved").flash().add();
         
@@ -102,6 +110,49 @@ public class InsertMonthlySummariesPresenter implements Serializable {
         }
         for (Long lunchBreakTicketId : lunchBreakTicketIds)
             lunchBreakTickets.add(lunchBreakTicketService.find(lunchBreakTicketId));
+        updateFooterSummary();
+    }
+    
+    public void reset(MonthlySummary summary) {
+        if (summary.getId() != null)
+            summariesToBeDeleted.add(summary);
+        int index = summaries.indexOf(summary);
+        summaries.remove(index);
+        summaries.add(index, service.populateWorkerSummary(summary.getWorker(), summary.getMonth()));
+        updateFooterSummary();
+    }
+    
+    public void updateFooterSummary() {
+        footerSummary = new MonthlySummary();
+        Integer distanceTraveled = 0;
+        BigDecimal dressingAllowance = BigDecimal.ZERO;
+        BigDecimal hours = BigDecimal.ZERO;
+        BigDecimal overtime30 = BigDecimal.ZERO;
+        BigDecimal overtime50 = BigDecimal.ZERO;
+        Integer presenceNumber = 0;
+        BigDecimal totalReimburseForDistanceTraveled = BigDecimal.ZERO;
+        
+        for (MonthlySummary summary : summaries) {
+            distanceTraveled += summary.getDistanceTraveled();
+            dressingAllowance = dressingAllowance.add(summary.getDressingAllowance());
+            hours = hours.add(summary.getHours());
+            overtime30 = overtime30.add(summary.getOvertime30());
+            overtime50 = overtime50.add(summary.getOvertime50());
+            presenceNumber += summary.getPresenceNumber();
+            totalReimburseForDistanceTraveled = totalReimburseForDistanceTraveled.add(summary.getTotalReimburseForDistanceTraveled());
+            for (Map.Entry<Long, Integer> entry : summary.getTicketSummaries().entrySet())
+                footerSummary.getTicketSummaries().merge(entry.getKey(), entry.getValue(), Integer::sum);
+            for (Map.Entry<PresenceEvent, BigDecimal> entry : summary.getPresenceEventSummaries().entrySet())
+                footerSummary.getPresenceEventSummaries().merge(entry.getKey(), entry.getValue(), BigDecimal::add);
+        }
+        
+        footerSummary.setDistanceTraveled(distanceTraveled);
+        footerSummary.setDressingAllowance(dressingAllowance);
+        footerSummary.setHours(hours);
+        footerSummary.setOvertime30(overtime30);
+        footerSummary.setOvertime50(overtime50);
+        footerSummary.setPresenceNumber(presenceNumber);
+        footerSummary.setTotalReimburseForDistanceTraveled(totalReimburseForDistanceTraveled);
     }
 
     public List<Worker> getSelectedWorkers() {
@@ -150,6 +201,14 @@ public class InsertMonthlySummariesPresenter implements Serializable {
 
     public void setEvents(List<PresenceEvent> events) {
         this.events = events;
+    }
+
+    public MonthlySummary getFooterSummary() {
+        return footerSummary;
+    }
+
+    public void setFooterSummary(MonthlySummary footerSummary) {
+        this.footerSummary = footerSummary;
     }
     
 }
