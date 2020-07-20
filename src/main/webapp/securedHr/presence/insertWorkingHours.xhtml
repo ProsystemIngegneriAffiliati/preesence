@@ -82,7 +82,9 @@
                                     #{msg['presence.presences']}
                                     <p:outputPanel>
                                         <p:commandButton title="#{msg['presence.insertWorkingHours.export.tip']}" icon="ui-icon-file-download" ajax="false">
-                                            <p:dataExporter type="xlsx" target="presencesTable" fileName="#{msg['presence.presences']} #{insertWorkingHoursPresenter.yearMonth}" />
+                                            <p:dataExporter type="xlsx" target="presencesTable"
+                                                            fileName="#{insertWorkingHoursPresenter.worker.name} #{insertWorkingHoursPresenter.yearMonth}"
+                                                            postProcessor="#{insertWorkingHoursPresenter.postProcessExportWorkingHours}"/>
                                         </p:commandButton>
                                     </p:outputPanel>
                                 </p:panelGrid>

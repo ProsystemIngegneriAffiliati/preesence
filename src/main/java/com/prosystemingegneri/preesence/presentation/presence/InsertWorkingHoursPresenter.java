@@ -28,6 +28,8 @@ import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.omnifaces.cdi.ViewScoped;
 import org.omnifaces.util.Messages;
 
@@ -97,6 +99,13 @@ public class InsertWorkingHoursPresenter implements Serializable{
     
     public void populateDays() {
         presences = service.populateDays(worker, start, end);
+    }
+    
+    public void postProcessExportWorkingHours(Object document) {
+        XSSFWorkbook wb = (XSSFWorkbook) document;
+        XSSFSheet sheet = wb.getSheetAt(0);
+        sheet.shiftRows(0, 0, 1);
+        sheet.createRow(0).createCell(0).setCellValue(worker.getName());
     }
 
     public Worker getWorker() {
