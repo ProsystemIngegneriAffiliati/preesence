@@ -156,6 +156,28 @@
                                     </h:outputText>
                                 </f:facet>
                             </p:column>
+                            <p:column headerText="#{msg['presence.monthlySummary.fringeBenefit']}">
+                                <p:cellEditor>
+                                    <f:facet name="output">
+                                        <h:outputText rendered="#{summary.fringeBenefit gt 0}" value="#{summary.fringeBenefit}">
+                                            <f:convertNumber currencySymbol="#{msg['presence.monthlySummary.fringeBenefit.um']}" minFractionDigits="2" type="currency" />
+                                        </h:outputText>
+                                    </f:facet>
+                                    <f:facet name="input">
+                                        <p:inputNumber value="#{summary.fringeBenefit}"
+                                                       decimalPlaces="0"
+                                                       minValue="0"
+                                                       symbol=" #{msg['presence.monthlySummary.fringeBenefit.um']}"
+                                                       symbolPosition="s">
+                                        </p:inputNumber>
+                                    </f:facet>
+                                </p:cellEditor>
+                                <f:facet name="footer">
+                                    <h:outputText value="#{insertMonthlySummariesPresenter.footerSummary.fringeBenefit}">
+                                        <f:convertNumber currencySymbol="#{msg['presence.monthlySummary.fringeBenefit.um']}" minFractionDigits="2" type="currency" />
+                                    </h:outputText>
+                                </f:facet>
+                            </p:column>
                             <p:column headerText="#{msg['presence.monthlySummary.presenceNumber']}">
                                 <h:outputText value="#{summary.presenceNumber}">
                                     <f:convertNumber />

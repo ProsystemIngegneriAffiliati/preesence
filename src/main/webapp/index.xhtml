@@ -7,15 +7,9 @@
         <div class="ui-g">
             <div class="ui-g-12">
                 <div class="card">
-                    <h1>#{msg.appName}</h1>
-                    <p>Default users are:
-                        <ul>
-                            <li>guestWorker - demo</li>
-                            <li>guestHr - demo</li>
-                            <li>demoAdmin - demo</li>
-                        </ul>
-                    </p>
-                    <p:button outcome="securedWorker/welcome" value="Go to the secret place" style="display:inline-block;margin-top:5px"/>
+                    <h1>#{msg['appName']}</h1>
+                    <p>#{msg['appName.tip']}</p>
+                    <p:button outcome="securedWorker/welcome" value="#{msg['start']}" style="display:inline-block;margin-top:5px"/>
                 </div>
             </div>
         </div>

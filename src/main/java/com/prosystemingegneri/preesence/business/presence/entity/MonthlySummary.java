@@ -71,6 +71,9 @@ public class MonthlySummary extends BaseEntity {
     @Column(nullable = false)
     private @NotNull @DecimalMin("0") BigDecimal dressingAllowance;
     
+    @Column(nullable = false)
+    private @NotNull @DecimalMin("0") BigDecimal fringeBenefit;
+    
     private @NotNull @DecimalMin("0") Integer presenceNumber;
 
     public MonthlySummary() {
@@ -78,6 +81,7 @@ public class MonthlySummary extends BaseEntity {
         overtime30 = BigDecimal.ZERO;
         overtime50 = BigDecimal.ZERO;
         dressingAllowance = BigDecimal.ZERO;
+        fringeBenefit = BigDecimal.ZERO;
         presenceEventSummaries = new HashMap<>();
         ticketSummaries = new HashMap<>();
         totalReimburseForDistanceTraveled = BigDecimal.ZERO;
@@ -179,6 +183,14 @@ public class MonthlySummary extends BaseEntity {
         this.presenceNumber = presenceNumber;
     }
 
+    public BigDecimal getFringeBenefit() {
+        return fringeBenefit;
+    }
+
+    public void setFringeBenefit(BigDecimal fringeBenefit) {
+        this.fringeBenefit = fringeBenefit;
+    }
+
     public boolean isEmpty() {
         if (
                 BigDecimal.ZERO.compareTo(hours) < 0 ||
@@ -189,6 +201,7 @@ public class MonthlySummary extends BaseEntity {
                 BigDecimal.ZERO.compareTo(totalReimburseForDistanceTraveled) < 0 ||
                 distanceTraveled > 0 ||
                 BigDecimal.ZERO.compareTo(dressingAllowance) < 0 ||
+                BigDecimal.ZERO.compareTo(fringeBenefit) < 0 ||
                 presenceNumber > 0
                 )
             return false;
