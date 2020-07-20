@@ -57,7 +57,7 @@ public class InsertWorkingHoursPresenter implements Serializable{
     }
     
     public String reload() {
-        return facesContext.getViewRoot().getViewId() + "?faces-redirect=true&includeViewParams=true";
+        return facesContext.getViewRoot().getViewId() + "?faces-redirect=true";
     }
     
     public String save() {

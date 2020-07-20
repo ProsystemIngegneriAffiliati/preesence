@@ -184,14 +184,19 @@
                                     <f:convertNumber />
                                 </h:outputText>
                             </p:column>
-                            <p:column headerText="#{msg['presence.presence.difference']}">
+                            <p:column headerText="#{msg['presence.presence.difference']}" exportable="false">
                                 <h:panelGroup id="differencePanel">
                                     <h:outputText rendered="#{presence.difference.compareTo(BigDecimal.ZERO) gt 0}" value="#{presence.difference}">
                                         <f:convertNumber />
                                     </h:outputText>
                                 </h:panelGroup>
                             </p:column>
-                            <p:column headerText="#{msg['presence.presence.differenceEvent']}">
+                            <p:column headerText="#{msg['presence.presence.difference']}" visible="false">
+                                <h:outputText rendered="#{presence.difference.compareTo(BigDecimal.ZERO) gt 0}" value="#{presence.difference}">
+                                    <f:convertNumber />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="#{msg['presence.presence.differenceEvent']}" exportable="false">
                                 <p:cellEditor id="differenceEventCellEditor">
                                     <f:facet name="output">
                                         <h:outputText rendered="#{not empty presence.differenceEvent}" value="#{msg['presence.presenceEvent.' += presence.differenceEvent]}" />
@@ -207,6 +212,9 @@
                                         </p:selectOneMenu>
                                     </f:facet>
                                 </p:cellEditor>
+                            </p:column>
+                            <p:column headerText="#{msg['presence.presence.differenceEvent']}" visible="false">
+                                <h:outputText rendered="#{not empty presence.differenceEvent}" value="#{msg['presence.presenceEvent.' += presence.differenceEvent]}" />
                             </p:column>
                             <p:column headerText="#{msg['presence.presence.ticket']}">
                                 <p:cellEditor id="ticket">
