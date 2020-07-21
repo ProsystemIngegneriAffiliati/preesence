@@ -3,16 +3,16 @@
 source config.shlib; # load the config library functions
 
 #Apache proxy pass and reverse proxy configuration
-#ssh root@"$(config_get IP_ADDRESS)" -p "$(config_get EXTERNAL_SSH_PORT)" '\
-#a2enmod proxy_http; \
-#service apache2 stop; \
-#service apache2 start; \
-#service apache2 restart; \
-#cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/payaraSite.conf; \
-#sed -i /etc/apache2/sites-available/payaraSite.conf -e "s/<VirtualHost \*:80>/<VirtualHost *:80>\n\tProxyPass \/ http:\/\/localhost:8080\/\n\tProxyPassReverse \/ http:\/\/localhost:8080\/\n\tProxyPreserveHost on/"; \
-#a2dissite 000-default; \
-#a2ensite payaraSite; \
-#service apache2 restart'
+ssh root@"$(config_get IP_ADDRESS)" -p "$(config_get EXTERNAL_SSH_PORT)" '\
+a2enmod proxy_http; \
+service apache2 stop; \
+service apache2 start; \
+service apache2 restart; \
+cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/payaraSite.conf; \
+sed -i /etc/apache2/sites-available/payaraSite.conf -e "s/<VirtualHost \*:80>/<VirtualHost *:80>\n\tProxyPass \/ http:\/\/localhost:8080\/\n\tProxyPassReverse \/ http:\/\/localhost:8080\/\n\tProxyPreserveHost on/"; \
+a2dissite 000-default; \
+a2ensite payaraSite; \
+service apache2 restart'
 
 #Database creation
 scp -P "$(config_get EXTERNAL_SSH_PORT)" "$(config_get DB_INITIAL_FILENAME_COMPRESSED)" root@"$(config_get IP_ADDRESS)":/root/
