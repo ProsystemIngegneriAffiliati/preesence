@@ -86,6 +86,9 @@ public class Presence extends BaseEntity {
     private BigDecimal difference;
     
     @Transient
+    private BigDecimal normal;
+    
+    @Transient
     private BigDecimal overtime30;
     
     @Transient
@@ -216,6 +219,24 @@ public class Presence extends BaseEntity {
         return previous;
     }
 
+    public BigDecimal getNormal() {
+        return normal;
+    }
+
+    public void setNormal(BigDecimal normal) {
+        this.normal = normal;
+    }
+    
+    private void updateNormal() {
+        normal = null;
+        if (total != null) {
+            if (total.compareTo(worker.getContract().getHoursDaily()) > 0)
+                normal = worker.getContract().getHoursDaily();
+            else
+                normal = total;
+        }
+    }
+
     public BigDecimal getOvertime30() {
         return overtime30;
     }
@@ -250,6 +271,7 @@ public class Presence extends BaseEntity {
     public void updateAllTimings() {
         updateTotal();
         updateDifference();
+        updateNormal();
         updateOvertime30();
         updateOvertime50();
         updateTicket();
@@ -280,7 +302,6 @@ public class Presence extends BaseEntity {
                         lunchBreakTicket = worker.getContract().getLunchBreakTicket();
                     break;
                 default:
-                    return;
             }
         }
     }

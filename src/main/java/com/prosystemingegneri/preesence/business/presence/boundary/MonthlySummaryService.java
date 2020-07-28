@@ -169,7 +169,7 @@ public class MonthlySummaryService {
         for (Presence presence : presences) {
             presence.updateAllTimings();
             distanceTraveled += presence.getDistanceTraveled();
-            hours = hours.add(presence.getTotal() == null ? BigDecimal.ZERO : presence.getTotal());
+            hours = hours.add(presence.getNormal() == null ? BigDecimal.ZERO : presence.getNormal());
             overtime30 = overtime30.add(presence.getOvertime30() == null ? BigDecimal.ZERO : presence.getOvertime30());
             overtime50 = overtime50.add(presence.getOvertime50() == null ? BigDecimal.ZERO : presence.getOvertime50());
             totalReimburseForDistanceTraveled = totalReimburseForDistanceTraveled.add(presence.getMileageReimbursement());
