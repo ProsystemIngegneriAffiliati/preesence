@@ -268,7 +268,7 @@ public class Presence extends BaseEntity {
     }
     
     private void updateTicket() {
-        if (lunchBreakTicket == null && worker != null && event.equals(PresenceEvent.WORK)) {
+        if (lunchBreakTicket == null && worker != null && (event.equals(PresenceEvent.WORK) || event.equals(PresenceEvent.HOLIDAY))) {
             BigDecimal workingHours = hoursBetweenTimes(startAfternoon, endAfternoon, hoursBetweenTimes(startMorning, endMorning, BigDecimal.ZERO));
             switch (worker.getContract().getContractTime()) {
                 case FULL_TIME:
