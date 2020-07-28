@@ -89,6 +89,9 @@ public class Presence extends BaseEntity {
     private BigDecimal normal;
     
     @Transient
+    private final BigDecimal TICK_FOR_OVERTIME_30 = new BigDecimal(0.5);
+    
+    @Transient
     private BigDecimal overtime30;
     
     @Transient
@@ -248,8 +251,10 @@ public class Presence extends BaseEntity {
     private void updateOvertime30() {
         overtime30 = null;
         if (total != null)
-            if (total.compareTo(worker.getContract().getHoursDaily()) > 0)
-                overtime30 = total.subtract(worker.getContract().getHoursDaily());
+            if (total.compareTo(worker.getContract().getHoursDaily()) > 0) {
+                overtime30 = total.subtract(worker.getContract().getHoursDaily()).divide(TICK_FOR_OVERTIME_30, 9, RoundingMode.HALF_EVEN).setScale(0, RoundingMode.HALF_UP).multiply(TICK_FOR_OVERTIME_30);
+                total = worker.getContract().getHoursDaily().add(overtime30);
+            }
     }
 
     public BigDecimal getOvertime50() {
